@@ -37,6 +37,10 @@ export class XQcmEdit extends HTMLElement {
    * displays a message in the component.
    */
   private async handleMovePage(pageId: string, direction: 'up' | 'down') {
+    // If user is not allowed to edit pages, simply return without doing anything
+    if (!this.canEdit) {
+      return;
+    }
     try {
       const resp = await fetchWithAuth(`http://localhost:3000/page/${pageId}/reorder`, {
         method: 'PATCH',
@@ -366,6 +370,8 @@ export class XQcmEdit extends HTMLElement {
    * Updates local QCM state and re-renders the pages list.
    */
   private async handleAddPage() {
+    // Prevent adding a page if the user does not have edit permissions
+    if (!this.canEdit) return;
     if (!this.qcmId) return;
     // Determine default name based on current number of pages
     const num = (this.qcm?.pages.length ?? 0) + 1;
@@ -403,6 +409,10 @@ export class XQcmEdit extends HTMLElement {
    * open in the editor, editing mode is cancelled.
    */
   private async handleDeletePage(pageId: string) {
+    // Disallow deletion if user is not allowed to edit
+    if (!this.canEdit) {
+      return;
+    }
     // Simple confirmation dialog
     if (!confirm('Are you sure you want to delete this page?')) {
       return;
