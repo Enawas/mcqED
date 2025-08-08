@@ -1,0 +1,29 @@
+<!--
+  Purpose: Template for the QCM import Web Component. Defines the
+  structure for selecting a file and choosing an import format. Values
+  are populated and handled by the component logic.
+  Inputs: None (file input and format selection occur client-side).
+  Outputs: None (events are emitted on success or cancellation).
+  Events: None.
+  Errors: Displayed inline below the form.
+-->
+<div class="container">
+  <h2>Import QCM</h2>
+  <div class="field">
+    <label for="fileInput">Select File</label>
+    <input id="fileInput" type="file" accept=".json,.xml" />
+  </div>
+  <div class="field">
+    <label for="formatSelect">Format</label>
+    <select id="formatSelect">
+      <option value="auto">Auto detect</option>
+      <option value="json">JSON</option>
+      <option value="xml">XML</option>
+    </select>
+  </div>
+  <div id="error" class="error"></div>
+  <div class="actions">
+    <button id="importBtn">Import</button>
+    <button id="cancelBtn" class="secondary">Cancel</button>
+  </div>
+</div>

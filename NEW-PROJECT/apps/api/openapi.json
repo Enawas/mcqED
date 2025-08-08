@@ -1,0 +1,705 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "QCM API",
+    "version": "1.0.0",
+    "description": "API for managing QCMs (questionnaires à choix multiples), pages and questions."
+  },
+  "paths": {
+    "/qcm": {
+      "get": {
+        "summary": "List all QCMs",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "schema": { "type": "string" },
+            "required": false,
+            "description": "Search term to filter QCM titles or descriptions"
+          },
+          {
+            "name": "difficulty",
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/QcmDifficulty" },
+            "required": false,
+            "description": "Filter by difficulty level"
+          },
+          {
+            "name": "icon",
+            "in": "query",
+            "schema": { "type": "string" },
+            "required": false,
+            "description": "Filter by icon class"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of QCMs returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": { "$ref": "#/components/schemas/Qcm" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new QCM",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/QcmCreate" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "QCM created successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Qcm" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/qcm/{id}": {
+      "get": {
+        "summary": "Get a QCM by its ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "description": "Identifier of the QCM"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "QCM found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Qcm" }
+              }
+            }
+          },
+          "404": { "description": "QCM not found" }
+        }
+      },
+      "patch": {
+        "summary": "Update an existing QCM",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "description": "Identifier of the QCM"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/QcmUpdate" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "QCM updated successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Qcm" }
+              }
+            }
+          },
+          "404": { "description": "QCM not found" }
+        }
+      }
+    },
+    "/qcm/{id}/favorite": {
+      "patch": {
+        "summary": "Toggle the favorite status of a QCM",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "description": "Identifier of the QCM"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Favorite status toggled",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Qcm" }
+              }
+            }
+          },
+          "404": { "description": "QCM not found" }
+        }
+      }
+    },
+    "/qcm/{id}/stats": {
+      "patch": {
+        "summary": "Update the last score and time of a QCM",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "description": "Identifier of the QCM"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "score": { "type": "integer", "minimum": 0, "maximum": 100 },
+                  "time": { "type": "integer", "minimum": 0 }
+                },
+                "required": ["score", "time"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Statistics updated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Qcm" }
+              }
+            }
+          },
+          "404": { "description": "QCM not found" }
+        }
+      }
+    },
+    "/qcm/import": {
+      "post": {
+        "summary": "Import a QCM from JSON or XML",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/QcmImport" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "QCM imported successfully",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Qcm" }
+              }
+            }
+          },
+          "400": { "description": "Invalid format or data" }
+        }
+      }
+    },
+    "/qcm/{id}/export": {
+      "get": {
+        "summary": "Export a QCM as JSON or XML",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "description": "Identifier of the QCM"
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "schema": { "$ref": "#/components/schemas/QcmExport" },
+            "required": false,
+            "description": "Export format (json or xml)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "QCM exported successfully",
+            "content": {
+              "application/json": {
+                "schema": { "type": "string" }
+              },
+              "application/xml": {
+                "schema": { "type": "string" }
+              }
+            }
+          },
+          "404": { "description": "QCM not found" }
+        }
+      }
+    },
+    "/page/{id}": {
+      "get": {
+        "summary": "Get a page by its ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "description": "Identifier of the page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Page found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/QcmPage" }
+              }
+            }
+          },
+          "404": { "description": "Page not found" }
+        }
+      },
+      "patch": {
+        "summary": "Rename a page",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "description": "Identifier of the page"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string" }
+                },
+                "required": ["name"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Page renamed",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/QcmPage" }
+              }
+            }
+          },
+          "404": { "description": "Page not found" }
+        }
+      },
+      "delete": {
+        "summary": "Delete a page",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "description": "Identifier of the page"
+          }
+        ],
+        "responses": {
+          "204": { "description": "Page deleted" },
+          "404": { "description": "Page not found" }
+        }
+      }
+    },
+    "/page/{id}/reorder": {
+      "patch": {
+        "summary": "Reorder a page within its QCM",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "description": "Identifier of the page"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "direction": { "$ref": "#/components/schemas/ReorderDirection" }
+                },
+                "required": ["direction"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": { "description": "Page reordered" },
+          "404": { "description": "Page not found" }
+        }
+      }
+    },
+    "/qcm/{id}/page": {
+      "post": {
+        "summary": "Create a new page for a QCM",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "description": "Identifier of the QCM"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/QcmPageCreate" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Page created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/QcmPage" }
+              }
+            }
+          },
+          "404": { "description": "QCM not found" }
+        }
+      }
+    },
+    "/page/{id}/question": {
+      "post": {
+        "summary": "Create a new question on a page",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "description": "Identifier of the page"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/QuestionCreate" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Question created",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Question" }
+              }
+            }
+          },
+          "404": { "description": "Page not found" }
+        }
+      }
+    },
+    "/question/{id}": {
+      "get": {
+        "summary": "Get a question by its ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "description": "Identifier of the question"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Question found",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Question" }
+              }
+            }
+          },
+          "404": { "description": "Question not found" }
+        }
+      },
+      "patch": {
+        "summary": "Update an existing question",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "description": "Identifier of the question"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/QuestionUpdate" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Question updated",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Question" }
+              }
+            }
+          },
+          "404": { "description": "Question not found" }
+        }
+      },
+      "delete": {
+        "summary": "Delete a question",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "description": "Identifier of the question"
+          }
+        ],
+        "responses": {
+          "204": { "description": "Question deleted" },
+          "404": { "description": "Question not found" }
+        }
+      }
+    },
+    "/question/{id}/reorder": {
+      "patch": {
+        "summary": "Reorder a question within its page",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": { "type": "string", "format": "uuid" },
+            "description": "Identifier of the question"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "direction": { "$ref": "#/components/schemas/ReorderDirection" }
+                },
+                "required": ["direction"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": { "description": "Question reordered" },
+          "404": { "description": "Question not found" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Option": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "text": { "type": "string" }
+        },
+        "required": ["id", "text"]
+      },
+      "Question": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "text": { "type": "string" },
+          "type": { "type": "string", "enum": ["single", "multiple"] },
+          "options": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Option" },
+            "minItems": 2
+          },
+          "correctAnswers": {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 1
+          },
+          "explanation": { "type": "string", "nullable": true },
+          "position": { "type": "integer" }
+        },
+        "required": ["id", "text", "type", "options", "correctAnswers", "position"]
+      },
+      "QuestionCreate": {
+        "type": "object",
+        "properties": {
+          "text": { "type": "string" },
+          "type": { "type": "string", "enum": ["single", "multiple"] },
+          "options": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Option" },
+            "minItems": 2
+          },
+          "correctAnswers": {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 1
+          },
+          "explanation": { "type": "string", "nullable": true }
+        },
+        "required": ["text", "type", "options", "correctAnswers"]
+      },
+      "QuestionUpdate": {
+        "allOf": [
+          { "$ref": "#/components/schemas/QuestionCreate" },
+          {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string", "format": "uuid" }
+            },
+            "required": ["id"]
+          }
+        ]
+      },
+      "QcmPage": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "name": { "type": "string" },
+          "questions": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Question" }
+          }
+        },
+        "required": ["id", "name", "questions"]
+      },
+      "QcmPageCreate": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "questions": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/QuestionCreate" }
+          }
+        },
+        "required": ["name"]
+      },
+      "Qcm": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string", "format": "uuid" },
+          "title": { "type": "string" },
+          "description": { "type": "string", "nullable": true },
+          "iconClass": { "type": "string", "nullable": true },
+          "status": { "$ref": "#/components/schemas/QcmStatus" },
+          "difficultyLevel": { "$ref": "#/components/schemas/QcmDifficulty", "nullable": true },
+          "passingThreshold": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "nullable": true
+          },
+          "createdAt": { "type": "string" },
+          "lastScore": { "type": "number", "nullable": true },
+          "lastTime": { "type": "number", "nullable": true },
+          "isFavorite": { "type": "boolean", "nullable": true },
+          "pages": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/QcmPage" }
+          }
+        },
+        "required": ["id", "title", "status", "createdAt", "pages"]
+      },
+      "QcmCreate": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "description": { "type": "string", "nullable": true },
+          "iconClass": { "type": "string", "nullable": true },
+          "status": { "$ref": "#/components/schemas/QcmStatus", "default": "draft" },
+          "difficultyLevel": { "$ref": "#/components/schemas/QcmDifficulty", "nullable": true },
+          "passingThreshold": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "nullable": true
+          },
+          "pages": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/QcmPageCreate" },
+            "default": []
+          }
+        },
+        "required": ["title"]
+      },
+      "QcmUpdate": {
+        "allOf": [
+          { "$ref": "#/components/schemas/QcmCreate" },
+          {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string", "format": "uuid" }
+            },
+            "required": ["id"]
+          }
+        ]
+      },
+      "QcmImport": {
+        "type": "object",
+        "properties": {
+          "format": { "type": "string", "enum": ["json", "xml"] },
+          "data": { "type": "string" }
+        },
+        "required": ["format", "data"]
+      },
+      "QcmExport": {
+        "type": "object",
+        "properties": {
+          "format": { "type": "string", "enum": ["json", "xml"], "default": "json" }
+        }
+      },
+      "QcmStatus": {
+        "type": "string",
+        "enum": ["draft", "published"]
+      },
+      "QcmDifficulty": {
+        "type": "string",
+        "enum": ["beginner", "intermediate", "advanced"]
+      },
+      "ReorderDirection": {
+        "type": "string",
+        "enum": ["up", "down"]
+      }
+    }
+  }
+}
