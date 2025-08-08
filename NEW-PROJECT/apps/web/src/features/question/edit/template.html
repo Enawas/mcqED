@@ -1,0 +1,34 @@
+<!--
+  Purpose: Template for the Question edit Web Component. Defines
+  the structure of the form used to edit a question. Dynamic
+  generation of option rows is handled in the component's TS file.
+  Inputs: None (values are populated by the component logic).
+  Outputs: None.
+  Events: None.
+  Errors: None.
+-->
+<div class="container">
+  <h2>Edit Question</h2>
+  <div class="field">
+    <label for="questionText">Question Text</label>
+    <input id="questionText" type="text" />
+  </div>
+  <div class="field">
+    <label for="questionType">Type</label>
+    <select id="questionType">
+      <option value="single">Single choice</option>
+      <option value="multiple">Multiple choice</option>
+    </select>
+  </div>
+  <div id="optionsContainer"></div>
+  <button id="addOption" class="add-option">Add Option</button>
+  <div class="field">
+    <label for="explanation">Explanation</label>
+    <textarea id="explanation"></textarea>
+  </div>
+  <div id="error" class="error"></div>
+  <div class="actions">
+    <button id="save">Save</button>
+    <button id="cancel" class="secondary">Cancel</button>
+  </div>
+</div>
