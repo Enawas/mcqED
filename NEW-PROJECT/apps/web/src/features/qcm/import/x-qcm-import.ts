@@ -75,9 +75,13 @@ export class XQcmImport extends HTMLElement {
     reader.onload = async () => {
       const data = reader.result?.toString() || '';
       try {
+        // Include authorization header if a token exists
+        const token = localStorage.getItem('accessToken');
+        const headers: any = { 'Content-Type': 'application/json' };
+        if (token) headers['Authorization'] = `Bearer ${token}`;
         const response = await fetch('http://localhost:3000/qcm/import', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers,
           body: JSON.stringify({ format: chosenFormat, data }),
         });
         if (!response.ok) {

@@ -68,7 +68,11 @@ export class XQcmList extends HTMLElement {
    */
   private async loadQcms() {
     try {
-      const response = await fetch('http://localhost:3000/qcm');
+      // Include authorization header if a token exists in localStorage
+      const token = localStorage.getItem('accessToken');
+      const headers: any = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      const response = await fetch('http://localhost:3000/qcm', { headers });
       if (!response.ok) {
         throw new Error(`Failed to load QCMs: ${response.statusText}`);
       }
@@ -243,8 +247,12 @@ export class XQcmList extends HTMLElement {
    */
   private async toggleFavorite(id: string) {
     try {
+      const token = localStorage.getItem('accessToken');
+      const headers: any = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
       const response = await fetch(`http://localhost:3000/qcm/${id}/favorite`, {
         method: 'PATCH',
+        headers,
       });
       if (!response.ok) {
         console.error('Failed to toggle favourite:', await response.text());
@@ -268,7 +276,10 @@ export class XQcmList extends HTMLElement {
    */
   private async exportQcm(id: string, format: 'json' | 'xml') {
     try {
-      const response = await fetch(`http://localhost:3000/qcm/${id}/export?format=${format}`);
+      const token = localStorage.getItem('accessToken');
+      const headers: any = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      const response = await fetch(`http://localhost:3000/qcm/${id}/export?format=${format}`, { headers });
       if (!response.ok) {
         console.error('Failed to export QCM:', await response.text());
         return;

@@ -80,7 +80,11 @@ export class XPageEdit extends HTMLElement {
       return;
     }
     try {
-      const resp = await fetch(`http://localhost:3000/page/${this.pageId}`);
+      // Include auth token if available
+      const token = localStorage.getItem('accessToken');
+      const headers: any = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      const resp = await fetch(`http://localhost:3000/page/${this.pageId}`, { headers });
       if (!resp.ok) {
         throw new Error(`Failed to load page: ${resp.statusText}`);
       }
@@ -115,9 +119,12 @@ export class XPageEdit extends HTMLElement {
       return;
     }
     try {
+      const token = localStorage.getItem('accessToken');
+      const headers: any = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
       const response = await fetch(`http://localhost:3000/page/${this.pageId}`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ name: newName }),
       });
       if (!response.ok) {
@@ -286,8 +293,12 @@ export class XPageEdit extends HTMLElement {
       return;
     }
     try {
+      const token = localStorage.getItem('accessToken');
+      const headers: any = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
       const resp = await fetch(`http://localhost:3000/question/${questionId}`, {
         method: 'DELETE',
+        headers,
       });
       if (!resp.ok) {
         const msg = await resp.text();
@@ -320,9 +331,12 @@ export class XPageEdit extends HTMLElement {
       return;
     }
     try {
+      const token = localStorage.getItem('accessToken');
+      const headers: any = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
       const resp = await fetch(`http://localhost:3000/question/${questionId}/reorder`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ direction }),
       });
       if (!resp.ok) {

@@ -1,0 +1,24 @@
+<!--
+  Purpose: Template for the Audit list Web Component. Defines the
+  structure of the audit log UI, including optional filter inputs
+  for entity, entityId, userId and limit, a container for log
+  entries, and a back button to exit the audit view.
+  Inputs: None directly; component logic populates values.
+  Outputs: None directly; events are emitted by the TS component.
+  Events: None (handled in TypeScript).
+-->
+<div class="audit-container">
+  <h2>Audit Logs</h2>
+  <form id="filterForm" class="filter-form">
+    <input id="entity" type="text" placeholder="Entity" />
+    <input id="entityId" type="text" placeholder="Entity ID" />
+    <input id="userId" type="text" placeholder="User ID" />
+    <input id="limit" type="number" min="1" placeholder="Limit" />
+    <button type="submit">Filter</button>
+  </form>
+  <div id="error" class="error"></div>
+  <div id="logs" class="logs"></div>
+  <div class="actions">
+    <button id="back" class="secondary">Back</button>
+  </div>
+</div>

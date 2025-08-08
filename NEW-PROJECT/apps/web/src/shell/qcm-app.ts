@@ -14,13 +14,18 @@ import '../features/qcm/edit/x-qcm-edit';
 import '../features/qcm/create/x-qcm-create';
 import '../features/qcm/player/x-qcm-player';
 import '../features/qcm/import/x-qcm-import';
+import '../features/auth/login/x-auth-login';
+import '../features/audit/list/x-audit-list';
 
 export class QcmApp extends HTMLElement {
   private shadow: ShadowRoot;
   // Track the current view ('list' or 'edit') and the ID of the QCM being edited.
-  private currentView: 'list' | 'edit' | 'create' | 'player' | 'import' = 'list';
+  private currentView: 'list' | 'edit' | 'create' | 'player' | 'import' | 'audit' = 'list';
   private editingQcmId: string | null = null;
   private playingQcmId: string | null = null;
+
+  // Track whether the user is logged in. Determined by presence of an access token.
+  private loggedIn = false;
 
   constructor() {
     super();
@@ -28,39 +33,42 @@ export class QcmApp extends HTMLElement {
   }
 
   connectedCallback() {
+    // Determine login state based on localStorage token
+    this.loggedIn = !!localStorage.getItem('accessToken');
     this.render();
     this.bindEvents();
   }
 
   private render() {
-    // Render different views: list, edit, or create. The list view
-    // includes a button to trigger creation of a new QCM. Edit view
-    // passes the QCM ID to the edit component. Create view renders
-    // the creation form component.
+    // If not logged in, show login view regardless of currentView
+    if (!this.loggedIn) {
+      this.shadow.innerHTML = `<x-auth-login></x-auth-login>`;
+      return;
+    }
+    // Render different views based on currentView. The list view
+    // includes buttons for create, import and logout.
     if (this.currentView === 'list') {
       this.shadow.innerHTML = `
         <div class="toolbar">
           <button id="create-button">Create QCM</button>
           <button id="import-button">Import QCM</button>
+          <button id="audit-button">Audit Logs</button>
+          <button id="logout-button">Logout</button>
         </div>
         <x-qcm-list></x-qcm-list>
       `;
     } else if (this.currentView === 'edit') {
       const idAttr = this.editingQcmId ? ` qcm-id="${this.editingQcmId}"` : '';
       this.shadow.innerHTML = `<x-qcm-edit${idAttr}></x-qcm-edit>`;
-    } else {
-      // create view
-      if (this.currentView === 'create') {
-        this.shadow.innerHTML = `<x-qcm-create></x-qcm-create>`;
-      } else {
-        if (this.currentView === 'player') {
-          const idAttr2 = this.playingQcmId ? ` qcm-id="${this.playingQcmId}"` : '';
-          this.shadow.innerHTML = `<x-qcm-player${idAttr2}></x-qcm-player>`;
-        } else {
-          // import view
-          this.shadow.innerHTML = `<x-qcm-import></x-qcm-import>`;
-        }
-      }
+    } else if (this.currentView === 'create') {
+      this.shadow.innerHTML = `<x-qcm-create></x-qcm-create>`;
+    } else if (this.currentView === 'player') {
+      const idAttr2 = this.playingQcmId ? ` qcm-id="${this.playingQcmId}"` : '';
+      this.shadow.innerHTML = `<x-qcm-player${idAttr2}></x-qcm-player>`;
+    } else if (this.currentView === 'import') {
+      this.shadow.innerHTML = `<x-qcm-import></x-qcm-import>`;
+    } else if (this.currentView === 'audit') {
+      this.shadow.innerHTML = `<x-audit-list></x-audit-list>`;
     }
   }
 
@@ -70,11 +78,22 @@ export class QcmApp extends HTMLElement {
    * will be added later.
    */
   private bindEvents() {
-    // Bind events based on the current view. When in list view, listen
-    // for launch/edit/fav events. When in edit view, listen for
-    // save/cancel events to return to the list.
+    // If not logged in, bind login events
+    if (!this.loggedIn) {
+      const loginComp = this.shadow.querySelector('x-auth-login');
+      if (loginComp) {
+        loginComp.addEventListener('login-success', () => {
+          this.loggedIn = true;
+          this.currentView = 'list';
+          this.render();
+          this.bindEvents();
+        });
+      }
+      return;
+    }
+    // Bind events based on the current view when logged in
     if (this.currentView === 'list') {
-      // Bind create button
+      // Create button
       const createBtn = this.shadow.getElementById('create-button');
       if (createBtn) {
         createBtn.addEventListener('click', () => {
@@ -83,6 +102,7 @@ export class QcmApp extends HTMLElement {
           this.bindEvents();
         });
       }
+      // Import button
       const importBtn = this.shadow.getElementById('import-button');
       if (importBtn) {
         importBtn.addEventListener('click', () => {
@@ -91,54 +111,70 @@ export class QcmApp extends HTMLElement {
           this.bindEvents();
         });
       }
+      // Audit button
+      const auditBtn = this.shadow.getElementById('audit-button');
+      if (auditBtn) {
+        auditBtn.addEventListener('click', () => {
+          this.currentView = 'audit';
+          this.render();
+          this.bindEvents();
+        });
+      }
+      // Logout button
+      const logoutBtn = this.shadow.getElementById('logout-button');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+          // Clear tokens and return to login
+          localStorage.removeItem('accessToken');
+          localStorage.removeItem('refreshToken');
+          this.loggedIn = false;
+          this.currentView = 'list';
+          this.render();
+          this.bindEvents();
+        });
+      }
+      // Bind list events
       const list = this.shadow.querySelector('x-qcm-list');
-      if (!list) return;
-      list.addEventListener('qcm-launch', (e: Event) => {
-        const id = (e as CustomEvent).detail.id;
-        // TODO: implement routing to player, e.g., using a router.
-        // Switch to player view with the specified QCM ID
-        this.playingQcmId = id;
-        this.currentView = 'player';
-        this.render();
-        this.bindEvents();
-      });
-      list.addEventListener('qcm-edit', (e: Event) => {
-        const id = (e as CustomEvent).detail.id;
-        // Switch to edit view with the specified QCM ID
-        this.editingQcmId = id;
-        this.currentView = 'edit';
-        this.render();
-        this.bindEvents();
-      });
+      if (list) {
+        list.addEventListener('qcm-launch', (e: Event) => {
+          const id = (e as CustomEvent).detail.id;
+          this.playingQcmId = id;
+          this.currentView = 'player';
+          this.render();
+          this.bindEvents();
+        });
+        list.addEventListener('qcm-edit', (e: Event) => {
+          const id = (e as CustomEvent).detail.id;
+          this.editingQcmId = id;
+          this.currentView = 'edit';
+          this.render();
+          this.bindEvents();
+        });
+      }
     } else if (this.currentView === 'edit') {
       const edit = this.shadow.querySelector('x-qcm-edit');
-      if (!edit) return;
-      edit.addEventListener('qcm-updated', (e: Event) => {
-        // When a QCM is updated, return to the list and refresh it
-        this.currentView = 'list';
-        this.editingQcmId = null;
-        this.render();
-        this.bindEvents();
-        // Refresh list to show updated data
-        const list = this.shadow.querySelector('x-qcm-list');
-        if (list && typeof (list as any).refresh === 'function') {
-          (list as any).refresh();
-        }
-      });
-      edit.addEventListener('edit-cancel', () => {
-        // Return to list view without saving
-        this.currentView = 'list';
-        this.editingQcmId = null;
-        this.render();
-        this.bindEvents();
-      });
-    } else {
-      // create or player view
-      if (this.currentView === 'create') {
-        const create = this.shadow.querySelector('x-qcm-create');
-        if (!create) return;
+      if (edit) {
+        edit.addEventListener('qcm-updated', () => {
+          this.currentView = 'list';
+          this.editingQcmId = null;
+          this.render();
+          this.bindEvents();
+          const list = this.shadow.querySelector('x-qcm-list');
+          if (list && typeof (list as any).refresh === 'function') {
+            (list as any).refresh();
+          }
+        });
+        edit.addEventListener('edit-cancel', () => {
+          this.currentView = 'list';
+          this.editingQcmId = null;
+          this.render();
+          this.bindEvents();
+        });
+      }
+    } else if (this.currentView === 'create') {
+      const create = this.shadow.querySelector('x-qcm-create');
+      if (create) {
         create.addEventListener('qcm-created', () => {
-          // Return to list view and refresh after creation
           this.currentView = 'list';
           this.render();
           this.bindEvents();
@@ -147,58 +183,67 @@ export class QcmApp extends HTMLElement {
             (list as any).refresh();
           }
         });
-      } else {
-        if (this.currentView === 'player') {
-          const player = this.shadow.querySelector('x-qcm-player');
-          if (!player) return;
-          player.addEventListener('quiz-finished', async (e: Event) => {
-            const detail = (e as CustomEvent).detail || {};
-            const qcmId = detail.qcmId;
-            const score = detail.score;
-            const elapsedSeconds = detail.elapsedSeconds;
-            // Attempt to update lastScore and lastTime via API
-            if (qcmId) {
-              try {
-                await fetch(`http://localhost:3000/qcm/${qcmId}/stats`, {
-                  method: 'PATCH',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({ score, time: elapsedSeconds }),
-                });
-              } catch (err) {
-                console.error('Error updating stats', err);
-              }
+      }
+    } else if (this.currentView === 'player') {
+      const player = this.shadow.querySelector('x-qcm-player');
+      if (player) {
+        player.addEventListener('quiz-finished', async (e: Event) => {
+          const detail = (e as CustomEvent).detail || {};
+          const qcmId = detail.qcmId;
+          const score = detail.score;
+          const elapsedSeconds = detail.elapsedSeconds;
+          // Update stats with auth header
+          if (qcmId) {
+            try {
+              const token = localStorage.getItem('accessToken');
+              const headers: any = { 'Content-Type': 'application/json' };
+              if (token) headers['Authorization'] = `Bearer ${token}`;
+              await fetch(`http://localhost:3000/qcm/${qcmId}/stats`, {
+                method: 'PATCH',
+                headers,
+                body: JSON.stringify({ score, time: elapsedSeconds }),
+              });
+            } catch (err) {
+              console.error('Error updating stats', err);
             }
-            // Return to list view and refresh the list
-            this.currentView = 'list';
-            this.playingQcmId = null;
-            this.render();
-            this.bindEvents();
-            const list = this.shadow.querySelector('x-qcm-list');
-            if (list && typeof (list as any).refresh === 'function') {
-              (list as any).refresh();
-            }
-          });
-        } else {
-          // import view
-          const importComp = this.shadow.querySelector('x-qcm-import');
-          if (!importComp) return;
-          importComp.addEventListener('qcm-imported', (e: Event) => {
-            // Return to list view and refresh the list after import
-            this.currentView = 'list';
-            this.render();
-            this.bindEvents();
-            const list = this.shadow.querySelector('x-qcm-list');
-            if (list && typeof (list as any).refresh === 'function') {
-              (list as any).refresh();
-            }
-          });
-          importComp.addEventListener('import-cancel', () => {
-            // Return to list view on cancel
-            this.currentView = 'list';
-            this.render();
-            this.bindEvents();
-          });
-        }
+          }
+          this.currentView = 'list';
+          this.playingQcmId = null;
+          this.render();
+          this.bindEvents();
+          const list = this.shadow.querySelector('x-qcm-list');
+          if (list && typeof (list as any).refresh === 'function') {
+            (list as any).refresh();
+          }
+        });
+      }
+    } else if (this.currentView === 'import') {
+      const importComp = this.shadow.querySelector('x-qcm-import');
+      if (importComp) {
+        importComp.addEventListener('qcm-imported', () => {
+          this.currentView = 'list';
+          this.render();
+          this.bindEvents();
+          const list = this.shadow.querySelector('x-qcm-list');
+          if (list && typeof (list as any).refresh === 'function') {
+            (list as any).refresh();
+          }
+        });
+        importComp.addEventListener('import-cancel', () => {
+          this.currentView = 'list';
+          this.render();
+          this.bindEvents();
+        });
+      }
+    }
+    else if (this.currentView === 'audit') {
+      const auditComp = this.shadow.querySelector('x-audit-list');
+      if (auditComp) {
+        auditComp.addEventListener('audit-cancel', () => {
+          this.currentView = 'list';
+          this.render();
+          this.bindEvents();
+        });
       }
     }
   }

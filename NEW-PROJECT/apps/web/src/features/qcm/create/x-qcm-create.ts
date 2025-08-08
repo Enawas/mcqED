@@ -87,9 +87,12 @@ export class XQcmCreate extends HTMLElement {
     // implemented in a future iteration.
     body.pages = [];
     try {
-      const response = await fetch('/qcm', {
+      const token = localStorage.getItem('accessToken');
+      const headers: any = { 'Content-Type': 'application/json' };
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+      const response = await fetch('http://localhost:3000/qcm', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify(body),
       });
       if (!response.ok) {
