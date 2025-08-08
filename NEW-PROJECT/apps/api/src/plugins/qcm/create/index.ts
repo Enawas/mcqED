@@ -13,6 +13,7 @@
 import { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { qcmCreateSchema, qcmReadSchema, QcmCreateInput } from '@packages/schemas/src/qcm';
+import { recordAudit } from '../../../observability/auditWriter';
 import { createQcm } from '../../../services/qcm/create.service';
 import { canCreateQcm } from '../../../policies/qcm/create.policy';
 
@@ -35,6 +36,9 @@ export async function qcmCreatePlugin(fastify: FastifyInstance) {
       }
       const input = request.body as unknown as QcmCreateInput;
       const qcm = await createQcm(input);
+      // Record audit event for created QCM.  Use user ID if available, null otherwise.
+      const userId = (request as any).user?.id ?? null;
+      await recordAudit('qcm.created', 'qcm', qcm.id, userId, undefined, qcm);
       return reply.status(201).send(qcm);
     },
   );

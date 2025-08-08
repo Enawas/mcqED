@@ -13,11 +13,12 @@ import '../features/qcm/list/x-qcm-list';
 import '../features/qcm/edit/x-qcm-edit';
 import '../features/qcm/create/x-qcm-create';
 import '../features/qcm/player/x-qcm-player';
+import '../features/qcm/import/x-qcm-import';
 
 export class QcmApp extends HTMLElement {
   private shadow: ShadowRoot;
   // Track the current view ('list' or 'edit') and the ID of the QCM being edited.
-  private currentView: 'list' | 'edit' | 'create' | 'player' = 'list';
+  private currentView: 'list' | 'edit' | 'create' | 'player' | 'import' = 'list';
   private editingQcmId: string | null = null;
   private playingQcmId: string | null = null;
 
@@ -40,6 +41,7 @@ export class QcmApp extends HTMLElement {
       this.shadow.innerHTML = `
         <div class="toolbar">
           <button id="create-button">Create QCM</button>
+          <button id="import-button">Import QCM</button>
         </div>
         <x-qcm-list></x-qcm-list>
       `;
@@ -51,9 +53,13 @@ export class QcmApp extends HTMLElement {
       if (this.currentView === 'create') {
         this.shadow.innerHTML = `<x-qcm-create></x-qcm-create>`;
       } else {
-        // player view
-        const idAttr2 = this.playingQcmId ? ` qcm-id="${this.playingQcmId}"` : '';
-        this.shadow.innerHTML = `<x-qcm-player${idAttr2}></x-qcm-player>`;
+        if (this.currentView === 'player') {
+          const idAttr2 = this.playingQcmId ? ` qcm-id="${this.playingQcmId}"` : '';
+          this.shadow.innerHTML = `<x-qcm-player${idAttr2}></x-qcm-player>`;
+        } else {
+          // import view
+          this.shadow.innerHTML = `<x-qcm-import></x-qcm-import>`;
+        }
       }
     }
   }
@@ -73,6 +79,14 @@ export class QcmApp extends HTMLElement {
       if (createBtn) {
         createBtn.addEventListener('click', () => {
           this.currentView = 'create';
+          this.render();
+          this.bindEvents();
+        });
+      }
+      const importBtn = this.shadow.getElementById('import-button');
+      if (importBtn) {
+        importBtn.addEventListener('click', () => {
+          this.currentView = 'import';
           this.render();
           this.bindEvents();
         });
@@ -134,36 +148,57 @@ export class QcmApp extends HTMLElement {
           }
         });
       } else {
-        // player view
-        const player = this.shadow.querySelector('x-qcm-player');
-        if (!player) return;
-        player.addEventListener('quiz-finished', async (e: Event) => {
-          const detail = (e as CustomEvent).detail || {};
-          const qcmId = detail.qcmId;
-          const score = detail.score;
-          const elapsedSeconds = detail.elapsedSeconds;
-          // Attempt to update lastScore and lastTime via API
-          if (qcmId) {
-            try {
-              await fetch(`http://localhost:3000/qcm/${qcmId}/stats`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ score, time: elapsedSeconds }),
-              });
-            } catch (err) {
-              console.error('Error updating stats', err);
+        if (this.currentView === 'player') {
+          const player = this.shadow.querySelector('x-qcm-player');
+          if (!player) return;
+          player.addEventListener('quiz-finished', async (e: Event) => {
+            const detail = (e as CustomEvent).detail || {};
+            const qcmId = detail.qcmId;
+            const score = detail.score;
+            const elapsedSeconds = detail.elapsedSeconds;
+            // Attempt to update lastScore and lastTime via API
+            if (qcmId) {
+              try {
+                await fetch(`http://localhost:3000/qcm/${qcmId}/stats`, {
+                  method: 'PATCH',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ score, time: elapsedSeconds }),
+                });
+              } catch (err) {
+                console.error('Error updating stats', err);
+              }
             }
-          }
-          // Return to list view and refresh the list
-          this.currentView = 'list';
-          this.playingQcmId = null;
-          this.render();
-          this.bindEvents();
-          const list = this.shadow.querySelector('x-qcm-list');
-          if (list && typeof (list as any).refresh === 'function') {
-            (list as any).refresh();
-          }
-        });
+            // Return to list view and refresh the list
+            this.currentView = 'list';
+            this.playingQcmId = null;
+            this.render();
+            this.bindEvents();
+            const list = this.shadow.querySelector('x-qcm-list');
+            if (list && typeof (list as any).refresh === 'function') {
+              (list as any).refresh();
+            }
+          });
+        } else {
+          // import view
+          const importComp = this.shadow.querySelector('x-qcm-import');
+          if (!importComp) return;
+          importComp.addEventListener('qcm-imported', (e: Event) => {
+            // Return to list view and refresh the list after import
+            this.currentView = 'list';
+            this.render();
+            this.bindEvents();
+            const list = this.shadow.querySelector('x-qcm-list');
+            if (list && typeof (list as any).refresh === 'function') {
+              (list as any).refresh();
+            }
+          });
+          importComp.addEventListener('import-cancel', () => {
+            // Return to list view on cancel
+            this.currentView = 'list';
+            this.render();
+            this.bindEvents();
+          });
+        }
       }
     }
   }

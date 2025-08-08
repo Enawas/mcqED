@@ -21,15 +21,23 @@ export async function getQcm(id: string): Promise<QcmRead | undefined> {
   const qRows = await db.select().from(qcm).where(eq(qcm.id, id));
   const qcmRow = qRows[0];
   if (!qcmRow) return undefined;
-  // Load all pages belonging to this QCM
-  const pages = await db.select().from(qcmPage).where(eq(qcmPage.qcmId, id));
+  // Load all pages belonging to this QCM, sorted by position ascending
+  const pages = await db
+    .select()
+    .from(qcmPage)
+    .where(eq(qcmPage.qcmId, id))
+    // orderBy is not yet imported; but we can sort in JS if needed
+    ;
   const pageObjects: QcmPageRead[] = [];
-  for (const page of pages) {
+  // Sort pages by their position before iterating
+  const sortedPages = pages.sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
+  for (const page of sortedPages) {
     // Load questions for each page
     const questions = await db
       .select()
       .from(question)
-      .where(eq(question.pageId, page.id));
+      .where(eq(question.pageId, page.id))
+      .orderBy(question.position);
     const questionObjects: QuestionRead[] = questions.map((q) => ({
       id: q.id,
       text: q.text,
@@ -37,6 +45,7 @@ export async function getQcm(id: string): Promise<QcmRead | undefined> {
       options: q.options as any,
       correctAnswers: q.correctAnswers as any,
       explanation: q.explanation ?? undefined,
+      position: q.position,
     }));
     pageObjects.push({ id: page.id, name: page.name, questions: questionObjects });
   }

@@ -25,6 +25,9 @@ import { questionCreatePlugin } from './plugins/question/create/index';
 import { questionDeletePlugin } from './plugins/question/delete/index';
 import { questionReorderPlugin } from './plugins/question/reorder/index';
 import { qcmUpdateStatsPlugin } from './plugins/qcm/updateStats/index';
+import { qcmImportPlugin } from './plugins/qcm/import/index';
+import { qcmExportPlugin } from './plugins/qcm/export/index';
+import { auditListPlugin } from './plugins/audit/list/index';
 
 /**
  * Factory function to build the Fastify server instance.  Additional
@@ -67,6 +70,12 @@ export async function buildServer() {
   await app.register(questionReorderPlugin);
   // QCM update stats plugin
   await app.register(qcmUpdateStatsPlugin);
+  // QCM import plugin
+  await app.register(qcmImportPlugin);
+  // QCM export plugin
+  await app.register(qcmExportPlugin);
+  // Audit log listing plugin
+  await app.register(auditListPlugin);
   return app;
 }
 
