@@ -22,10 +22,26 @@ import { eq } from 'drizzle-orm';
  * loaded yet; this will be added in a future iteration.
  */
 export async function listQcm(filters: QcmFilter): Promise<QcmRead[]> {
-  // Fetch all QCMs. Filtering on search/difficulty/icon can be added later.
+  // Fetch all QCMs. We fetch all and then apply in-memory filters on the
+  // resulting rows. For small datasets this is acceptable; if performance
+  // becomes an issue, filters should be pushed down to SQL.
   const qcms = await db.select().from(qcmTable);
   const result: QcmRead[] = [];
   for (const qcm of qcms) {
+    // Apply search/difficulty/icon filters. Skip this QCM if it does not
+    // match. Search is case-insensitive on title and description.
+    if (filters.search) {
+      const pattern = filters.search.toLowerCase();
+      const titleMatch = qcm.title?.toLowerCase().includes(pattern);
+      const descriptionMatch = (qcm.description ?? '').toLowerCase().includes(pattern);
+      if (!titleMatch && !descriptionMatch) continue;
+    }
+    if (filters.difficulty && qcm.difficultyLevel && qcm.difficultyLevel !== filters.difficulty) {
+      continue;
+    }
+    if (filters.icon && qcm.iconClass && qcm.iconClass !== filters.icon) {
+      continue;
+    }
     // Load pages for this QCM
     const pages = await db
       .select()
