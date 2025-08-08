@@ -11,11 +11,12 @@
 
 import '../features/qcm/list/x-qcm-list';
 import '../features/qcm/edit/x-qcm-edit';
+import '../features/qcm/create/x-qcm-create';
 
 export class QcmApp extends HTMLElement {
   private shadow: ShadowRoot;
   // Track the current view ('list' or 'edit') and the ID of the QCM being edited.
-  private currentView: 'list' | 'edit' = 'list';
+  private currentView: 'list' | 'edit' | 'create' = 'list';
   private editingQcmId: string | null = null;
 
   constructor() {
@@ -29,13 +30,23 @@ export class QcmApp extends HTMLElement {
   }
 
   private render() {
-    // Render the appropriate component based on the current view. When in
-    // edit mode, pass the QCM ID as an attribute to the edit component.
+    // Render different views: list, edit, or create. The list view
+    // includes a button to trigger creation of a new QCM. Edit view
+    // passes the QCM ID to the edit component. Create view renders
+    // the creation form component.
     if (this.currentView === 'list') {
-      this.shadow.innerHTML = `<x-qcm-list></x-qcm-list>`;
-    } else {
+      this.shadow.innerHTML = `
+        <div class="toolbar">
+          <button id="create-button">Create QCM</button>
+        </div>
+        <x-qcm-list></x-qcm-list>
+      `;
+    } else if (this.currentView === 'edit') {
       const idAttr = this.editingQcmId ? ` qcm-id="${this.editingQcmId}"` : '';
       this.shadow.innerHTML = `<x-qcm-edit${idAttr}></x-qcm-edit>`;
+    } else {
+      // create view
+      this.shadow.innerHTML = `<x-qcm-create></x-qcm-create>`;
     }
   }
 
@@ -49,6 +60,15 @@ export class QcmApp extends HTMLElement {
     // for launch/edit/fav events. When in edit view, listen for
     // save/cancel events to return to the list.
     if (this.currentView === 'list') {
+      // Bind create button
+      const createBtn = this.shadow.getElementById('create-button');
+      if (createBtn) {
+        createBtn.addEventListener('click', () => {
+          this.currentView = 'create';
+          this.render();
+          this.bindEvents();
+        });
+      }
       const list = this.shadow.querySelector('x-qcm-list');
       if (!list) return;
       list.addEventListener('qcm-launch', (e: Event) => {
@@ -64,26 +84,41 @@ export class QcmApp extends HTMLElement {
         this.render();
         this.bindEvents();
       });
-    } else {
+    } else if (this.currentView === 'edit') {
       const edit = this.shadow.querySelector('x-qcm-edit');
       if (!edit) return;
       edit.addEventListener('qcm-updated', (e: Event) => {
         // When a QCM is updated, return to the list and refresh it
-        const updatedQcm = (e as CustomEvent).detail.qcm;
         this.currentView = 'list';
         this.editingQcmId = null;
         this.render();
         this.bindEvents();
-        // Optionally, refresh the list to reflect updates.
+        // Refresh list to show updated data
         const list = this.shadow.querySelector('x-qcm-list');
-        (list as any)?.loadQcms?.();
+        if (list && typeof (list as any).refresh === 'function') {
+          (list as any).refresh();
+        }
       });
       edit.addEventListener('edit-cancel', () => {
-        // Simply return to the list view without saving
+        // Return to list view without saving
         this.currentView = 'list';
         this.editingQcmId = null;
         this.render();
         this.bindEvents();
+      });
+    } else {
+      // currentView === 'create'
+      const create = this.shadow.querySelector('x-qcm-create');
+      if (!create) return;
+      create.addEventListener('qcm-created', () => {
+        // Return to list view and refresh after creation
+        this.currentView = 'list';
+        this.render();
+        this.bindEvents();
+        const list = this.shadow.querySelector('x-qcm-list');
+        if (list && typeof (list as any).refresh === 'function') {
+          (list as any).refresh();
+        }
       });
     }
   }

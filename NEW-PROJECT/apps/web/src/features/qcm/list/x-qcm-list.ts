@@ -81,6 +81,17 @@ export class XQcmList extends HTMLElement {
   }
 
   /**
+   * Public method to refresh the list by reloading QCMs from the API and
+   * reapplying filters. Can be called by parent components when
+   * underlying data may have changed.
+   */
+  public async refresh() {
+    await this.loadQcms();
+    this.populateIconOptions();
+    this.applyFilters();
+  }
+
+  /**
    * Recomputes the filtered list based on search, difficulty and icon
    * criteria. Updates the UI accordingly.
    */
