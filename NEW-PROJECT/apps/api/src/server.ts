@@ -18,6 +18,13 @@ import { questionGetPlugin } from './plugins/question/get/index';
 import { questionEditPlugin } from './plugins/question/edit/index';
 import { pageGetPlugin } from './plugins/page/get/index';
 import { pageEditPlugin } from './plugins/page/edit/index';
+import { pageReorderPlugin } from './plugins/page/reorder/index';
+import { pageCreatePlugin } from './plugins/page/create/index';
+import { pageDeletePlugin } from './plugins/page/delete/index';
+import { questionCreatePlugin } from './plugins/question/create/index';
+import { questionDeletePlugin } from './plugins/question/delete/index';
+import { questionReorderPlugin } from './plugins/question/reorder/index';
+import { qcmUpdateStatsPlugin } from './plugins/qcm/updateStats/index';
 
 /**
  * Factory function to build the Fastify server instance.  Additional
@@ -46,6 +53,20 @@ export async function buildServer() {
   await app.register(pageGetPlugin);
   // Page edit plugin
   await app.register(pageEditPlugin);
+  // Page reorder plugin
+  await app.register(pageReorderPlugin);
+  // Page create plugin
+  await app.register(pageCreatePlugin);
+  // Page delete plugin
+  await app.register(pageDeletePlugin);
+  // Question create plugin
+  await app.register(questionCreatePlugin);
+  // Question delete plugin
+  await app.register(questionDeletePlugin);
+  // Question reorder plugin
+  await app.register(questionReorderPlugin);
+  // QCM update stats plugin
+  await app.register(qcmUpdateStatsPlugin);
   return app;
 }
 

@@ -255,6 +255,16 @@ export class XQcmPlayer extends HTMLElement {
       const p1 = document.createElement('p');
       p1.textContent = `Score: ${correctCount} / ${totalQuestions} (${score}%)`;
       resultContainer.appendChild(p1);
+      // Display pass/fail message if passingThreshold is defined
+      if (this.qcm && typeof this.qcm.passingThreshold === 'number') {
+        const threshold = this.qcm.passingThreshold;
+        const passed = score >= threshold;
+        const pf = document.createElement('p');
+        pf.textContent = passed
+          ? `Result: Passed (threshold ${threshold}%)`
+          : `Result: Failed (threshold ${threshold}%)`;
+        resultContainer.appendChild(pf);
+      }
       const minutes = Math.floor(elapsedSeconds / 60);
       const seconds = elapsedSeconds % 60;
       const p2 = document.createElement('p');

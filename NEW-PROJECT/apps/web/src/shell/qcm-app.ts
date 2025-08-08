@@ -137,8 +137,24 @@ export class QcmApp extends HTMLElement {
         // player view
         const player = this.shadow.querySelector('x-qcm-player');
         if (!player) return;
-        player.addEventListener('quiz-finished', (e: Event) => {
-          // When quiz finishes, return to list view and maybe refresh list
+        player.addEventListener('quiz-finished', async (e: Event) => {
+          const detail = (e as CustomEvent).detail || {};
+          const qcmId = detail.qcmId;
+          const score = detail.score;
+          const elapsedSeconds = detail.elapsedSeconds;
+          // Attempt to update lastScore and lastTime via API
+          if (qcmId) {
+            try {
+              await fetch(`http://localhost:3000/qcm/${qcmId}/stats`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ score, time: elapsedSeconds }),
+              });
+            } catch (err) {
+              console.error('Error updating stats', err);
+            }
+          }
+          // Return to list view and refresh the list
           this.currentView = 'list';
           this.playingQcmId = null;
           this.render();
