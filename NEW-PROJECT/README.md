@@ -150,6 +150,29 @@ pnpm --filter @apps/web run test
   in its own directory under `apps/web/src/features` for the front
   end and `apps/api/src/plugins` for the back end. Follow the
   AI_GUIDE when contributing new features.
+* ### Roles and permissions (RBAC)
+
+  The application implements Role‑Based Access Control to restrict
+  certain operations to authorised users. Three roles are recognised:
+
+  * **admin** – full access to all features. Admins can create,
+    import, export and delete QCMs, pages and questions; view audit
+    logs; and manage users.  
+  * **editor** – can create and modify QCMs, pages and questions,
+    import and export data, and view audit logs. Editors cannot
+    manage other users.  
+  * **viewer** – read‑only access. Viewers can list and play QCMs but
+    cannot create, edit, import, export or view audit logs. Editing
+    functions (add/delete/reorder pages or questions, rename pages,
+    update QCM metadata) are hidden in the UI for viewers and
+    rejected by the API.
+
+  The role is encoded in the JWT access token issued at login. The
+  front‑end decodes this token to determine which buttons and
+  controls to display. The back‑end policies also validate the
+  requester's role before performing any mutation. To assign roles to
+  users, update the `role` column in the `users` table or seed the
+  database accordingly.
 * Environment variables control many aspects of the system, including
   CORS, JWT secrets and S3 credentials. See `.env.example` for the
   full list and adjust as needed.
