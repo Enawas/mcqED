@@ -1,0 +1,44 @@
+<!--
+  Purpose: Template for the QCM creation form.  This markup defines the
+  structure of the form used by the `x-qcm-create` web component.  It
+  collects the metadata required to create a new quiz (title, description,
+  icon class, difficulty level, passing threshold) and submits via a
+  CustomEvent handled by the component's script.
+-->
+
+<form id="qcm-create-form">
+  <div class="field">
+    <label for="title">Titre</label>
+    <input type="text" id="title" name="title" required />
+  </div>
+  <div class="field">
+    <label for="description">Description</label>
+    <textarea id="description" name="description"></textarea>
+  </div>
+  <div class="field">
+    <label for="iconClass">Icône (classe CSS)</label>
+    <input type="text" id="iconClass" name="iconClass" />
+  </div>
+  <div class="field">
+    <label for="difficulty">Difficulté</label>
+    <select id="difficulty" name="difficulty">
+      <option value="">-- Choisir --</option>
+      <option value="beginner">Débutant</option>
+      <option value="intermediate">Intermédiaire</option>
+      <option value="advanced">Avancé</option>
+    </select>
+  </div>
+  <div class="field">
+    <label for="passingThreshold">Seuil de réussite (%)</label>
+    <input
+      type="number"
+      id="passingThreshold"
+      name="passingThreshold"
+      min="0"
+      max="100"
+    />
+  </div>
+  <div class="actions">
+    <button type="submit">Créer le QCM</button>
+  </div>
+</form>
