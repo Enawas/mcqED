@@ -9,7 +9,8 @@
  */
 
 export function canExportQcm(role: string): boolean {
-  // Permit all roles (including guests) to export QCMs.  Modify
-  // this logic if you wish to restrict exports to specific roles.
-  return true;
+  // Only editors and administrators are permitted to export QCMs.
+  // Restricting exports prevents unauthorized access to potentially
+  // sensitive data and aligns with stricter RBAC requirements.
+  return role === 'editor' || role === 'admin';
 }

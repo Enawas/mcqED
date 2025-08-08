@@ -28,6 +28,9 @@ import { qcmUpdateStatsPlugin } from './plugins/qcm/updateStats/index';
 import { qcmImportPlugin } from './plugins/qcm/import/index';
 import { qcmExportPlugin } from './plugins/qcm/export/index';
 import { auditListPlugin } from './plugins/audit/list/index';
+import { authLoginPlugin } from './plugins/auth/login/index';
+import { authRefreshPlugin } from './plugins/auth/refresh/index';
+import { jwtAuthPlugin } from './plugins/auth/jwt';
 
 /**
  * Factory function to build the Fastify server instance.  Additional
@@ -37,7 +40,14 @@ import { auditListPlugin } from './plugins/audit/list/index';
  */
 export async function buildServer() {
   const app = fastify();
-  // Register API plugins.  For now we only register the QCM list plugin.
+  // Register global plugins.  JWT authentication plugin must be registered
+  // before route plugins so that request.user is populated.
+  await app.register(jwtAuthPlugin);
+  // Authentication plugin for login endpoint
+  await app.register(authLoginPlugin);
+  // Authentication plugin for refresh endpoint
+  await app.register(authRefreshPlugin);
+  // Register API plugins.  Order matters for auth plugin to run before others.
   // QCM list plugin
   await app.register(qcmListPlugin);
   // QCM create plugin

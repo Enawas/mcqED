@@ -4,6 +4,45 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>QCM App</title>
+    <!--
+      Define global CSS variables for theming. The application uses a simple
+      scheme based on CSS custom properties that can be toggled via
+      data attributes on the root element. The theme switcher component
+      manipulates `data-theme` and `data-colorblind` attributes to
+      customise colours. Add your own variables as needed.
+    -->
+    <style>
+      :root {
+        /* Light theme (default) */
+        --bg-color: #ffffff;
+        --text-color: #000000;
+      }
+      /* Dark theme overrides */
+      [data-theme="dark"] {
+        --bg-color: #121212;
+        --text-color: #ffffff;
+      }
+      /* Colourblind (high contrast) overrides. We avoid conflicting with
+         dark theme; colourblind mode uses a light background and high
+         contrast. */
+      [data-colorblind="true"] {
+        --bg-color: #f5f5f5;
+        --text-color: #000000;
+      }
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        margin: 0;
+        padding: 0;
+        font-family: sans-serif;
+      }
+      /* Apply a grayscale/contrast filter to the entire page when
+         colourblind mode is active. This helps users with colour
+         vision deficiencies distinguish elements more easily. */
+      [data-colorblind="true"] body {
+        filter: grayscale(100%) contrast(1.2);
+      }
+    </style>
   </head>
   <body>
     <!--

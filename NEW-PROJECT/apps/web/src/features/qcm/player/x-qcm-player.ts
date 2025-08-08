@@ -10,6 +10,8 @@
 
 import { QcmRead, QcmPageRead } from '@packages/schemas/src/qcm';
 import { QuestionRead } from '@packages/schemas/src/question';
+// Import authenticated fetch utility to automatically attach tokens and refresh on 401
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
 
 export class XQcmPlayer extends HTMLElement {
   private shadow: ShadowRoot;
@@ -79,7 +81,7 @@ export class XQcmPlayer extends HTMLElement {
       return;
     }
     try {
-      const resp = await fetch(`http://localhost:3000/qcm/${this.qcmId}`);
+      const resp = await fetchWithAuth(`http://localhost:3000/qcm/${this.qcmId}`);
       if (!resp.ok) {
         throw new Error(`Failed to load QCM: ${resp.statusText}`);
       }

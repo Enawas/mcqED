@@ -15,6 +15,7 @@ import {
   QuestionUpdateInput,
   QuestionType,
 } from '@packages/schemas/src/question';
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
 
 interface OptionState {
   id: string;
@@ -111,7 +112,7 @@ export class XQuestionEdit extends HTMLElement {
       return;
     }
     try {
-      const resp = await fetch(`http://localhost:3000/question/${this.questionId}`);
+      const resp = await fetchWithAuth(`http://localhost:3000/question/${this.questionId}`);
       if (!resp.ok) {
         throw new Error(`Failed to load question: ${resp.statusText}`);
       }
@@ -294,7 +295,7 @@ export class XQuestionEdit extends HTMLElement {
     // If questionId is set, perform update; otherwise, perform create using pageId
     if (this.questionId) {
       try {
-        const response = await fetch(`http://localhost:3000/question/${this.questionId}`, {
+        const response = await fetchWithAuth(`http://localhost:3000/question/${this.questionId}`, {
           method: 'PATCH',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(body),
@@ -327,7 +328,7 @@ export class XQuestionEdit extends HTMLElement {
         return;
       }
       try {
-        const response = await fetch(`http://localhost:3000/page/${this.pageId}/question`, {
+        const response = await fetchWithAuth(`http://localhost:3000/page/${this.pageId}/question`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(body),

@@ -10,6 +10,7 @@
  */
 
 import { QcmRead } from '@packages/schemas/src/qcm';
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
 
 export class XQcmImport extends HTMLElement {
   private shadow: ShadowRoot;
@@ -75,13 +76,9 @@ export class XQcmImport extends HTMLElement {
     reader.onload = async () => {
       const data = reader.result?.toString() || '';
       try {
-        // Include authorization header if a token exists
-        const token = localStorage.getItem('accessToken');
-        const headers: any = { 'Content-Type': 'application/json' };
-        if (token) headers['Authorization'] = `Bearer ${token}`;
-        const response = await fetch('http://localhost:3000/qcm/import', {
+        const response = await fetchWithAuth('http://localhost:3000/qcm/import', {
           method: 'POST',
-          headers,
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ format: chosenFormat, data }),
         });
         if (!response.ok) {

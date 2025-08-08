@@ -10,6 +10,7 @@
  */
 
 import { QcmPageRead } from '@packages/schemas/src/qcm';
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
 // Register the question edit component so it can be used dynamically
 import '../question/edit/x-question-edit';
 
@@ -80,11 +81,8 @@ export class XPageEdit extends HTMLElement {
       return;
     }
     try {
-      // Include auth token if available
-      const token = localStorage.getItem('accessToken');
-      const headers: any = {};
-      if (token) headers['Authorization'] = `Bearer ${token}`;
-      const resp = await fetch(`http://localhost:3000/page/${this.pageId}`, { headers });
+      // Use fetchWithAuth to include token and handle refresh automatically
+      const resp = await fetchWithAuth(`http://localhost:3000/page/${this.pageId}`);
       if (!resp.ok) {
         throw new Error(`Failed to load page: ${resp.statusText}`);
       }
@@ -119,12 +117,9 @@ export class XPageEdit extends HTMLElement {
       return;
     }
     try {
-      const token = localStorage.getItem('accessToken');
-      const headers: any = { 'Content-Type': 'application/json' };
-      if (token) headers['Authorization'] = `Bearer ${token}`;
-      const response = await fetch(`http://localhost:3000/page/${this.pageId}`, {
+      const response = await fetchWithAuth(`http://localhost:3000/page/${this.pageId}`, {
         method: 'PATCH',
-        headers,
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name: newName }),
       });
       if (!response.ok) {
@@ -293,12 +288,8 @@ export class XPageEdit extends HTMLElement {
       return;
     }
     try {
-      const token = localStorage.getItem('accessToken');
-      const headers: any = {};
-      if (token) headers['Authorization'] = `Bearer ${token}`;
-      const resp = await fetch(`http://localhost:3000/question/${questionId}`, {
+      const resp = await fetchWithAuth(`http://localhost:3000/question/${questionId}`, {
         method: 'DELETE',
-        headers,
       });
       if (!resp.ok) {
         const msg = await resp.text();
@@ -331,12 +322,9 @@ export class XPageEdit extends HTMLElement {
       return;
     }
     try {
-      const token = localStorage.getItem('accessToken');
-      const headers: any = { 'Content-Type': 'application/json' };
-      if (token) headers['Authorization'] = `Bearer ${token}`;
-      const resp = await fetch(`http://localhost:3000/question/${questionId}/reorder`, {
+      const resp = await fetchWithAuth(`http://localhost:3000/question/${questionId}/reorder`, {
         method: 'PATCH',
-        headers,
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ direction }),
       });
       if (!resp.ok) {

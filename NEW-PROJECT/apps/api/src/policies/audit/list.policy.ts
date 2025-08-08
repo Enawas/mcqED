@@ -6,7 +6,8 @@
  */
 
 export function canListAudit(role: string): boolean {
-  // In this implementation, only 'admin' roles may view audit logs.
-  // Additional roles such as 'auditor' could be added in the future.
-  return role === 'admin';
+  // Only administrators and editors may view audit logs. Expanding
+  // access to editors facilitates debugging and monitoring while
+  // maintaining restrictions on less privileged roles.
+  return role === 'admin' || role === 'editor';
 }

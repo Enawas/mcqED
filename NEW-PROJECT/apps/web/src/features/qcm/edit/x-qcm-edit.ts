@@ -13,6 +13,8 @@
 import { QcmRead, QcmUpdateInput } from '@packages/schemas/src/qcm';
 // Import page edit component to ensure it is registered
 import '../../page/edit/x-page-edit';
+// Import fetchWithAuth utility for authenticated requests with auto-refresh
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
 
 export class XQcmEdit extends HTMLElement {
   private shadow: ShadowRoot;
@@ -31,7 +33,7 @@ export class XQcmEdit extends HTMLElement {
    */
   private async handleMovePage(pageId: string, direction: 'up' | 'down') {
     try {
-      const resp = await fetch(`http://localhost:3000/page/${pageId}/reorder`, {
+      const resp = await fetchWithAuth(`http://localhost:3000/page/${pageId}/reorder`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ direction }),
@@ -127,7 +129,9 @@ export class XQcmEdit extends HTMLElement {
       return;
     }
     try {
-      const response = await fetch(`http://localhost:3000/qcm/${this.qcmId}`);
+      const response = await fetchWithAuth(
+        `http://localhost:3000/qcm/${this.qcmId}`,
+      );
       if (!response.ok) {
         throw new Error(`Failed to load QCM: ${response.statusText}`);
       }
@@ -198,7 +202,7 @@ export class XQcmEdit extends HTMLElement {
     }
     const body = this.gatherInput();
     try {
-      const response = await fetch(`http://localhost:3000/qcm/${this.qcmId}`, {
+      const response = await fetchWithAuth(`http://localhost:3000/qcm/${this.qcmId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -348,11 +352,14 @@ export class XQcmEdit extends HTMLElement {
     const num = (this.qcm?.pages.length ?? 0) + 1;
     const defaultName = `Page ${num}`;
     try {
-      const response = await fetch(`http://localhost:3000/qcm/${this.qcmId}/page`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: defaultName }),
-      });
+      const response = await fetchWithAuth(
+        `http://localhost:3000/qcm/${this.qcmId}/page`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: defaultName }),
+        },
+      );
       if (!response.ok) {
         const msg = await response.text();
         throw new Error(`Failed to create page: ${msg}`);
@@ -382,7 +389,7 @@ export class XQcmEdit extends HTMLElement {
       return;
     }
     try {
-      const resp = await fetch(`http://localhost:3000/page/${pageId}`, {
+      const resp = await fetchWithAuth(`http://localhost:3000/page/${pageId}`, {
         method: 'DELETE',
       });
       if (!resp.ok) {

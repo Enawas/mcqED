@@ -12,6 +12,8 @@
  */
 
 import { AuditEvent } from '@packages/schemas/src/audit';
+// Import fetchWithAuth to handle auth headers and refresh tokens
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
 
 export class XAuditList extends HTMLElement {
   private shadow: ShadowRoot;
@@ -72,13 +74,9 @@ export class XAuditList extends HTMLElement {
     if (entityIdInput && entityIdInput.value.trim()) params.append('entityId', entityIdInput.value.trim());
     if (userIdInput && userIdInput.value.trim()) params.append('userId', userIdInput.value.trim());
     if (limitInput && limitInput.value.trim()) params.append('limit', limitInput.value.trim());
-    // Set up headers with token
-    const token = localStorage.getItem('accessToken');
-    const headers: any = {};
-    if (token) headers['Authorization'] = `Bearer ${token}`;
     try {
       const url = `http://localhost:3000/audit${params.toString() ? '?' + params.toString() : ''}`;
-      const resp = await fetch(url, { headers });
+      const resp = await fetchWithAuth(url);
       if (!resp.ok) {
         if (resp.status === 403) {
           throw new Error('Forbidden');

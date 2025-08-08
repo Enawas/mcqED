@@ -13,11 +13,16 @@
  */
 
 import { QcmRead } from '@packages/schemas/src/qcm';
+import { fetchWithAuth } from '../../utils/fetchWithAuth';
+import { getUserRole } from '../../utils/jwt';
 
 export class XQcmList extends HTMLElement {
   private qcms: QcmRead[] = [];
   private filtered: QcmRead[] = [];
   private shadow: ShadowRoot;
+
+  // Store the current user's role (admin/editor/user) for RBAC UI
+  private userRole: string | null = null;
 
   constructor() {
     super();
@@ -57,6 +62,8 @@ export class XQcmList extends HTMLElement {
     }
 
     // Fetch QCM data.
+    // Determine user role for RBAC (import/export buttons)
+    this.userRole = getUserRole();
     await this.loadQcms();
     this.populateIconOptions();
     this.applyFilters();
@@ -68,11 +75,7 @@ export class XQcmList extends HTMLElement {
    */
   private async loadQcms() {
     try {
-      // Include authorization header if a token exists in localStorage
-      const token = localStorage.getItem('accessToken');
-      const headers: any = {};
-      if (token) headers['Authorization'] = `Bearer ${token}`;
-      const response = await fetch('http://localhost:3000/qcm', { headers });
+      const response = await fetchWithAuth('http://localhost:3000/qcm');
       if (!response.ok) {
         throw new Error(`Failed to load QCMs: ${response.statusText}`);
       }
@@ -217,23 +220,27 @@ export class XQcmList extends HTMLElement {
       });
       actions.appendChild(favBtn);
 
-      // Export JSON button
-      const exportJsonBtn = document.createElement('button');
-      exportJsonBtn.className = 'secondary';
-      exportJsonBtn.textContent = 'Export JSON';
-      exportJsonBtn.addEventListener('click', async () => {
-        await this.exportQcm(qcm.id, 'json');
-      });
-      actions.appendChild(exportJsonBtn);
+      // Export buttons (JSON/XML) only for admin or editor roles
+      const canExport = this.userRole === 'admin' || this.userRole === 'editor';
+      if (canExport) {
+        // Export JSON button
+        const exportJsonBtn = document.createElement('button');
+        exportJsonBtn.className = 'secondary';
+        exportJsonBtn.textContent = 'Export JSON';
+        exportJsonBtn.addEventListener('click', async () => {
+          await this.exportQcm(qcm.id, 'json');
+        });
+        actions.appendChild(exportJsonBtn);
 
-      // Export XML button
-      const exportXmlBtn = document.createElement('button');
-      exportXmlBtn.className = 'secondary';
-      exportXmlBtn.textContent = 'Export XML';
-      exportXmlBtn.addEventListener('click', async () => {
-        await this.exportQcm(qcm.id, 'xml');
-      });
-      actions.appendChild(exportXmlBtn);
+        // Export XML button
+        const exportXmlBtn = document.createElement('button');
+        exportXmlBtn.className = 'secondary';
+        exportXmlBtn.textContent = 'Export XML';
+        exportXmlBtn.addEventListener('click', async () => {
+          await this.exportQcm(qcm.id, 'xml');
+        });
+        actions.appendChild(exportXmlBtn);
+      }
 
       card.appendChild(actions);
       listEl.appendChild(card);
@@ -247,12 +254,8 @@ export class XQcmList extends HTMLElement {
    */
   private async toggleFavorite(id: string) {
     try {
-      const token = localStorage.getItem('accessToken');
-      const headers: any = {};
-      if (token) headers['Authorization'] = `Bearer ${token}`;
-      const response = await fetch(`http://localhost:3000/qcm/${id}/favorite`, {
+      const response = await fetchWithAuth(`http://localhost:3000/qcm/${id}/favorite`, {
         method: 'PATCH',
-        headers,
       });
       if (!response.ok) {
         console.error('Failed to toggle favourite:', await response.text());
@@ -276,10 +279,9 @@ export class XQcmList extends HTMLElement {
    */
   private async exportQcm(id: string, format: 'json' | 'xml') {
     try {
-      const token = localStorage.getItem('accessToken');
-      const headers: any = {};
-      if (token) headers['Authorization'] = `Bearer ${token}`;
-      const response = await fetch(`http://localhost:3000/qcm/${id}/export?format=${format}`, { headers });
+      const response = await fetchWithAuth(
+        `http://localhost:3000/qcm/${id}/export?format=${format}`,
+      );
       if (!response.ok) {
         console.error('Failed to export QCM:', await response.text());
         return;

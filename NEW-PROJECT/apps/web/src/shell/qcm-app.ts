@@ -16,6 +16,11 @@ import '../features/qcm/player/x-qcm-player';
 import '../features/qcm/import/x-qcm-import';
 import '../features/auth/login/x-auth-login';
 import '../features/audit/list/x-audit-list';
+import '../features/theme/switcher/x-theme-switcher';
+
+// Import utilities for role handling and authenticated fetches
+import { getUserRole } from '../utils/jwt';
+import { fetchWithAuth } from '../utils/fetchWithAuth';
 
 export class QcmApp extends HTMLElement {
   private shadow: ShadowRoot;
@@ -27,6 +32,9 @@ export class QcmApp extends HTMLElement {
   // Track whether the user is logged in. Determined by presence of an access token.
   private loggedIn = false;
 
+  // Track the current user's role (e.g. 'admin', 'editor', 'user'). Null if not logged in
+  private userRole: string | null = null;
+
   constructor() {
     super();
     this.shadow = this.attachShadow({ mode: 'open' });
@@ -35,6 +43,8 @@ export class QcmApp extends HTMLElement {
   connectedCallback() {
     // Determine login state based on localStorage token
     this.loggedIn = !!localStorage.getItem('accessToken');
+    // Determine user role if logged in
+    this.userRole = this.loggedIn ? getUserRole() : null;
     this.render();
     this.bindEvents();
   }
@@ -48,12 +58,17 @@ export class QcmApp extends HTMLElement {
     // Render different views based on currentView. The list view
     // includes buttons for create, import and logout.
     if (this.currentView === 'list') {
+      // Only show import and audit buttons for admin or editor roles
+      const showAdmin = this.userRole === 'admin' || this.userRole === 'editor';
+      const importBtnHtml = showAdmin ? '<button id="import-button">Import QCM</button>' : '';
+      const auditBtnHtml = showAdmin ? '<button id="audit-button">Audit Logs</button>' : '';
       this.shadow.innerHTML = `
         <div class="toolbar">
           <button id="create-button">Create QCM</button>
-          <button id="import-button">Import QCM</button>
-          <button id="audit-button">Audit Logs</button>
+          ${importBtnHtml}
+          ${auditBtnHtml}
           <button id="logout-button">Logout</button>
+          <x-theme-switcher></x-theme-switcher>
         </div>
         <x-qcm-list></x-qcm-list>
       `;
@@ -84,6 +99,8 @@ export class QcmApp extends HTMLElement {
       if (loginComp) {
         loginComp.addEventListener('login-success', () => {
           this.loggedIn = true;
+          // Determine and store the user role after successful login
+          this.userRole = getUserRole();
           this.currentView = 'list';
           this.render();
           this.bindEvents();
@@ -128,6 +145,7 @@ export class QcmApp extends HTMLElement {
           localStorage.removeItem('accessToken');
           localStorage.removeItem('refreshToken');
           this.loggedIn = false;
+          this.userRole = null;
           this.currentView = 'list';
           this.render();
           this.bindEvents();
@@ -192,15 +210,12 @@ export class QcmApp extends HTMLElement {
           const qcmId = detail.qcmId;
           const score = detail.score;
           const elapsedSeconds = detail.elapsedSeconds;
-          // Update stats with auth header
+          // Update stats; use fetchWithAuth to include token and refresh if needed
           if (qcmId) {
             try {
-              const token = localStorage.getItem('accessToken');
-              const headers: any = { 'Content-Type': 'application/json' };
-              if (token) headers['Authorization'] = `Bearer ${token}`;
-              await fetch(`http://localhost:3000/qcm/${qcmId}/stats`, {
+              await fetchWithAuth(`http://localhost:3000/qcm/${qcmId}/stats`, {
                 method: 'PATCH',
-                headers,
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ score, time: elapsedSeconds }),
               });
             } catch (err) {
