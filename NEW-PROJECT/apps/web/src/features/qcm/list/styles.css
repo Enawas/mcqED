@@ -1,0 +1,80 @@
+/* 
+ * Purpose: Scoped styles for the QCM list Web Component. Provides basic
+ * layout and appearance for filters, statistics, and list cards. 
+ */
+
+:host {
+  display: block;
+  padding: 1rem;
+  font-family: sans-serif;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.filters input,
+.filters select {
+  padding: 0.3rem 0.5rem;
+  font-size: 1rem;
+}
+
+.stats {
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.stats span {
+  margin-right: 1rem;
+}
+
+.list .qcm-card {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  background-color: #fafafa;
+}
+
+.list .qcm-card h3 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.1rem;
+}
+
+.list .qcm-card p {
+  margin: 0.15rem 0;
+  font-size: 0.9rem;
+}
+
+.list .actions {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.list .actions button {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.85rem;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.list .actions button.primary {
+  background-color: #2c7be5;
+  color: white;
+}
+
+.list .actions button.secondary {
+  background-color: #e9ecef;
+  color: #212529;
+}
+
+.list .actions button.danger {
+  background-color: #dc3545;
+  color: white;
+}

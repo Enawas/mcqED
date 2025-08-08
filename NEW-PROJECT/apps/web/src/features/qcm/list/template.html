@@ -1,0 +1,23 @@
+<!--
+  Purpose: Markup template for the QCM list Web Component. Defines the
+  structure of the filters, statistics area, and list container. This file
+  contains no logic; the corresponding TypeScript module handles data binding.
+  Inputs: None.
+  Outputs: None (static markup).
+  Events: None.
+  Errors: None.
+-->
+<div class="filters">
+  <input id="search" type="text" placeholder="Search..." />
+  <select id="difficulty">
+    <option value="">All difficulties</option>
+    <option value="beginner">Beginner</option>
+    <option value="intermediate">Intermediate</option>
+    <option value="advanced">Advanced</option>
+  </select>
+  <select id="icon">
+    <option value="">All icons</option>
+  </select>
+</div>
+<div id="stats" class="stats"></div>
+<div id="qcm-list" class="list"></div>

@@ -6,5 +6,10 @@
  * Events: None.
  * Errors: None.
  */
-import './router';
-// TODO: register global design-system components and mount root component.
+import './shell/qcm-app';
+
+/**
+ * Bootstraps the web application by registering the root component.
+ * In future iterations this file can configure providers, theming,
+ * and other global services.
+ */
