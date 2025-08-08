@@ -14,6 +14,10 @@
 
 import { randomUUID } from 'crypto';
 import { QcmCreateInput, QcmRead, QcmPageRead } from '@packages/schemas/src/qcm';
+import { db } from '../../db';
+import { qcm as qcmTable } from '@packages/db/src/schema/qcm';
+import { qcmPage } from '@packages/db/src/schema/page';
+import { question as questionTable } from '@packages/db/src/schema/question';
 
 /**
  * Helper to create a deep copy of pages with generated IDs for the page
@@ -41,10 +45,11 @@ function transformPages(pages: QcmCreateInput['pages']): QcmPageRead[] {
 }
 
 export async function createQcm(input: QcmCreateInput): Promise<QcmRead> {
-  const now = new Date().toISOString();
+  // Generate identifiers and timestamps
+  const now = new Date();
   const qcmId = randomUUID();
-  const pages = transformPages(input.pages);
-  return {
+  // Persist the QCM to the database. Nullable values are inserted as undefined
+  await db.insert(qcmTable).values({
     id: qcmId,
     title: input.title,
     description: input.description,
@@ -53,9 +58,64 @@ export async function createQcm(input: QcmCreateInput): Promise<QcmRead> {
     difficultyLevel: input.difficultyLevel,
     passingThreshold: input.passingThreshold,
     createdAt: now,
+    lastScore: null,
+    lastTime: null,
+    isFavorite: false,
+  });
+  // Insert pages and questions
+  const pageResults: QcmPageRead[] = [];
+  const pages = input.pages ?? [];
+  let position = 0;
+  for (const page of pages) {
+    position += 1;
+    const pageId = randomUUID();
+    await db.insert(qcmPage).values({
+      id: pageId,
+      qcmId,
+      name: page.name,
+      position,
+    });
+    const questionReads = [] as QcmPageRead['questions'];
+    for (const q of page.questions) {
+      const questionId = randomUUID();
+      await db.insert(questionTable).values({
+        id: questionId,
+        qcmId,
+        pageId,
+        text: q.text,
+        type: q.type,
+        options: q.options,
+        correctAnswers: q.correctAnswers,
+        explanation: q.explanation,
+      });
+      questionReads.push({
+        id: questionId,
+        text: q.text,
+        type: q.type,
+        options: q.options,
+        correctAnswers: q.correctAnswers,
+        explanation: q.explanation,
+      });
+    }
+    pageResults.push({
+      id: pageId,
+      name: page.name,
+      questions: questionReads,
+    });
+  }
+  // Assemble and return the QCM read object with persisted pages
+  return {
+    id: qcmId,
+    title: input.title,
+    description: input.description,
+    iconClass: input.iconClass,
+    status: input.status ?? 'draft',
+    difficultyLevel: input.difficultyLevel,
+    passingThreshold: input.passingThreshold,
+    createdAt: now.toISOString(),
     lastScore: undefined,
     lastTime: undefined,
     isFavorite: false,
-    pages,
+    pages: pageResults,
   };
 }
