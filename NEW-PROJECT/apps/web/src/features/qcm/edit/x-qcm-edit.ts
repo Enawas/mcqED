@@ -15,6 +15,8 @@ import { QcmRead, QcmUpdateInput } from '@packages/schemas/src/qcm';
 import '../../page/edit/x-page-edit';
 // Import fetchWithAuth utility for authenticated requests with auto-refresh
 import { fetchWithAuth } from '../../utils/fetchWithAuth';
+// Import helper to decode the user's role from the JWT
+import { getUserRole } from '../../utils/jwt';
 
 export class XQcmEdit extends HTMLElement {
   private shadow: ShadowRoot;
@@ -24,6 +26,9 @@ export class XQcmEdit extends HTMLElement {
   // Track the page being edited, if any. When not null, the page
   // edit component is displayed instead of the pages list.
   private editingPageId: string | null = null;
+
+  // Flag indicating whether the current user is allowed to edit pages.
+  private canEdit: boolean = false;
 
   /**
    * Moves a page up or down in the order. Sends a PATCH request to the
@@ -99,11 +104,19 @@ export class XQcmEdit extends HTMLElement {
       fetch(new URL('./styles.css', import.meta.url)).then((res) => res.text()),
     ]);
     this.shadow.innerHTML = `<style>${styleCss}</style>${templateHtml}`;
+
+    // Determine if the user has editing rights based on their role
+    const role = getUserRole();
+    this.canEdit = role === 'admin' || role === 'editor';
     // Bind button click handlers
     const saveBtn = this.shadow.getElementById('save') as HTMLButtonElement | null;
     const cancelBtn = this.shadow.getElementById('cancel') as HTMLButtonElement | null;
     if (saveBtn) {
       saveBtn.addEventListener('click', () => this.handleSave());
+      // Hide the save button if the user is not permitted to edit
+      if (!this.canEdit) {
+        saveBtn.style.display = 'none';
+      }
     }
     if (cancelBtn) {
       cancelBtn.addEventListener('click', () => this.handleCancel());
@@ -112,6 +125,10 @@ export class XQcmEdit extends HTMLElement {
     const addPageBtn = this.shadow.getElementById('addPage') as HTMLButtonElement | null;
     if (addPageBtn) {
       addPageBtn.addEventListener('click', () => this.handleAddPage());
+      // Hide the add page button for unauthorized users
+      if (!this.canEdit) {
+        addPageBtn.style.display = 'none';
+      }
     }
     // Attempt to load QCM if ID is already provided
     await this.loadQcm();
@@ -256,46 +273,48 @@ export class XQcmEdit extends HTMLElement {
       nameSpan.className = 'page-name';
       nameSpan.textContent = page.name;
       row.appendChild(nameSpan);
-      // Container for action buttons (move up/down, rename, delete)
-      const actionsContainer = document.createElement('div');
-      actionsContainer.className = 'page-actions';
-      // Move up button (disabled for first)
-      const upBtn = document.createElement('button');
-      upBtn.className = 'move-up-button';
-      upBtn.textContent = '↑';
-      upBtn.disabled = index === 0;
-      upBtn.addEventListener('click', () => {
-        this.handleMovePage(page.id, 'up');
-      });
-      actionsContainer.appendChild(upBtn);
-      // Move down button (disabled for last)
-      const downBtn = document.createElement('button');
-      downBtn.className = 'move-down-button';
-      downBtn.textContent = '↓';
-      downBtn.disabled = index === pages.length - 1;
-      downBtn.addEventListener('click', () => {
-        this.handleMovePage(page.id, 'down');
-      });
-      actionsContainer.appendChild(downBtn);
-      // Rename button
-      const renameBtn = document.createElement('button');
-      renameBtn.className = 'rename-button';
-      renameBtn.textContent = 'Rename';
-      renameBtn.addEventListener('click', () => {
-        this.editingPageId = page.id;
-        this.renderPagesList();
-        this.renderPageEditor();
-      });
-      actionsContainer.appendChild(renameBtn);
-      // Delete button
-      const deleteBtn = document.createElement('button');
-      deleteBtn.className = 'delete-button';
-      deleteBtn.textContent = 'Delete';
-      deleteBtn.addEventListener('click', () => {
-        this.handleDeletePage(page.id);
-      });
-      actionsContainer.appendChild(deleteBtn);
-      row.appendChild(actionsContainer);
+      if (this.canEdit) {
+        // Container for action buttons (move up/down, rename, delete)
+        const actionsContainer = document.createElement('div');
+        actionsContainer.className = 'page-actions';
+        // Move up button (disabled for first)
+        const upBtn = document.createElement('button');
+        upBtn.className = 'move-up-button';
+        upBtn.textContent = '↑';
+        upBtn.disabled = index === 0;
+        upBtn.addEventListener('click', () => {
+          this.handleMovePage(page.id, 'up');
+        });
+        actionsContainer.appendChild(upBtn);
+        // Move down button (disabled for last)
+        const downBtn = document.createElement('button');
+        downBtn.className = 'move-down-button';
+        downBtn.textContent = '↓';
+        downBtn.disabled = index === pages.length - 1;
+        downBtn.addEventListener('click', () => {
+          this.handleMovePage(page.id, 'down');
+        });
+        actionsContainer.appendChild(downBtn);
+        // Rename button
+        const renameBtn = document.createElement('button');
+        renameBtn.className = 'rename-button';
+        renameBtn.textContent = 'Rename';
+        renameBtn.addEventListener('click', () => {
+          this.editingPageId = page.id;
+          this.renderPagesList();
+          this.renderPageEditor();
+        });
+        actionsContainer.appendChild(renameBtn);
+        // Delete button
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'delete-button';
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.addEventListener('click', () => {
+          this.handleDeletePage(page.id);
+        });
+        actionsContainer.appendChild(deleteBtn);
+        row.appendChild(actionsContainer);
+      }
       listContainer.appendChild(row);
     });
   }

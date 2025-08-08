@@ -203,13 +203,17 @@ export class XQcmList extends HTMLElement {
       actions.appendChild(launchBtn);
 
       // Edit button
-      const editBtn = document.createElement('button');
-      editBtn.className = 'secondary';
-      editBtn.textContent = 'Edit';
-      editBtn.addEventListener('click', () => {
-        this.dispatchEvent(new CustomEvent('qcm-edit', { detail: { id: qcm.id } }));
-      });
-      actions.appendChild(editBtn);
+      // Only show edit button for admin or editor roles
+      const canEdit = this.userRole === 'admin' || this.userRole === 'editor';
+      if (canEdit) {
+        const editBtn = document.createElement('button');
+        editBtn.className = 'secondary';
+        editBtn.textContent = 'Edit';
+        editBtn.addEventListener('click', () => {
+          this.dispatchEvent(new CustomEvent('qcm-edit', { detail: { id: qcm.id } }));
+        });
+        actions.appendChild(editBtn);
+      }
 
       // Favourite toggle button
       const favBtn = document.createElement('button');

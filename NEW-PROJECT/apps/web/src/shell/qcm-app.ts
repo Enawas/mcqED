@@ -62,9 +62,14 @@ export class QcmApp extends HTMLElement {
       const showAdmin = this.userRole === 'admin' || this.userRole === 'editor';
       const importBtnHtml = showAdmin ? '<button id="import-button">Import QCM</button>' : '';
       const auditBtnHtml = showAdmin ? '<button id="audit-button">Audit Logs</button>' : '';
+      // Only allow creating new QCMs for users with editing rights
+      const showCreate = showAdmin;
+      const createBtnHtml = showCreate
+        ? '<button id="create-button">Create QCM</button>'
+        : '';
       this.shadow.innerHTML = `
         <div class="toolbar">
-          <button id="create-button">Create QCM</button>
+          ${createBtnHtml}
           ${importBtnHtml}
           ${auditBtnHtml}
           <button id="logout-button">Logout</button>

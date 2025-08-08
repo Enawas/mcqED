@@ -11,6 +11,7 @@
 
 import { QcmPageRead } from '@packages/schemas/src/qcm';
 import { fetchWithAuth } from '../../utils/fetchWithAuth';
+import { getUserRole } from '../../utils/jwt';
 // Register the question edit component so it can be used dynamically
 import '../question/edit/x-question-edit';
 
@@ -26,6 +27,9 @@ export class XPageEdit extends HTMLElement {
   // Flag indicating that a new question is being created. When true, the
   // question editor is shown without an existing question-id.
   private creatingQuestion: boolean = false;
+
+  // Flag to determine if the user may edit this page and its questions
+  private canEdit: boolean = false;
 
   constructor() {
     super();
@@ -59,14 +63,30 @@ export class XPageEdit extends HTMLElement {
       fetch(new URL('./styles.css', import.meta.url)).then((res) => res.text()),
     ]);
     this.shadow.innerHTML = `<style>${styleCss}</style>${templateHtml}`;
+
+    // Determine if the user has editing rights based on their role
+    const role = getUserRole();
+    this.canEdit = role === 'admin' || role === 'editor';
     // Bind buttons
     const saveBtn = this.shadow.getElementById('save') as HTMLButtonElement | null;
-    if (saveBtn) saveBtn.addEventListener('click', () => this.handleSave());
+    if (saveBtn) {
+      saveBtn.addEventListener('click', () => this.handleSave());
+      // Hide the save button for unauthorized users
+      if (!this.canEdit) {
+        saveBtn.style.display = 'none';
+      }
+    }
     const cancelBtn = this.shadow.getElementById('cancel') as HTMLButtonElement | null;
     if (cancelBtn) cancelBtn.addEventListener('click', () => this.handleCancel());
     // Bind add question button
     const addBtn = this.shadow.getElementById('addQuestion') as HTMLButtonElement | null;
-    if (addBtn) addBtn.addEventListener('click', () => this.handleAddQuestion());
+    if (addBtn) {
+      addBtn.addEventListener('click', () => this.handleAddQuestion());
+      // Hide the add question button if the user cannot edit
+      if (!this.canEdit) {
+        addBtn.style.display = 'none';
+      }
+    }
     // Load page if ID provided
     await this.loadPage();
   }
@@ -171,48 +191,50 @@ export class XPageEdit extends HTMLElement {
       textSpan.className = 'question-text';
       textSpan.textContent = question.text;
       row.appendChild(textSpan);
-      // Actions container
-      const actionsDiv = document.createElement('div');
-      actionsDiv.className = 'question-actions';
-      // Move up button
-      const upBtn = document.createElement('button');
-      upBtn.className = 'move-up-question-button';
-      upBtn.textContent = '↑';
-      upBtn.disabled = index === 0;
-      upBtn.addEventListener('click', () => {
-        this.handleMoveQuestion(question.id, 'up');
-      });
-      actionsDiv.appendChild(upBtn);
-      // Move down button
-      const downBtn = document.createElement('button');
-      downBtn.className = 'move-down-question-button';
-      downBtn.textContent = '↓';
-      downBtn.disabled = index === questions.length - 1;
-      downBtn.addEventListener('click', () => {
-        this.handleMoveQuestion(question.id, 'down');
-      });
-      actionsDiv.appendChild(downBtn);
-      // Edit button
-      const editBtn = document.createElement('button');
-      editBtn.className = 'edit-question-button';
-      editBtn.textContent = 'Edit';
-      editBtn.addEventListener('click', () => {
-        this.editingQuestionId = question.id;
-        this.creatingQuestion = false;
-        this.renderQuestionsList();
-        this.renderQuestionEditor();
-      });
-      actionsDiv.appendChild(editBtn);
-      // Delete button
-      const delBtn = document.createElement('button');
-      delBtn.className = 'delete-question-button';
-      delBtn.textContent = 'Delete';
-      delBtn.addEventListener('click', () => {
-        this.handleDeleteQuestion(question.id);
-      });
-      actionsDiv.appendChild(delBtn);
-      // Append actions container
-      row.appendChild(actionsDiv);
+      if (this.canEdit) {
+        // Actions container
+        const actionsDiv = document.createElement('div');
+        actionsDiv.className = 'question-actions';
+        // Move up button
+        const upBtn = document.createElement('button');
+        upBtn.className = 'move-up-question-button';
+        upBtn.textContent = '↑';
+        upBtn.disabled = index === 0;
+        upBtn.addEventListener('click', () => {
+          this.handleMoveQuestion(question.id, 'up');
+        });
+        actionsDiv.appendChild(upBtn);
+        // Move down button
+        const downBtn = document.createElement('button');
+        downBtn.className = 'move-down-question-button';
+        downBtn.textContent = '↓';
+        downBtn.disabled = index === questions.length - 1;
+        downBtn.addEventListener('click', () => {
+          this.handleMoveQuestion(question.id, 'down');
+        });
+        actionsDiv.appendChild(downBtn);
+        // Edit button
+        const editBtn = document.createElement('button');
+        editBtn.className = 'edit-question-button';
+        editBtn.textContent = 'Edit';
+        editBtn.addEventListener('click', () => {
+          this.editingQuestionId = question.id;
+          this.creatingQuestion = false;
+          this.renderQuestionsList();
+          this.renderQuestionEditor();
+        });
+        actionsDiv.appendChild(editBtn);
+        // Delete button
+        const delBtn = document.createElement('button');
+        delBtn.className = 'delete-question-button';
+        delBtn.textContent = 'Delete';
+        delBtn.addEventListener('click', () => {
+          this.handleDeleteQuestion(question.id);
+        });
+        actionsDiv.appendChild(delBtn);
+        // Append actions container
+        row.appendChild(actionsDiv);
+      }
       listContainer.appendChild(row);
     });
   }
@@ -227,6 +249,10 @@ export class XPageEdit extends HTMLElement {
     container.innerHTML = '';
     if (!this.pageId) return;
     if (!this.editingQuestionId && !this.creatingQuestion) {
+      return;
+    }
+    // Do not display question editor if the user cannot edit
+    if (!this.canEdit) {
       return;
     }
     const questionEdit = document.createElement('x-question-edit');
@@ -273,6 +299,8 @@ export class XPageEdit extends HTMLElement {
    * rendering of the question editor.
    */
   private handleAddQuestion() {
+    // Only allow adding a question if user can edit
+    if (!this.canEdit) return;
     this.creatingQuestion = true;
     this.editingQuestionId = null;
     this.renderQuestionsList();
@@ -284,6 +312,7 @@ export class XPageEdit extends HTMLElement {
    * the API call, updates local state and re-renders.
    */
   private async handleDeleteQuestion(questionId: string) {
+    if (!this.canEdit) return;
     if (!confirm('Are you sure you want to delete this question?')) {
       return;
     }
@@ -319,6 +348,10 @@ export class XPageEdit extends HTMLElement {
   private async handleMoveQuestion(questionId: string, direction: 'up' | 'down') {
     const errorEl = this.shadow.getElementById('error');
     if (!questionId || !direction) {
+      return;
+    }
+    // Do not allow reordering if user cannot edit
+    if (!this.canEdit) {
       return;
     }
     try {
