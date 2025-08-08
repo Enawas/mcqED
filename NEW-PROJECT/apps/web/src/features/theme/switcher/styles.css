@@ -1,0 +1,29 @@
+/*
+ * Purpose: Scoped styles for the Theme Switcher component. The
+ * switcher is displayed inline with other toolbar elements and
+ * contains two toggles with labels. Styles are encapsulated in
+ * Shadow DOM to prevent leakage.
+ */
+:host {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.theme-switcher {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.toggle input {
+  margin: 0;
+}
