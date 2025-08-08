@@ -1,0 +1,34 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "pSQL-Conn",
+            "database": "mcqED",
+            "username": "admin-mcq",
+            "password": "Eve2024!*!2025!*!"
+        },
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "psqlconn",
+            "database": "mcqed",
+            "username": "adminmcq",
+            "password": "Eve2024!*!2025!*!"
+        },
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "psqlconn",
+            "database": "mcqed_db",
+            "username": "mcqed_user",
+            "password": "Eve2024!*!2025!*!"
+        }
+    ]
+}

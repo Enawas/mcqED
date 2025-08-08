@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Administrateur - MCQED</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="dark-mode.css">
+    <script src="theme-init.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: #f8f9fa;
+            color: #374151;
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            background: #f1f3f4;
+        }
+        
+        .sidebar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea !important;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .sidebar-brand:hover {
+            color: #667eea !important;
+            text-decoration: none;
+        }
+        
+        .sidebar-user {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            background: #f1f3f4;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        
+        .user-info i {
+            font-size: 1.2rem;
+            color: #667eea;
+        }
+        
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+        
+        .nav-section {
+            margin-bottom: 2rem;
+        }
+        
+        .nav-section-title {
+            padding: 0.5rem 1.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #9ca3af;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .nav-item {
+            margin: 0;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #6b7280;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .nav-link:hover {
+            background: #f3f4f6;
+            color: #374151;
+            text-decoration: none;
+            border-left-color: #667eea;
+        }
+        
+        .nav-item.active .nav-link {
+            background: #667eea;
+            color: #ffffff;
+            border-left-color: #ffffff;
+        }
+        
+        /* Style spécial pour le bouton Favoris quand il est actif */
+        .nav-item.active .nav-link[onclick*="toggleFavoritesView"] {
+            background: #dc2626 !important;
+            color: #ffffff !important;
+            border-left-color: #ffffff !important;
+        }
+        
+        .nav-item.active .nav-link[onclick*="toggleFavoritesView"] i {
+            color: #ffffff !important;
+        }
+        
+        .nav-link i {
+            width: 20px;
+            text-align: center;
+            font-size: 1rem;
+        }
+        
+        .nav-link span {
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .nav-link.text-danger {
+            color: #dc2626 !important;
+        }
+        
+        .nav-link.text-danger:hover {
+            background: #fef2f2;
+            color: #dc2626 !important;
+        }
+        
+        /* Mode sombre pour la sidebar */
+        [data-theme="dark"] .sidebar {
+            background: #1a1a1a;
+            color: #ffffff;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        [data-theme="dark"] .sidebar-header {
+            border-bottom: 1px solid #333;
+            background: #111;
+        }
+        
+        [data-theme="dark"] .sidebar-user {
+            border-bottom: 1px solid #333;
+            background: #222;
+        }
+        
+        [data-theme="dark"] .user-info {
+            color: #ccc;
+        }
+        
+        [data-theme="dark"] .nav-section-title {
+            color: #888;
+        }
+        
+        [data-theme="dark"] .nav-link {
+            color: #ccc;
+        }
+        
+        [data-theme="dark"] .nav-link:hover {
+            background: #333;
+            color: #ffffff;
+        }
+        
+        [data-theme="dark"] .nav-link.text-danger {
+            color: #ff6b6b !important;
+        }
+        
+        [data-theme="dark"] .nav-link.text-danger:hover {
+            background: #4a1a1a;
+            color: #ff6b6b !important;
+        }
+        
+        /* Styles pour le sous-menu Mon compte */
+        .nav-item.has-submenu {
+            position: relative;
+        }
+        
+        .nav-item.has-submenu .nav-link {
+            cursor: pointer;
+        }
+        
+        .nav-item.has-submenu .nav-link::after {
+            content: '\f107';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-left: auto;
+            transition: transform 0.2s ease;
+        }
+        
+        .nav-item.has-submenu.open .nav-link::after {
+            transform: rotate(180deg);
+        }
+        
+        .submenu {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            background: #f8f9fa;
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.3s ease;
+        }
+        
+        .nav-item.has-submenu.open .submenu {
+            max-height: 200px;
+        }
+        
+        .submenu .nav-link {
+            padding-left: 3rem;
+            font-size: 0.85rem;
+            border-left: none;
+        }
+        
+        .submenu .nav-link:hover {
+            background: #e9ecef;
+            border-left: none;
+        }
+        
+        /* Supprimer l'icône flèche des éléments du sous-menu */
+        .submenu .nav-link::after {
+            display: none !important;
+        }
+        
+        /* Mode sombre pour le sous-menu */
+        [data-theme="dark"] .submenu {
+            background: #1a1a1a;
+        }
+        
+        [data-theme="dark"] .submenu .nav-link:hover {
+            background: #333;
+        }
+        
+        /* Mode daltonien */
+        [data-colorblind="enabled"] {
+            filter: grayscale(100%) contrast(120%);
+        }
+        
+        [data-colorblind="enabled"] .btn-primary,
+        [data-colorblind="enabled"] .btn-success,
+        [data-colorblind="enabled"] .btn-danger,
+        [data-colorblind="enabled"] .btn-warning,
+        [data-colorblind="enabled"] .btn-info {
+            filter: grayscale(0%) contrast(150%);
+        }
+        
+        [data-colorblind="enabled"] .nav-item.active .nav-link {
+            background: #000000 !important;
+            color: #ffffff !important;
+        }
+        
+        .main-container {
+            padding-top: 20px;
+            min-height: calc(100vh - 20px);
+            margin-left: 280px;
+        }
+        .profile-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            margin: 20px 0;
+        }
+        .section-title {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+        }
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: white !important;
+        }
+        
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(230, 126, 34, 0.4);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220, 53, 69, 0.4);
+        }
+        .password-toggle {
+            cursor: pointer;
+            color: #6c757d;
+        }
+        .password-toggle:hover {
+            color: #667eea;
+        }
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+        .info-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .info-card i {
+            color: #667eea;
+            margin-right: 10px;
+        }
+        
+        /* Styles pour les sections de sécurité */
+        .security-section {
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .deletion-section {
+            background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+            border-color: #feb2b2;
+        }
+        
+        .deletion-section:hover {
+            border-color: #fc8181;
+            box-shadow: 0 5px 15px rgba(252, 129, 129, 0.2);
+        }
+        
+        .session-section {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border-color: #7dd3fc;
+        }
+        
+        .session-section:hover {
+            border-color: #38bdf8;
+            box-shadow: 0 5px 15px rgba(56, 189, 248, 0.2);
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .section-header h5 {
+            margin: 0;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .deletion-badge {
+            background: #fecaca;
+            color: #dc2626;
+            border: 1px solid #fca5a5;
+        }
+        
+        .session-badge {
+            background: #dbeafe;
+            color: #2563eb;
+            border: 1px solid #93c5fd;
+        }
+        
+        /* Styles pour les icônes dans les sections */
+        .deletion-section .form-text i {
+            color: #dc2626;
+        }
+        
+        .session-section .form-text i {
+            color: #2563eb;
+        }
+        
+        /* Styles pour les labels dans les sections */
+        .deletion-section label {
+            color: #991b1b;
+            font-weight: 600;
+        }
+        
+        .session-section label {
+            color: #1e40af;
+            font-weight: 600;
+        }
+        
+        /* Styles pour les sections pliables */
+        .collapsible-section {
+            margin-bottom: 20px;
+        }
+        
+        .section-header-clickable {
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            margin-bottom: 20px;
+        }
+        
+        .section-header-clickable:hover {
+            background: #e9ecef;
+            border-color: #667eea;
+        }
+        
+        .section-header-clickable h4 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: #667eea;
+            font-weight: 600;
+        }
+        
+        .section-header-clickable .toggle-icon {
+            transition: transform 0.3s ease;
+            color: #667eea;
+        }
+        
+        .section-header-clickable.collapsed .toggle-icon {
+            transform: rotate(-90deg);
+        }
+        
+        .section-content {
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            max-height: 2000px;
+            opacity: 1;
+        }
+        
+        .section-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+            padding: 0;
+            margin: 0;
+        }
+        
+        /* Mode sombre pour les sections pliables */
+        [data-theme="dark"] .section-header-clickable {
+            background: #2d3748;
+            border-color: #4a5568;
+            color: #e2e8f0;
+        }
+        
+        [data-theme="dark"] .section-header-clickable:hover {
+            background: #4a5568;
+            border-color: #667eea;
+        }
+        
+        [data-theme="dark"] .section-header-clickable h4 {
+            color: #e2e8f0;
+        }
+        
+        /* Styles pour la barre de sécurité du mot de passe */
+        .password-strength {
+            margin-top: 10px;
+        }
+        
+        .strength-bar {
+            height: 8px;
+            border-radius: 4px;
+            background: #e9ecef;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+        
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+        }
+        
+        .strength-weak {
+            background: #dc3545;
+            width: 25%;
+        }
+        
+        .strength-fair {
+            background: #ffc107;
+            width: 50%;
+        }
+        
+        .strength-good {
+            background: #17a2b8;
+            width: 75%;
+        }
+        
+        .strength-strong {
+            background: #28a745;
+            width: 100%;
+        }
+        
+        .strength-text {
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .strength-weak-text {
+            color: #dc3545;
+        }
+        
+        .strength-fair-text {
+            color: #ffc107;
+        }
+        
+        .strength-good-text {
+            color: #17a2b8;
+        }
+        
+        .strength-strong-text {
+            color: #28a745;
+        }
+        
+        .strength-requirements {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        
+        .requirement {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-bottom: 2px;
+        }
+        
+        .requirement i {
+            font-size: 0.7rem;
+        }
+        
+        .requirement.met {
+            color: #28a745;
+        }
+        
+        .requirement.not-met {
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <a class="sidebar-brand" href="#">
+                <i class="fas fa-graduation-cap"></i> mcqED
+            </a>
+        </div>
+        
+        <div class="sidebar-user">
+            <div class="user-info">
+                <i class="fas fa-user-circle"></i>
+                <span id="username-display">Utilisateur</span>
+            </div>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <ul class="nav-list">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="favorites.html" class="nav-link">
+                        <i class="fas fa-heart"></i>
+                        <span>Favoris</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Outils</div>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="import.html" class="nav-link">
+                            <i class="fas fa-upload"></i>
+                            <span>Importer</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="question-editor.html" class="nav-link">
+                            <i class="fas fa-edit"></i>
+                            <span>Éditeur</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Système</div>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="password-generator.html" class="nav-link">
+                            <i class="fas fa-key"></i>
+                            <span>Générateur</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="diagnostic-login.html" class="nav-link">
+                            <i class="fas fa-stethoscope"></i>
+                            <span>Diagnostic</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="debug-login.html" class="nav-link">
+                            <i class="fas fa-bug"></i>
+                            <span>Debug</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="nav-section">
+                <div class="nav-section-title">Apparence</div>
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="toggleDarkMode()">
+                            <i class="fas fa-moon"></i>
+                            <span>Mode sombre</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link" onclick="toggleColorblindMode()">
+                            <i class="fas fa-eye"></i>
+                            <span>Mode daltonien</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="nav-section" style="margin-top: auto;">
+                <ul class="nav-list">
+                    <li class="nav-item has-submenu">
+                        <a href="#" class="nav-link" onclick="toggleSubmenu(this)">
+                            <i class="fas fa-user"></i>
+                            <span>Mon compte</span>
+                        </a>
+                        <ul class="submenu">
+                            <li class="nav-item active">
+                                <a href="admin-profile.html" class="nav-link">
+                                    <i class="fas fa-user-shield"></i>
+                                    <span>Profil administrateur</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link text-danger" onclick="logout()">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Déconnexion</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <div class="main-container">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="profile-card">
+                        <!-- Section Informations (toujours visible) -->
+                        <div class="info-card">
+                            <h5><i class="fas fa-info-circle"></i> Informations</h5>
+                            <p class="mb-1"><strong>Nom d'utilisateur :</strong> <span id="admin-username">admin</span></p>
+                            <p class="mb-1"><strong>Rôle :</strong> Administrateur</p>
+                            <p class="mb-0"><strong>Dernière connexion :</strong> <span id="last-login">-</span></p>
+                        </div>
+
+                        <!-- Section Configuration de Sécurité (pliable) -->
+                        <div class="collapsible-section">
+                            <div class="section-header-clickable" onclick="toggleSection('security-section')">
+                                <h4>
+                                    <span><i class="fas fa-shield-alt"></i> Configuration de Sécurité</span>
+                                    <i class="fas fa-chevron-down toggle-icon"></i>
+                                </h4>
+                            </div>
+                            <div class="section-content" id="security-section">
+                        
+                        <form id="security-form">
+                            
+
+                            <!-- Section Mot de passe de session -->
+                            <div class="security-section session-section">
+                                <div class="section-header">
+                                    <h5><i class="fas fa-user-lock text-primary"></i> Mot de passe de session</h5>
+                                    <div class="section-badge session-badge">
+                                        <i class="fas fa-sign-in-alt"></i> Connexion
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="current-password">
+                                        <i class="fas fa-key"></i> Mot de passe actuel
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" id="current-password" 
+                                               placeholder="Entrez votre mot de passe actuel">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text password-toggle" onclick="togglePassword('current-password', 'current-password-icon')">
+                                                <i class="fas fa-eye" id="current-password-icon"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <small class="form-text text-muted">
+                                        <i class="fas fa-info-circle"></i> Requis pour confirmer le changement de mot de passe.
+                                    </small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="login-password">
+                                        <i class="fas fa-lock"></i> Nouveau mot de passe de connexion
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" id="login-password" 
+                                               placeholder="Entrez le nouveau mot de passe">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text password-toggle" onclick="togglePassword('login-password', 'login-password-icon')">
+                                                <i class="fas fa-eye" id="login-password-icon"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <small class="form-text text-muted">
+                                        <i class="fas fa-info-circle"></i> Laissez vide si vous ne souhaitez pas modifier le mot de passe de connexion.
+                                    </small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="confirm-password">
+                                        <i class="fas fa-check-circle"></i> Confirmer le nouveau mot de passe
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="password" class="form-control" id="confirm-password" 
+                                               placeholder="Confirmez le nouveau mot de passe">
+                                        <div class="input-group-append">
+                                            <span class="input-group-text password-toggle" onclick="togglePassword('confirm-password', 'confirm-password-icon')">
+                                                <i class="fas fa-eye" id="confirm-password-icon"></i>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <small class="form-text text-muted">
+                                        <i class="fas fa-info-circle"></i> Entrez à nouveau le nouveau mot de passe pour confirmation.
+                                    </small>
+                                </div>
+                            </div>
+
+                            <!-- Paramètres de sécurité -->
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="max-attempts">
+                                            <i class="fas fa-ban"></i> Tentatives de connexion max
+                                        </label>
+                                        <input type="number" class="form-control" id="max-attempts" 
+                                               min="1" max="10" value="3">
+                                        <small class="form-text text-muted">
+                                            Nombre de tentatives avant verrouillage du compte.
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="lockout-duration">
+                                            <i class="fas fa-clock"></i> Durée de verrouillage (minutes)
+                                        </label>
+                                        <input type="number" class="form-control" id="lockout-duration" 
+                                               min="5" max="60" value="15">
+                                        <small class="form-text text-muted">
+                                            Durée du verrouillage après trop de tentatives.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Sauvegarder la configuration de sécurité
+                            </button>
+                        </form>
+
+                        <!-- Messages d'alerte pour la configuration de sécurité -->
+                        <div id="security-success-alert" class="alert alert-success mt-3" style="display: none;">
+                            <i class="fas fa-check-circle"></i>
+                            <span id="security-success-message">Configuration sauvegardée avec succès !</span>
+                        </div>
+                        
+                        <div id="security-error-alert" class="alert alert-danger mt-3" style="display: none;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span id="security-error-message">Erreur lors de la sauvegarde.</span>
+                        </div>
+                            </div>
+                        </div>
+
+                        <!-- Section Mot de passe de suppression QCM (pliable) -->
+                        <div class="collapsible-section">
+                            <div class="section-header-clickable" onclick="toggleSection('deletion-section')">
+                                <h4>
+                                    <span><i class="fas fa-trash-alt"></i> Mot de passe de suppression QCM</span>
+                                    <i class="fas fa-chevron-down toggle-icon"></i>
+                                </h4>
+                            </div>
+                            <div class="section-content" id="deletion-section">
+                        
+                        <div class="security-section deletion-section">
+                            <div class="section-header">
+                                <h5><i class="fas fa-trash-alt text-danger"></i> Configuration suppression QCM</h5>
+                                <div class="section-badge deletion-badge">
+                                    <i class="fas fa-exclamation-triangle"></i> Suppression QCM
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="deletion-password">
+                                    <i class="fas fa-key"></i> Mot de passe de suppression
+                                </label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="deletion-password" 
+                                           placeholder="Entrez le mot de passe pour la suppression des QCM">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text" style="background: #e9ecef; color: #6c757d;">
+                                            <i class="fas fa-lock"></i>
+                                        </span>
+                                    </div>
+                                </div>
+                                <small class="form-text text-muted">
+                                    <i class="fas fa-info-circle"></i> Ce mot de passe sera utilisé pour confirmer la suppression des QCM dans l'éditeur.
+                                </small>
+                                
+                                <!-- Barre de sécurité du mot de passe -->
+                                <div class="password-strength" id="password-strength" style="display: none;">
+                                    <div class="strength-text" id="strength-text">Niveau de sécurité</div>
+                                    <div class="strength-bar">
+                                        <div class="strength-fill" id="strength-fill"></div>
+                                    </div>
+                                    <div class="strength-requirements">
+                                        <div class="requirement" id="req-length">
+                                            <i class="fas fa-circle"></i>
+                                            <span>Minimum 6 caractères</span>
+                                        </div>
+                                        <div class="requirement" id="req-uppercase">
+                                            <i class="fas fa-circle"></i>
+                                            <span>Au moins une majuscule</span>
+                                        </div>
+                                        <div class="requirement" id="req-lowercase">
+                                            <i class="fas fa-circle"></i>
+                                            <span>Au moins une minuscule</span>
+                                        </div>
+                                        <div class="requirement" id="req-special">
+                                            <i class="fas fa-circle"></i>
+                                            <span>Au moins un caractère spécial</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-warning" onclick="saveDeletionPassword()">
+                                <i class="fas fa-save"></i> Sauvegarder le mot de passe de suppression
+                            </button>
+
+                            <!-- Messages d'alerte pour le mot de passe de suppression -->
+                            <div id="deletion-success-alert" class="alert alert-success mt-3" style="display: none;">
+                                <i class="fas fa-check-circle"></i>
+                                <span id="deletion-success-message">Mot de passe sauvegardé avec succès !</span>
+                            </div>
+                            
+                            <div id="deletion-error-alert" class="alert alert-danger mt-3" style="display: none;">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <span id="deletion-error-message">Erreur lors de la sauvegarde.</span>
+                            </div>
+                        </div>
+                            </div>
+                        </div>
+
+                        <!-- Section Réinitialisation de l'environnement (pliable) -->
+                        <div class="collapsible-section">
+                            <div class="section-header-clickable" onclick="toggleSection('reset-section')">
+                                <h4>
+                                    <span><i class="fas fa-redo-alt"></i> Réinitialisation de l'environnement</span>
+                                    <i class="fas fa-chevron-down toggle-icon"></i>
+                                </h4>
+                            </div>
+                            <div class="section-content" id="reset-section">
+                        
+                        <div class="security-section deletion-section">
+                            <div class="section-header">
+                                <h5><i class="fas fa-exclamation-triangle text-danger"></i> Réinitialisation complète</h5>
+                                <div class="section-badge deletion-badge">
+                                    <i class="fas fa-trash-alt"></i> Suppression données
+                                </div>
+                            </div>
+                            
+
+                            
+                            <form id="reset-form">
+                                <div class="form-group">
+                                    <label for="captcha-input">
+                                        <i class="fas fa-shield-alt"></i> Captcha de sécurité
+                                    </label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" style="background: #f8f9fa; font-weight: bold; font-size: 16px; letter-spacing: 2px;" id="captcha-display">
+                                                <!-- Le captcha sera généré ici -->
+                                            </span>
+                                        </div>
+                                        <input type="text" class="form-control" id="captcha-input" 
+                                               placeholder="Entrez le code captcha" maxlength="6"
+                                               onpaste="return false;" oncopy="return false;" oncut="return false;"
+                                               oncontextmenu="return false;">
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-outline-secondary" onclick="generateCaptcha()">
+                                                <i class="fas fa-sync-alt"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <small class="form-text text-muted">
+                                        <i class="fas fa-info-circle"></i> Entrez le code affiché ci-dessus pour confirmer l'action.
+                                    </small>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-redo-alt"></i> Réinitialiser l'environnement
+                                </button>
+                            </form>
+                        </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Messages d'alerte pour la réinitialisation -->
+                        <div id="reset-success-alert" class="alert alert-success mt-3" style="display: none;">
+                            <i class="fas fa-check-circle"></i>
+                            <span id="reset-success-message">Message de succès.</span>
+                        </div>
+                        
+                        <div id="reset-error-alert" class="alert alert-danger mt-3" style="display: none;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <span id="reset-error-message">Message d'erreur.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="config.js"></script>
+    <script>
+        // Protection globale contre le copier-coller
+        document.addEventListener('DOMContentLoaded', function() {
+            // Désactiver le copier-coller sur toute la page
+            document.addEventListener('copy', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            document.addEventListener('paste', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            document.addEventListener('cut', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // Désactiver le clic droit
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                return false;
+            });
+            
+            // Désactiver les raccourcis clavier
+            document.addEventListener('keydown', function(e) {
+                // Ctrl+C, Ctrl+V, Ctrl+X, Ctrl+A
+                if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'a')) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        });
+        // Vérification de l'authentification
+        function checkAuth() {
+            const sessionData = sessionStorage.getItem('mcqed_session');
+            if (!sessionData) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            try {
+                const session = JSON.parse(sessionData);
+                const now = Date.now();
+                
+                if (session.expiresAt <= now) {
+                    sessionStorage.removeItem('mcqed_session');
+                    window.location.href = 'login.html';
+                    return;
+                }
+                
+                // Afficher les informations de session
+                document.getElementById('admin-username').textContent = session.userId;
+                document.getElementById('last-login').textContent = new Date(session.loginTime).toLocaleString('fr-FR');
+                
+            } catch (e) {
+                sessionStorage.removeItem('mcqed_session');
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Charger la configuration actuelle
+        function loadCurrentConfig() {
+            const config = getSecurityConfig();
+            
+            // Charger le mot de passe de suppression
+            document.getElementById('deletion-password').value = config.deletionPassword || '';
+            
+            // Charger les autres paramètres
+            document.getElementById('max-attempts').value = config.maxAttempts || 3;
+            document.getElementById('lockout-duration').value = (config.lockoutDuration / (60 * 1000)) || 15;
+        }
+
+        // Basculer la visibilité du mot de passe
+        function togglePassword(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // Sauvegarder la configuration de sécurité
+        function saveConfiguration() {
+            const currentPassword = document.getElementById('current-password').value;
+            const loginPassword = document.getElementById('login-password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const maxAttempts = parseInt(document.getElementById('max-attempts').value);
+            const lockoutDuration = parseInt(document.getElementById('lockout-duration').value) * 60 * 1000;
+
+            if (maxAttempts < 1 || maxAttempts > 10) {
+                showSecurityError('Le nombre de tentatives doit être entre 1 et 10.');
+                return false;
+            }
+
+            if (lockoutDuration < 5 * 60 * 1000 || lockoutDuration > 60 * 60 * 1000) {
+                showSecurityError('La durée de verrouillage doit être entre 5 et 60 minutes.');
+                return false;
+            }
+
+            // Validation du changement de mot de passe
+            if (loginPassword.trim() || confirmPassword.trim() || currentPassword.trim()) {
+                // Si l'un des champs de mot de passe est rempli, tous doivent l'être
+                if (!currentPassword.trim()) {
+                    showSecurityError('Le mot de passe actuel est requis pour changer le mot de passe.');
+                    return false;
+                }
+                
+                if (!loginPassword.trim()) {
+                    showSecurityError('Le nouveau mot de passe est requis.');
+                    return false;
+                }
+                
+                if (!confirmPassword.trim()) {
+                    showSecurityError('La confirmation du nouveau mot de passe est requise.');
+                    return false;
+                }
+                
+                // Vérifier que le mot de passe actuel est correct
+                const salt = MCQED_CONFIG.security.passwordSalt;
+                const currentPasswordHash = CryptoJS.SHA256(currentPassword + salt).toString();
+                const storedPasswordHash = MCQED_CONFIG.security.credentials.passwordHash;
+                
+                if (currentPasswordHash !== storedPasswordHash) {
+                    showSecurityError('Le mot de passe actuel est incorrect.');
+                    return false;
+                }
+                
+                // Vérifier que les nouveaux mots de passe correspondent
+                if (loginPassword !== confirmPassword) {
+                    showSecurityError('Les nouveaux mots de passe ne correspondent pas.');
+                    return false;
+                }
+                
+                // Vérifier que le nouveau mot de passe est différent de l'ancien
+                if (loginPassword === currentPassword) {
+                    showSecurityError('Le nouveau mot de passe doit être différent de l\'ancien.');
+                    return false;
+                }
+            }
+
+            // Préparer la nouvelle configuration
+            const newConfig = {
+                maxAttempts: maxAttempts,
+                lockoutDuration: lockoutDuration
+            };
+
+            // Si un nouveau mot de passe de connexion est fourni
+            if (loginPassword.trim()) {
+                const salt = MCQED_CONFIG.security.passwordSalt;
+                const newPasswordHash = CryptoJS.SHA256(loginPassword + salt).toString();
+                newConfig.credentials = {
+                    username: MCQED_CONFIG.security.credentials.username,
+                    passwordHash: newPasswordHash
+                };
+            }
+
+            // Sauvegarder
+            saveSecurityConfig(newConfig);
+            showSecuritySuccess('Configuration de sécurité sauvegardée avec succès !');
+            
+            // Vider les champs de mot de passe
+            document.getElementById('current-password').value = '';
+            document.getElementById('login-password').value = '';
+            document.getElementById('confirm-password').value = '';
+            
+            return true;
+        }
+
+        // Afficher un message de succès pour la configuration de sécurité
+        function showSecuritySuccess(message) {
+            document.getElementById('security-success-message').textContent = message;
+            document.getElementById('security-success-alert').style.display = 'block';
+            document.getElementById('security-error-alert').style.display = 'none';
+            
+            setTimeout(() => {
+                document.getElementById('security-success-alert').style.display = 'none';
+            }, 5000);
+        }
+
+        // Afficher un message d'erreur pour la configuration de sécurité
+        function showSecurityError(message) {
+            document.getElementById('security-error-message').textContent = message;
+            document.getElementById('security-error-alert').style.display = 'block';
+            document.getElementById('security-success-alert').style.display = 'none';
+            
+            setTimeout(() => {
+                document.getElementById('security-error-alert').style.display = 'none';
+            }, 5000);
+        }
+
+        // Afficher un message de succès pour le mot de passe de suppression
+        function showDeletionSuccess(message) {
+            document.getElementById('deletion-success-message').textContent = message;
+            document.getElementById('deletion-success-alert').style.display = 'block';
+            document.getElementById('deletion-error-alert').style.display = 'none';
+            
+            setTimeout(() => {
+                document.getElementById('deletion-success-alert').style.display = 'none';
+            }, 5000);
+        }
+
+        // Afficher un message d'erreur pour le mot de passe de suppression
+        function showDeletionError(message) {
+            document.getElementById('deletion-error-message').textContent = message;
+            document.getElementById('deletion-error-alert').style.display = 'block';
+            document.getElementById('deletion-success-alert').style.display = 'none';
+            
+            setTimeout(() => {
+                document.getElementById('deletion-error-alert').style.display = 'none';
+            }, 5000);
+        }
+
+        // Afficher un message de succès pour la réinitialisation
+        function showResetSuccess(message) {
+            document.getElementById('reset-success-message').textContent = message;
+            document.getElementById('reset-success-alert').style.display = 'block';
+            document.getElementById('reset-error-alert').style.display = 'none';
+            
+            setTimeout(() => {
+                document.getElementById('reset-success-alert').style.display = 'none';
+            }, 5000);
+        }
+
+        // Afficher un message d'erreur pour la réinitialisation
+        function showResetError(message) {
+            document.getElementById('reset-error-message').textContent = message;
+            document.getElementById('reset-error-alert').style.display = 'block';
+            document.getElementById('reset-success-alert').style.display = 'none';
+            
+            setTimeout(() => {
+                document.getElementById('reset-error-alert').style.display = 'none';
+            }, 5000);
+        }
+
+        // Déconnexion
+        function logout() {
+            sessionStorage.removeItem('mcqed_session');
+            window.location.href = 'login.html';
+        }
+        
+        // Fonction pour basculer le mode sombre
+        function toggleDarkMode() {
+            const darkModeLink = document.querySelector('.nav-link[onclick="toggleDarkMode()"]');
+            const icon = darkModeLink.querySelector('i');
+            const span = darkModeLink.querySelector('span');
+            
+            // Basculer le mode sombre en utilisant la fonction de dark-mode.js
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            // Appliquer le nouveau thème
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('mcqed_theme', newTheme);
+            
+            // Mettre à jour l'icône et le texte
+            if (newTheme === 'dark') {
+                icon.className = 'fas fa-sun';
+                span.textContent = 'Mode clair';
+            } else {
+                icon.className = 'fas fa-moon';
+                span.textContent = 'Mode sombre';
+            }
+        }
+        
+        // Fonction pour basculer le mode daltonien
+        function toggleColorblindMode() {
+            const colorblindLink = document.querySelector('.nav-link[onclick="toggleColorblindMode()"]');
+            const icon = colorblindLink.querySelector('i');
+            const span = colorblindLink.querySelector('span');
+            
+            // Basculer le mode daltonien
+            const currentColorblindMode = document.documentElement.getAttribute('data-colorblind');
+            const newColorblindMode = currentColorblindMode === 'enabled' ? 'disabled' : 'enabled';
+            
+            // Appliquer le mode daltonien
+            document.documentElement.setAttribute('data-colorblind', newColorblindMode);
+            localStorage.setItem('mcqed_colorblind', newColorblindMode);
+            
+            // Mettre à jour l'icône et le texte
+            if (newColorblindMode === 'enabled') {
+                icon.className = 'fas fa-eye-slash';
+                span.textContent = 'Mode normal';
+            } else {
+                icon.className = 'fas fa-eye';
+                span.textContent = 'Mode daltonien';
+            }
+        }
+        
+        // Fonction pour basculer le sous-menu Mon compte
+        function toggleSubmenu(element) {
+            const navItem = element.closest('.nav-item');
+            const isOpen = navItem.classList.contains('open');
+            
+            // Fermer tous les autres sous-menus
+            document.querySelectorAll('.nav-item.has-submenu').forEach(item => {
+                item.classList.remove('open');
+            });
+            
+            // Basculer l'état du sous-menu actuel
+            if (!isOpen) {
+                navItem.classList.add('open');
+            }
+        }
+
+        // Gestionnaire de soumission du formulaire de sécurité
+        document.getElementById('security-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            saveConfiguration();
+        });
+
+        // Gestionnaire de soumission du formulaire de réinitialisation
+        document.getElementById('reset-form').addEventListener('submit', handleResetSubmit);
+
+        // Valider la force du mot de passe
+        function validatePasswordStrength(password) {
+            const requirements = {
+                length: password.length >= 6,
+                uppercase: /[A-Z]/.test(password),
+                lowercase: /[a-z]/.test(password),
+                special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password)
+            };
+            
+            const metCount = Object.values(requirements).filter(Boolean).length;
+            let strength = 'weak';
+            let strengthText = 'Faible';
+            let strengthClass = 'strength-weak';
+            let strengthTextClass = 'strength-weak-text';
+            
+            if (metCount === 4) {
+                strength = 'strong';
+                strengthText = 'Fort';
+                strengthClass = 'strength-strong';
+                strengthTextClass = 'strength-strong-text';
+            } else if (metCount === 3) {
+                strength = 'good';
+                strengthText = 'Bon';
+                strengthClass = 'strength-good';
+                strengthTextClass = 'strength-good-text';
+            } else if (metCount === 2) {
+                strength = 'fair';
+                strengthText = 'Moyen';
+                strengthClass = 'strength-fair';
+                strengthTextClass = 'strength-fair-text';
+            }
+            
+            return { requirements, strength, strengthText, strengthClass, strengthTextClass };
+        }
+        
+        // Mettre à jour l'affichage de la force du mot de passe
+        function updatePasswordStrength(password) {
+            const strengthContainer = document.getElementById('password-strength');
+            const strengthText = document.getElementById('strength-text');
+            const strengthFill = document.getElementById('strength-fill');
+            
+            if (!password) {
+                strengthContainer.style.display = 'none';
+                return;
+            }
+            
+            const validation = validatePasswordStrength(password);
+            
+            // Afficher la barre
+            strengthContainer.style.display = 'block';
+            
+            // Mettre à jour le texte et la barre
+            strengthText.textContent = `Niveau de sécurité : ${validation.strengthText}`;
+            strengthText.className = `strength-text ${validation.strengthTextClass}`;
+            
+            // Mettre à jour la barre
+            strengthFill.className = `strength-fill ${validation.strengthClass}`;
+            
+            // Mettre à jour les exigences
+            document.getElementById('req-length').className = `requirement ${validation.requirements.length ? 'met' : 'not-met'}`;
+            document.getElementById('req-uppercase').className = `requirement ${validation.requirements.uppercase ? 'met' : 'not-met'}`;
+            document.getElementById('req-lowercase').className = `requirement ${validation.requirements.lowercase ? 'met' : 'not-met'}`;
+            document.getElementById('req-special').className = `requirement ${validation.requirements.special ? 'met' : 'not-met'}`;
+            
+            // Mettre à jour les icônes
+            document.querySelectorAll('.requirement i').forEach((icon, index) => {
+                const isMet = Object.values(validation.requirements)[index];
+                icon.className = isMet ? 'fas fa-check-circle' : 'fas fa-circle';
+            });
+        }
+        
+        // Sauvegarder le mot de passe de suppression
+        function saveDeletionPassword() {
+            const deletionPassword = document.getElementById('deletion-password').value;
+            
+            if (!deletionPassword.trim()) {
+                showDeletionError('Le mot de passe de suppression ne peut pas être vide.');
+                return;
+            }
+            
+            // Vérifier la force du mot de passe
+            const validation = validatePasswordStrength(deletionPassword);
+            const metCount = Object.values(validation.requirements).filter(Boolean).length;
+            
+            if (metCount < 4) {
+                showDeletionError('❌ Le mot de passe de suppression ne respecte pas tous les critères de sécurité requis.');
+                return;
+            }
+
+            // Préparer la nouvelle configuration
+            const newConfig = {
+                deletionPassword: deletionPassword
+            };
+
+            // Sauvegarder
+            saveSecurityConfig(newConfig);
+            showDeletionSuccess('✅ Mot de passe de suppression sauvegardé avec succès !');
+        }
+
+        // Fonction pour basculer les sections pliables
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            const header = section.previousElementSibling;
+            const icon = header.querySelector('.toggle-icon');
+            
+            if (section.classList.contains('collapsed')) {
+                // Déplier la section
+                section.classList.remove('collapsed');
+                header.classList.remove('collapsed');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                // Plier la section
+                section.classList.add('collapsed');
+                header.classList.add('collapsed');
+                icon.style.transform = 'rotate(-90deg)';
+            }
+        }
+
+        // Variables globales pour le captcha
+        let currentCaptcha = '';
+
+        // Générer un captcha aléatoire
+        function generateCaptcha() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let captcha = '';
+            for (let i = 0; i < 6; i++) {
+                captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            currentCaptcha = captcha;
+            document.getElementById('captcha-display').textContent = captcha;
+        }
+
+        // Valider la réinitialisation
+        function validateReset() {
+            const captchaInput = document.getElementById('captcha-input').value;
+            const config = getSecurityConfig();
+
+            // Vérifier le captcha EN PREMIER (sensible à la casse)
+            if (captchaInput !== currentCaptcha) {
+                showResetError('Le code captcha est incorrect. Attention : respectez les majuscules et minuscules.');
+                document.getElementById('captcha-input').value = '';
+                generateCaptcha();
+                return false;
+            }
+
+            // Demander le mot de passe de suppression deux fois
+            const password1 = prompt('🔐 Entrez le mot de passe de suppression QCM :');
+            if (password1 === null) return false; // Annulation
+            
+            const password2 = prompt('🔐 Confirmez le mot de passe de suppression QCM :');
+            if (password2 === null) return false; // Annulation
+
+            // Vérifier que les deux mots de passe correspondent
+            if (password1 !== password2) {
+                showResetError('❌ Les mots de passe de suppression QCM ne correspondent pas. Veuillez réessayer.');
+                return false;
+            }
+
+            // Vérifier que le mot de passe est correct
+            if (password1 !== config.deletionPassword) {
+                showResetError('❌ Le mot de passe de suppression QCM est incorrect. Veuillez réessayer.');
+                return false;
+            }
+
+            return true;
+        }
+
+        // Gérer la soumission du formulaire de réinitialisation
+        function handleResetSubmit(event) {
+            event.preventDefault();
+            
+            if (validateReset()) {
+                // Rediriger vers la page de réinitialisation
+                window.location.href = '/reset-environment';
+            }
+        }
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+            loadCurrentConfig();
+            
+            // Plier toutes les sections par défaut (sauf Informations)
+            const sectionsToCollapse = ['security-section', 'deletion-section', 'reset-section'];
+            sectionsToCollapse.forEach(sectionId => {
+                const section = document.getElementById(sectionId);
+                const header = section.previousElementSibling;
+                const icon = header.querySelector('.toggle-icon');
+                
+                section.classList.add('collapsed');
+                header.classList.add('collapsed');
+                icon.style.transform = 'rotate(-90deg)';
+            });
+            
+            // Générer le captcha initial
+            generateCaptcha();
+            
+            // Ajouter l'écouteur d'événement pour la force du mot de passe
+            document.getElementById('deletion-password').addEventListener('input', function() {
+                updatePasswordStrength(this.value);
+            });
+            
+            // Mettre à jour l'état initial du bouton mode sombre
+            const darkModeLink = document.querySelector('.nav-link[onclick="toggleDarkMode()"]');
+            if (darkModeLink) {
+                const icon = darkModeLink.querySelector('i');
+                const span = darkModeLink.querySelector('span');
+                
+                // Récupérer le thème depuis localStorage ou utiliser 'light' par défaut
+                const savedTheme = localStorage.getItem('mcqed_theme') || 'light';
+                document.documentElement.setAttribute('data-theme', savedTheme);
+                
+                if (savedTheme === 'dark') {
+                    icon.className = 'fas fa-sun';
+                    span.textContent = 'Mode clair';
+                } else {
+                    icon.className = 'fas fa-moon';
+                    span.textContent = 'Mode sombre';
+                }
+            }
+            
+            // Mettre à jour l'état initial du bouton mode daltonien
+            const colorblindLink = document.querySelector('.nav-link[onclick="toggleColorblindMode()"]');
+            if (colorblindLink) {
+                const icon = colorblindLink.querySelector('i');
+                const span = colorblindLink.querySelector('span');
+                
+                // Récupérer le mode daltonien depuis localStorage ou utiliser 'disabled' par défaut
+                const savedColorblindMode = localStorage.getItem('mcqed_colorblind') || 'disabled';
+                document.documentElement.setAttribute('data-colorblind', savedColorblindMode);
+                
+                if (savedColorblindMode === 'enabled') {
+                    icon.className = 'fas fa-eye-slash';
+                    span.textContent = 'Mode normal';
+                } else {
+                    icon.className = 'fas fa-eye';
+                    span.textContent = 'Mode daltonien';
+                }
+            }
+        });
+    </script>
+    <script src="dark-mode.js"></script>
+</body>
+</html> 

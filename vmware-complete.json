@@ -1,0 +1,1859 @@
+{
+  "qcmId": "vmware-vsphere-8",
+  "title": "VMware vSphere 8 Professional",
+  "description": "QCM complet pour la certification VMware vSphere 8 Professional",
+  "version": "1.0",
+  "totalQuestions": 111,
+  "timeLimit": 120,
+  "passingScore": 70,
+  "questions": [
+    {
+      "id": 1,
+      "question": "An administrator is creating a content library to manage VM templates and ISO images. The administrator wants to password-protect the images and templates and share them with a remote site. Which two tasks must the administration perform when creating the content library? (Choose two.)",
+      "type": "multiple",
+      "options": [
+        "A. A. Publish the local content library.",
+        "B. B. Enable the security policy.",
+        "C. C. Create a subscribed content library.",
+        "D. D. Select an NFS datastore.",
+        "E. E. Enable authentication."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 2,
+      "question": "An administrator is responsible for the management of a VMware vCenter instance that is currently experiencing performance issues. The administrator quickly identifies that the CPU and memory utilization of vCenter is consistently over 80%. Upon further analysis, it seems that the vpxd process is contributing significantly to the performance issue. A combination of which four steps should the administrator take to resolve the performance issues and ensure that a similar issue can be rectified without requiring downtime to vCenter moving forward? (Choose four.)",
+      "type": "multiple",
+      "options": [
+        "A. A. Gracefully shut down vCenter using the vSphere Client.",
+        "B. B. Enable CPU Hot Add on the vCenter virtual machine.",
+        "C. C. Power on the vCenter Server Appliance using the vSphere Host Client.",
+        "D. D. Enable CPU and Memory Hot Add on the vCenter virtual machine.",
+        "E. E. Add additional CPU and memory to the vCenter Server Appliance.",
+        "F. F. Power on the vCenter Server Appliance using the vSphere Client.",
+        "G. G. Enable Memory Not Add on the vCenter virtual machine."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 3,
+      "question": "An administrator successfully installs VMware ESXi onto the first host of a new vSphere cluster but makes no additional configuration changes. When attempting to log into the vSphere Host Client using the Fully Qualified Domain Name (FQDN) of the host, the administrator receives the following error message: \"Server Not Found - We can't connect to the server at esxi101.corp.local.\" The following information has been provided to complete the configuration:",
+      "type": "multiple",
+      "options": [
+        "A. A. Ensure a DNS A Record is created for the VMware ESXi host on the corporate DNS servers.",
+        "B. B. Update the VMware ESXi Management Network DNS configuration to use the corporate DNS servers for names resolution.",
+        "C. C. Update the VMware ESXi Management Network IPv4 configuration to use a static a IPv4 address.",
+        "D. D. Configure at least two network adapters for the VMware ESXi Management Network.",
+        "E. E. Set the value of the VMware ESXi Management Network VLAN ID to 10.",
+        "F. F. Disable IPv6 for the VMware ESXi Management Network."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 4,
+      "question": "When configuring vCenter High Availability (HA), which two statements are true regarding the active, passive, and witness nodes? (Choose two.)",
+      "type": "multiple",
+      "options": [
+        "A. A. Network latency must be less than 10 milliseconds.",
+        "B. B. They must have a supported Wide Area Network (WAN).",
+        "C. C. They must have a minimum of a 10 Gbps network adapter.",
+        "D. D. They must have a minimum of a 1 Gbps network adapter.",
+        "E. E. Network latency must be more than 10 milliseconds."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 5,
+      "question": "An administrator is deploying a new all flash vSAN cluster based on the vSAN Original Storage Architecture (OSA). What is the minimum supported network throughput in Gb/s for each host?",
+      "type": "multiple",
+      "options": [
+        "A. A. 50",
+        "B. B. 10",
+        "C. C. 25",
+        "D. D. 1"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 6,
+      "question": "An administrator enables Secure Boot on an ESXi host. On booting the ESXi host, the following error message appears: Fatal error: 39 (Secure Boot Failed) What is the cause of this issue?",
+      "type": "multiple",
+      "options": [
+        "A. A. The kernel has been tampered with.",
+        "B. B. The Trusted Platform Module chip has failed.",
+        "C. C. The administrator attempted to boot with a bootloader that is unsigned or has been tampered with.",
+        "D. D. A package (VIB or driver) has been tampered with."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 7,
+      "question": "To keep virtual machines (VMs) up and running at all times in a vSphere cluster, an administrator would like VMs to be migrated automatically when the host hardware health status becomes degraded. Which cluster feature can be used to meet this requirement?",
+      "type": "multiple",
+      "options": [
+        "A. A. Predictive DRS",
+        "B. B. Proactive HA",
+        "C. C. vSphere HA Orchestrated Restart",
+        "D. D. vSphere Fault Tolerance"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 8,
+      "question": "An administrator wants to allow a DevOps engineer the ability to delete Tanzu Kubernetes Grid (TKG) cluster objects in a vSphere Namespace. Which role would provide the minimum required permissions to perform this operation?",
+      "type": "multiple",
+      "options": [
+        "A. A. Administrator",
+        "B. B. Can View",
+        "C. C. Owner",
+        "D. D. Can Edit"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 9,
+      "question": "A group of new virtual machines have been deployed using thin-provisioned disks due to the limited storage space available in an environment. The storage team has expressed concern about extensive use of this type of provisioning. An administrator is tasked with creating a custom alarm to notify the storage team when thin provisioning reaches a certain capacity threshold. Where must the administrator define this alarm?",
+      "type": "multiple",
+      "options": [
+        "A. A. Datastore",
+        "B. B. Data center",
+        "C. C. Datastore cluster",
+        "D. D. Virtual machine"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 10,
+      "question": "What are three options an administrator can configure after creating a vSphere Namespace? (Choose three.)",
+      "type": "multiple",
+      "options": [
+        "A. A. Backup schedule",
+        "B. B. Certificates",
+        "C. C. Storage policies",
+        "D. D. Update policies",
+        "E. E. Permissions",
+        "F. F. Resource and Object limits"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 11,
+      "question": "A VMkernel port is labelled PROD01 and uses the default TCP/IP stack. Currently, this VMkernel port is configured for supporting live virtual machine (VM) migrations. Which configuration change should the administrator make to isolate live VM migration traffic from other network traffic?",
+      "type": "multiple",
+      "options": [
+        "A. A. Remove PROD01 and create a new VMkernel port and set the TCP/IP stack to vSphere vMotion.",
+        "B. B. Remove PROD01 and create a new VMkernel port with the TCP/IP stack set to provisioning.",
+        "C. C. Create a new VMkernel port and set the TCP/IP stack to provisioning.",
+        "D. D. Modify PROD01 by changing the TCP/IP stack to vSphere vMotion."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 12,
+      "question": "After adding a new vSphere ESXi host with identical hardware configuration to an existing vSphere cluster, which task would an administrator complete prior to checking the compliance with an existing host profile?",
+      "type": "multiple",
+      "options": [
+        "A. A. Attach the host profile to the new host",
+        "B. B. Duplicate the host profile",
+        "C. C. Copy the host setting from the new host",
+        "D. D. Import the host profile"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 13,
+      "question": "An administrator is tasked with deploying a new on-premises software-defined data center (SDDC) that will contain a total of eight VMware vCenter instances. The following requirements must be met:",
+      "type": "multiple",
+      "options": [
+        "A. A. Two Enhanced Linked Mode groups consisting of four vCenter instances each in a Single Sign-On domain.",
+        "B. B. A single Hybrid Linked Mode group consisting of four vCenter instances each in a Single Sign-On domain.",
+        "C. C. A single Enhanced Linked Mode group consisting of eight vCenter instances in one Single Sign-On domain.",
+        "D. D. A single Hybrid Linked Mode group consisting of eight vCenter instances in one Single Sign-On domain."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 14,
+      "question": "An administrator has Windows virtual machines (VMs) and VMware Tools is installed in each VM. The administrator performs a status check of VMware Tools using vSphere Lifecycle Manager. What is the VMware Tools status for the Windows VMs if the version of VMware Tools has a known problem and must be immediately upgraded?",
+      "type": "multiple",
+      "options": [
+        "A. A. Version Unsupported",
+        "B. B. Guest Managed",
+        "C. C. Unknown",
+        "D. D. Upgrade Available"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 15,
+      "question": "Which three features are only available when using vSphere Distributed Switches instead of vSphere Standard Switches? (Choose three.)",
+      "type": "multiple",
+      "options": [
+        "A. A. 802.1Q tagging",
+        "B. B. Port mirroring",
+        "C. C. Netflow",
+        "D. D. Configuration backup and restore",
+        "E. E. IPv6 support",
+        "F. F. IPv4 support"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 16,
+      "question": "An administrator is configuring vSphere Lifecycle Manager to install patches to a vSphere cluster. The cluster runs workload virtual machines (VMs) that are incompatible with vSphere vMotion, and therefore cannot be live migrated between hosts during the installation of the patches. Which configuration in vSphere Lifecycle Manager will allow the administrator to reduce the downtime associated with the patching operation without migrating the VMs?",
+      "type": "multiple",
+      "options": [
+        "A. A. Enable Distributed Power Management (DPM) and set the VM power state to the suspend to disk option",
+        "B. B. Enable Quick Boot and set the VM power stale to the suspend to disk option",
+        "C. C. Enable vSphere High Availability (HA) admission control and set the VM power stale to the suspend to memory option",
+        "D. D. Enable Quick Boot and set the VM power state to the suspend to memory option"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 17,
+      "question": "An administrator creates a new corporate virtual machine (VM) template every month to include all of the latest patches. The administrator needs to ensure that the new VM template is synchronized from the primary data center site (London) to two secondary data center sites (Tokyo and New York). The administrator is aware that datastore space is limited within the secondary data center sites. The administrator needs to ensure that the VM template is available in the secondary sites the first time a new virtual machine is requested. Which four steps should the administrator take to meet these requirements? (Choose four.)",
+      "type": "multiple",
+      "options": [
+        "A. A. Create a new published content library at the primary site.",
+        "B. B. Add the virtual machine template to the subscribed content library.",
+        "C. C. Create a new published content library in each secondary site.",
+        "D. D. Create a new subscribed content library in each secondary site.",
+        "E. E. Configure the subscribed content library to download content when needed.",
+        "F. F. Configure each subscribed content library to download content immediately.",
+        "G. G. Add the virtual machine template to the published content library."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 18,
+      "question": "An administrator is tasked with migrating a single virtual machine (VM) from an existing VMware vCenter to a secure environment where corporate security policy requires that all VMs be encrypted. The secure environment consists of a dedicated vCenter instance with a 4-node vSphere cluster and already contains a number of encrypted VMs. Which two steps must the administrator take to ensure the migration is a success? (Choose two.)",
+      "type": "multiple",
+      "options": [
+        "A. A. Ensure that the source and destination vCenter instances share the same Key Management Server (KMS).",
+        "B. B. Ensure that Encrypted vMotion is turned off for the VM.",
+        "C. C. Ensure that the VM is encrypted before attempting the migration.",
+        "D. D. Ensure that the VM is powered off before attempting the migration.",
+        "E. E. Ensure that the source and destination vCenter Servers have a different Key Management Server (KMS)."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 19,
+      "question": "An administrator is tasked with providing users access to objects within an existing VMware vCenter instance. The vCenter inventory has a single data center with one management vSphere cluster and five workload vSphere clusters. The following requirements must be met for assigning the users access:",
+      "type": "multiple",
+      "options": [
+        "A. A. Apply Global permissions to assign the Read Only role to the root vCenter object. Apply vCenter permissions to assign the custom role to the workload vSphere clusters and enable propagation.",
+        "B. B. Apply Global permissions to assign the Read Only role to the root vCenter object and enable propagation. Apply vCenter permissions to assign the custom role to the workload vSphere clusters and enable propagation.",
+        "C. C. Apply Global permissions to assign the Read Only role to the root vCenter object. Apply vCenter permissions to assign the custom role to the workload vSphere clusters.",
+        "D. D. Apply Global permissions to assign the Read Only role to the root vCenter object and enable propagation. Apply vCenter permissions to assign the custom role to the workload vSphere clusters."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 20,
+      "question": "An administrator has a requirement to revert a running virtual machine to a previous snapshot after a failed attempt to upgrade an application. When the administrator originally took the snapshot, the following choices in the Take Snapshot dialog were made:",
+      "type": "multiple",
+      "options": [
+        "A. A. The virtual machine will be restored to the parent snapshot in a powered on state.",
+        "B. B. The virtual machine will be restored to the parent snapshot in a powered off state.",
+        "C. C. The virtual machine will be restored to the child snapshot in a powered off state.",
+        "D. D. The virtual machine will be restored to the child snapshot in a powered on state."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 21,
+      "question": "An administrator is planning to upgrade a VMware vCenter instance to version 8. It is currently integrated with the following solutions:",
+      "type": "multiple",
+      "options": [
+        "A. A. vSphere Update Manager",
+        "B. B. VMware Aria Suite Lifecycle",
+        "C. C. vCenter Server Update Planner",
+        "D. D. vSphere Lifecycle Manager"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 22,
+      "question": "An administrator decides to restore VMware vCenter from a file-based backup following a failed upgrade. Which interface should the administrator use to complete the restore?",
+      "type": "multiple",
+      "options": [
+        "A. A. Direct Console User Interface (DCUI)",
+        "B. B. vCenter Management Interface (VAMI)",
+        "C. C. vSphere Client",
+        "D. D. vCenter GUI Installer"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 23,
+      "question": "An administrator needs to provide encryption for workloads within an existing vSphere cluster. The following requirements must be met:",
+      "type": "multiple",
+      "options": [
+        "A. A. Encrypted vSphere vMotion",
+        "B. B. Unified Extensible Firmware Interface (UEFI) Secure Boot",
+        "C. C. Host Encryption",
+        "D. D. VM Encryption"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 24,
+      "question": "After a number of outages within a production VMware software-defined data center, an administrator is tasked with identifying a solution to meet the following requirements:",
+      "type": "multiple",
+      "options": [
+        "A. A. VMware Aria Operations for Logs",
+        "B. B. VMware Skyline Advisor Pro",
+        "C. C. VMware Skyline Health",
+        "D. D. VMware Aria Operations"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 25,
+      "question": "An administrator is responsible for performing maintenance tasks on a vSphere cluster. The cluster has the following configuration:",
+      "type": "multiple",
+      "options": [
+        "A. A. Fully automated DRS must be enabled on the cluster so that VM1 will be automatically migrated to another host within the cluster when esx01 is placed into maintenance mode.",
+        "B. B. VM1 must be manually shut down and cold migrated to another host within the cluster using vSphere vMotion before esx01 is placed into maintenance mode.",
+        "C. C. vSphere HA must be enabled on the cluster so that VM1 will be automatically migrated to another host within the cluster when esx01 is placed into maintenance mode.",
+        "D. D. VM1 must be manually live migrated to another host within the cluster using vSphere vMotion before esx01 is placed into maintenance mode.",
+        "E. E. VM1 must be manually migrated to another host within the cluster using vSphere Storage vMotion before esx01 is placed into maintenance mode."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 26,
+      "question": "An administrator needs better performance and near-zero CPU utilization from the ESXi hosts for networking functions and processing. The administrator creates a new vSphere Distributed Switch and enables network offloads compatibility. Which solution would help achieve this goal?",
+      "type": "multiple",
+      "options": [
+        "A. A. vSphere Distributed Services Engine",
+        "B. B. Data Processing Units (DPUs)",
+        "C. C. vSphere Network I/O Control",
+        "D. D. Universal Passthrough version 2"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 27,
+      "question": "An administrator needs to perform maintenance on a datastore that is running the vSphere Cluster Services (vCLS) virtual machines (VMs). Which feature can the administrator use in this scenario to avoid the use of Storage vMotion on the vCLS VMs?",
+      "type": "multiple",
+      "options": [
+        "A. A. vSphere Distributed Resource Scheduler (DRS)",
+        "B. B. vSphere vMotion",
+        "C. C. vSphere Fault Tolerance",
+        "D. D. vCLS Retreat Mode"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 28,
+      "question": "What is the role of vSphere Distributed Services Engine?",
+      "type": "multiple",
+      "options": [
+        "A. A. Provide a live shadow instance of a virtual machine (VM) that mirrors the primary VM to prevent data loss and downtime during outages",
+        "B. B. Implement Quality of Service (QoS) on network traffic within a vSphere Distributed Switch",
+        "C. C. Provide hardware accelerated data processing to boost infrastructure performance",
+        "D. D. Redistribute virtual machines across vSphere cluster hosts to comply with user-defined affinity and anti-affinity rules following host failures or during maintenance operations"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 29,
+      "question": "A vSphere cluster has the following vSphere Distributed Resource Scheduler (DRS) group configuration: Virtual machine (VM) group named DB, Host groups named PROD11 and PROD55. The administrator wants to force the VMs in the DB group to run on the hosts in the PROD11 group. However, if all the hosts in PROD11 go offline for maintenance, then the VMs in the DB group should run on hosts in PROD55. Which VM/Host rule must the administrator create to ensure that these requirements are met?",
+      "type": "multiple",
+      "options": [
+        "A. A. A preferential rule between the DB group and the PROD11 group",
+        "B. B. A preferential rule between the DB group and the PROD55 group",
+        "C. C. A required rule between the DB group and the PROD11 group",
+        "D. D. A required rule between the DB group and the PROD55 group"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 30,
+      "question": "An administrator is asked to configure a security policy at the port group level of a standard switch. The following requirements must be met: The security policy must apply to all virtual machines on portgroup-1. All traffic must be forwarded, regardless of the destination. Which security policy must the administrator configure?",
+      "type": "multiple",
+      "options": [
+        "A. A. Forged transmits set to reject",
+        "B. B. MAC address changes set to accept",
+        "C. C. Promiscuous mode set to reject",
+        "D. D. Promiscuous mode set to accept"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 31,
+      "question": "Refer to the exhibit. After updating a predefined alarm on VMware vCenter, an administrator enables email notifications as shown in the attached alarm; however, notifications are NOT being sent. Where must the mail server settings be configured by the administrator to resolve this issue?",
+      "type": "multiple",
+      "options": [
+        "A. A. In the ESXi host system config",
+        "B. B. In the alarm rule definition",
+        "C. C. In the vCenter settings in the vSphere Client",
+        "D. D. In the vCenter Management Interface"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 32,
+      "question": "An administrator creates a virtual machine that contains the latest company-approved software, tools and security updates. Company policy requires that only full clones are allowed for server workloads. A combination of which two tasks should the administrator complete to prepare for the deployment of this virtual machine for multiple users? (Choose two.)",
+      "type": "multiple",
+      "options": [
+        "A. A. Set appropriate permissions on the virtual machine.",
+        "B. B. Create a virtual machine customization specification.",
+        "C. C. Upgrade the virtual hardware.",
+        "D. D. Convert the virtual machine to a template.",
+        "E. E. Take a snapshot of the virtual machine."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 33,
+      "question": "An administrator identifies a snapshot file named \"Win10-000001-sesparse.vmdk\" on a datastore. Which type of information can be determined about this datastore? (Choose the best answer.)",
+      "type": "multiple",
+      "options": [
+        "A. A. The datastore is formatted as VMFS3.",
+        "B. B. The datastore is formatted as VMFS6.",
+        "C. C. The datastore is a raw device mapping.",
+        "D. D. The datastore is a vSAN datastore."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 34,
+      "question": "Which feature can an administrator configure to have a copy of critical virtual machines in another cluster? (Choose the best answer.)",
+      "type": "multiple",
+      "options": [
+        "A. A. vSphere Storage vMotion",
+        "B. B. vSphere Fault Tolerance",
+        "C. C. vSphere Replication",
+        "D. D. Instant Clone"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 35,
+      "question": "An administrator sees a virtual machine message that reads, \"Consolidation is required\" in the vSphere Client. Which action does ESXi take when the administrator completes snapshot consolidation? (Choose the best answer.)",
+      "type": "multiple",
+      "options": [
+        "A. A. Collapses all snapshots in the current snapshot tree",
+        "B. B. Commits redundant delta disks to the base disk",
+        "C. C. Collapses all snapshots into a single snapshot",
+        "D. D. Deletes all snapshots without committing to the base disk"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 36,
+      "question": "During the staging of a patch on a vCenter Server Appliance, an error was encountered and the process stopped. An administrator resolved the root cause and is ready to continue with the staging of the patch. From the vCenter Management Interface, which action should the administrator take to continue the process from the point at which the error occurred?",
+      "type": "multiple",
+      "options": [
+        "A. A. Use the Stage and Install option to resume the staging.",
+        "B. B. Use the Resume option to resume the staging.",
+        "C. C. Use the Unstage option to restart the staging.",
+        "D. D. Use the Stage Only option to restart the staging."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 37,
+      "question": "An administrator is adding a new ESXi host to an existing vSphere cluster. When selecting the cluster, the administrator is unable to use the Cluster Quickstart workflow to add and configure the additional host. What could be the root cause of this issue?",
+      "type": "multiple",
+      "options": [
+        "A. A. The administrator has previously dismissed the Cluster Quickstart workflow.",
+        "B. B. The administrator must manually add the host to the cluster before using the Cluster Quickstart workflow.",
+        "C. C. The administrator has not been assigned the required permissions to use the Cluster Quickstart workflow.",
+        "D. D. The administrator must enable the Cluster Quickstart workflow option in VMware vCenter."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 38,
+      "question": "A company has two sites: Site A and Site B. The administrator would like to manage the VMware vCenter inventories in both sites from a single vSphere Client session. Which vCenter feature must be configured?",
+      "type": "multiple",
+      "options": [
+        "A. A. VMware Certificate Authority",
+        "B. B. VMware Site Recovery Manager",
+        "C. C. vCenter Single Sign-On",
+        "D. D. Enhanced Linked Mode"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 39,
+      "question": "An administrator plans to update the Supervisor cluster and has noticed some of the Tanzu Kubernetes Grid clusters are running an incompatible version. Which action must the administrator take before proceeding with the Supervisor cluster update?",
+      "type": "multiple",
+      "options": [
+        "A. A. Update all Tanzu Kubernetes Grid clusters to the latest version prior to the Supervisor cluster update.",
+        "B. B. No action is needed – Tanzu Kubernetes Grid clusters will be updated automatically as part of the update process.",
+        "C. C. No action is needed – Incompatible Tanzu Kubernetes Grid clusters can be manually updated after the Supervisor cluster update.",
+        "D. D. Update incompatible Tanzu Kubernetes Grid clusters prior to the Supervisor cluster update."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 40,
+      "question": "Which three vSphere features are still supported for Windows-based virtual machines when enabling vSphere’s virtualization-based security feature? (Choose three.)",
+      "type": "multiple",
+      "options": [
+        "A. A. vSphere vMotion",
+        "B. B. PCI passthrough",
+        "C. C. vSphere High Availability (HA)",
+        "D. D. vSphere Fault Tolerance",
+        "E. E. vSphere Distributed Resources Scheduler (DRS)",
+        "F. F. Hot Add of CPU or memory"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 41,
+      "question": "An administrator wants to create virtual machine (VM) templates and store them in a content library. The administrator would like to use the content library to manage different versions of these templates so that reverting to an earlier version is an option. How should the administrator create these templates?",
+      "type": "multiple",
+      "options": [
+        "A. A. Select a VM in the vCenter inventory. Clone the VM to the content library as a VM template type.",
+        "B. B. Select a VM template in the vCenter inventory. Clone the template to the content library.",
+        "C. C. Export a VM in the vCenter inventory to an OVF template. Import the OVF template into the content library.",
+        "D. D. Convert a VM to a template in the vCenter inventory. Clone the template to the content library."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 42,
+      "question": "An administrator is tasked with configuring certificates for a VMware software-defined data center (SDDC) based on the following requirements: All certificates should use certificates trusted by the Enterprise Certificate Authority (CA). The solution should minimize the ongoing management overhead of replacing certificates. Which three actions should the administrator take to ensure that the solution meets corporate policy? (Choose three.)",
+      "type": "multiple",
+      "options": [
+        "A. A. Replace the VMware Certificate Authority (VMCA) certificate with a self-signed certificate generated from the VMCA.",
+        "B. B. Replace the machine SSL certificates with custom certificates generated from the Enterprise CA.",
+        "C. C. Replace the machine SSL certificates with trusted certificates generated from the VMware Certificate Authority (VMCA).",
+        "D. D. Replace the VMware Certificate Authority (VMCA) certificate with a custom certificate generated from the Enterprise CA.",
+        "E. E. Replace the solution user certificates with custom certificates generated from the Enterprise CA.",
+        "F. F. Replace the solution user certificates with trusted certificates generated from the VMware Certificate Authority (VMCA)."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 43,
+      "question": "An administrator wants to create a master copy of an existing virtual machine (VM) named \"TestApp\" and deploy VMs from this master copy whenever a user requests one. Which method can the administrator use to create a master copy of TestApp? (Choose the best answer.)",
+      "type": "multiple",
+      "options": [
+        "A. A. Deploy from an Open Virtual Machine Format (OVF) template",
+        "B. B. Convert a template to a VM",
+        "C. C. Clone the VM to a template",
+        "D. D. Create a new VM"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 44,
+      "question": "Which feature is a prerequisite for Proactive High Availability (HA)? (Choose the best answer.)",
+      "type": "multiple",
+      "options": [
+        "A. A. vCenter High Availability",
+        "B. B. vSAN Cluster",
+        "C. C. Predictive Distributive Resource Scheduler (DRS)",
+        "D. D. vSphere Distributive Resource Scheduler (DRS)"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 45,
+      "question": "A host profile is updated with a new password that urgently needs to be changed on all hosts attached to the host profile. Which option would an administrator select to complete the password change? (Choose the best answer.)",
+      "type": "multiple",
+      "options": [
+        "A. A. Copy Settings from Host",
+        "B. B. Remediate",
+        "C. C. Check Host Profile Compliance",
+        "D. D. Edit Host Customizations"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 46,
+      "question": "An administrator manually configures a reference ESXi host that meets company security standards for vSphere environments. The administrator now needs to apply all of the security standards to every identically configured host across multiple vSphere clusters within a single VMware vCenter instance. Which four steps would the administrator complete to meet this requirement? (Choose four.)",
+      "type": "multiple",
+      "options": [
+        "A. A. Extract the host profile from the reference host.",
+        "B. B. Export the host profile from vCenter.",
+        "C. C. Import host customization on the reference host.",
+        "D. D. Attach the host profile to each cluster that requires the secure configuration.",
+        "E. E. Check the compliance of each host against the host profile.",
+        "F. F. Reset host customization on the reference host.",
+        "G. G. Remediate all non-compliant hosts."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 47,
+      "question": "After a recent unexplained peak in virtual machine (VM) CPU usage, an administrator is asked to monitor the VM performance for a recurrence of the issue. Which two tools can the administrator use? (Choose two.)",
+      "type": "multiple",
+      "options": [
+        "A. A. vCenter Management Interface",
+        "B. B. Direct Console User Interface (DCUI)",
+        "C. C. vSphere Performance Charts",
+        "D. D. vCenter Command Line Interface",
+        "E. E. ESXi Shell"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 48,
+      "question": "An administrator is tasked with configuring vSphere Trust Authority. The administrator has completed the following steps:",
+      "type": "multiple",
+      "options": [
+        "A. A. Import the Trusted Host information to the Trust Authority Cluster",
+        "B. B. Import the Trusted Cluster information to the Trusted Hosts",
+        "C. C. Create the Key Provider on the Trusted Cluster",
+        "D. D. Import the Trusted Host information to the Trusted Cluster"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 49,
+      "question": "Refer to the exhibit. An administrator set up the following configuration:\n            <ul>\n                <li>The distributed switch has three ESXi hosts, and each host has two 40 Gbps NICs.</li>\n                <li>The amount of bandwidth reserved for virtual machine (VM) traffic is 6 Gbps.</li>\n                <li>The administrator wants to guarantee that VMs in the Finance distributed port group can access 50 percent of the available reserved bandwidth for VM traffic.</li>\n            </ul>\n            Given this scenario, what should the size (in Gbps) of the Finance network resource pool be?",
+      "type": "multiple",
+      "options": [
+        "A. A. 18",
+        "B. B. 80",
+        "C. C. 36",
+        "D. D. 120"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 50,
+      "question": "A vSphere environment is experiencing intermittent short bursts of CPU contention, causing brief production outages for some of the virtual machines (VMs). To understand the cause of the issue, the administrator wants to observe near real-time statistics for all VMs. Which two vSphere reporting tools could the administrator use? (Choose two.)",
+      "type": "multiple",
+      "options": [
+        "A. A. Advanced Performance Charts",
+        "B. B. esxcli",
+        "C. C. resxtop",
+        "D. D. Overview Performance Charts",
+        "E. E. esxtop"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 51,
+      "question": "An administrator is performing maintenance activities and discovers that a Virtual Machine File System (VMFS) datastore has a lot more used capacity than expected. The datastore contains 10 virtual machines (VMs) and, when the administrator reviews the contents of the associated datastore, discovers that five virtual machines have a snapshot file (-delta.vmdk files) that has not been modified in over 12 months. The administrator checks the Snapshot Manager within the vSphere Client and confirms that there are no snapshots visible. Which task should the administrator complete on the virtual machines to free up datastore space?",
+      "type": "multiple",
+      "options": [
+        "A. A. Consolidate the snapshots for each VM.",
+        "B. B. Inflate the disk files for each VM.",
+        "C. C. Delete all snapshots for each VM.",
+        "D. D. Storage vMotion each VM to another datastore."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 52,
+      "question": "An administrator is attempting to configure Storage I/O Control (SIOC) on five datastores within a vSphere environment. The administrator is being asked to determine why SIOC configuration completed successfully on only four of the datastores. What are two possible reasons why the configuration was not successful? (Choose two.)",
+      "type": "multiple",
+      "options": [
+        "A. A. The datastore contains Raw Device Mappings (RDMs).",
+        "B. B. SAS disks are used for the datastore.",
+        "C. C. The datastore has multiple extents.",
+        "D. D. The datastore is using ISCSI.",
+        "E. E. The administrator is using NFS storage."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 53,
+      "question": "An administrator has mapped three vSphere zones to three vSphere clusters. Which two statements are true for this vSphere with Tanzu zonal Supervisor enablement? (Choose two.)",
+      "type": "multiple",
+      "options": [
+        "A. A. One Supervisor will be created in a specific zone.",
+        "B. B. One Supervisor will be created across all zones.",
+        "C. C. Three Supervisors will be created in Linked Mode.",
+        "D. D. Individual vSphere Namespaces will be placed into a specific zone.",
+        "E. E. Individual vSphere Namespaces will be spread across all zones."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 54,
+      "question": "An administrator is investigating reports of users experiencing difficulties logging into a VMware vCenter instance using LDAP accounts. Which service should the administrator check as part of troubleshooting?",
+      "type": "multiple",
+      "options": [
+        "A. A. vSphere Authentication Proxy Service",
+        "B. B. Lookup Service",
+        "C. C. Identity Management Service",
+        "D. D. VMware Authentication Framework Daemon"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 55,
+      "question": "An administrator is looking to deploy a new VMware vCenter instance. The current environment consists of 75 hosts and is expected to grow up to 100 hosts over the next three years. Which deployment size should the administrator select?",
+      "type": "multiple",
+      "options": [
+        "A. A. Medium",
+        "B. B. Tiny",
+        "C. C. Large",
+        "D. D. Small"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 56,
+      "question": "An administrator has been notified that a number of hosts are not compliant with the company policy for time synchronization. The relevant portion of the policy states: All physical servers must synchronize time with an external time source that is accurate to the microsecond. Which step should the administrator take to ensure compliance with the policy?",
+      "type": "multiple",
+      "options": [
+        "A. A. Ensure that each vCenter Server Appliance is configured to use a Network Time Protocol (NTP) source.",
+        "B. B. Ensure that each ESXi host is configured to use a Precision Time Protocol (PTP) source.",
+        "C. C. Ensure that each ESXi host is configured to use a Network Time Protocol (NTP) source.",
+        "D. D. Ensure that each vCenter Server Appliance is configured to use a Precision Time Protocol (PTP) source."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 57,
+      "question": "Following a merger with another company, an administrator is tasked with configuring an identity source for VMware vCenter so that all vSphere administrators can authenticate using their existing Active Directory accounts. Each company has user accounts in their own Active Directory forests. The following additional information has been provided: The corporate policy states that only Windows-based machine accounts are allowed in Active Directory. Which action should the administrator take to configure vCenter Single Sign-On (SSO) to meet this requirement?",
+      "type": "multiple",
+      "options": [
+        "A. A. Configure SSO to use Active Directory over LDAP as the identity source.",
+        "B. B. Configure SSO to use OpenLDAP as the identity source.",
+        "C. C. Join the vCenter Server Appliance to the LDAP domain.",
+        "D. D. Configure SSO to use Active Directory (Integrated Windows Authentication) as the identity source."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 58,
+      "question": "Which two performance tools can be used to monitor virtual machines outside the guest operating system? (Choose two.)",
+      "type": "multiple",
+      "options": [
+        "A. A. vCenter Server performance charts",
+        "B. B. Task Manager",
+        "C. C. top",
+        "D. D. esxtop",
+        "E. E. Perfmon"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 59,
+      "question": "What is the default shutdown order of virtual machines (VMs) on a host? (Choose the best answer.)",
+      "type": "multiple",
+      "options": [
+        "A. A. Alphabetical based on VM names",
+        "B. B. Highest utilization to lowest utilization",
+        "C. C. Largest VM to smallest VM",
+        "D. D. Reverse of the startup order"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 60,
+      "question": "An administrator is tasked with applying updates to a vSphere cluster running vSAN using vSphere Lifecycle Manager. Downtime to the ESXi hosts must be minimal while the work is completed. The administrator has already completed the following steps and no errors have been returned: Downloaded all applicable software and created a new image. Attached the new image to the cluster and run a compliance check against the image for the cluster. Ran a remediation pre-check for the cluster. Which two series of steps should the administrator perform to start the remediation of the cluster using the new image? (Choose two.)",
+      "type": "multiple",
+      "options": [
+        "A. A. Use the Remediate option in vSphere Lifecycle Manager to remediate all of the ESXi hosts in the cluster in parallel. Allow vSphere Lifecycle Manager to automatically control maintenance mode on the ESXi hosts.",
+        "B. B. Place each of the ESXi hosts into maintenance mode manually. Use the Stage option in vSphere Lifecycle Manager to stage the required software on all ESXi hosts one at a time.",
+        "C. C. Leave all ESXi hosts in the cluster operational. Use the Stage All option in vSphere Lifecycle Manager to stage the required software onto all ESXi hosts one at a time.",
+        "D. D. Leave all ESXi hosts in the cluster operational. Use the Stage All option in vSphere Lifecycle Manager to stage the required software onto all ESXi hosts in the cluster in parallel.",
+        "E. E. Use the Remediate option in vSphere Lifecycle Manager to remediate all of the ESXi hosts in the cluster in sequence. Allow vSphere Lifecycle Manager to automatically control maintenance mode on the ESXi hosts."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 61,
+      "question": "An administrator is working with VMware Support and is asked to provide log bundles for the ESXi hosts in an environment. Which three options does the administrator have? (Choose three.)",
+      "type": "multiple",
+      "options": [
+        "A. A. Generate a combined log bundle for all ESXi hosts using the vCenter Management Interface.",
+        "B. B. Generate a separate log bundle for each ESXi host using the vSphere Host Client.",
+        "C. C. Generate a combined log bundle for all ESXi hosts using the vSphere Client.",
+        "D. D. Generate a separate log bundle for each ESXi host using the vSphere Client.",
+        "E. E. Generate a separate log bundle for each ESXi host using the vCenter Management Interface.",
+        "F. F. Generate a combined log bundle for all ESXi hosts using the vSphere Host Client."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 62,
+      "question": "An administrator needs to consolidate a number of physical servers by migrating the workloads to a software-defined data center solution. Which VMware solution should the administrator recommend?",
+      "type": "multiple",
+      "options": [
+        "A. A. VMware Horizon",
+        "B. B. VMware vSAN",
+        "C. C. VMware vSphere",
+        "D. D. VMware NSX"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 63,
+      "question": "An administrator is tasked with configuring remote direct memory access (RDMA) over Converged Ethernet v2 (RoCE v2). Which two types of adapters must the administrator configure? (Choose two.)",
+      "type": "multiple",
+      "options": [
+        "A. A. Paravirtual RDMA adapter",
+        "B. B. RDMA network adapter",
+        "C. C. Software iSCSI adapter",
+        "D. D. Fibre Channel over Ethernet (FCoE) adapter",
+        "E. E. Software NVMe over RDMA storage adapter"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 64,
+      "question": "An administrator has a host profile named Standard-Config. The administrator wants to change the other host profiles to use only the storage configuration settings that are defined in the Standard-Config host profile. What should the administrator do to make this change?",
+      "type": "multiple",
+      "options": [
+        "A. A. Export host customizations and import them to the other host profiles.",
+        "B. B. Copy the storage settings from Standard-Config to all other host profiles.",
+        "C. C. Duplicate the Standard-Config host profile and only modify the storage configuration settings.",
+        "D. D. Export the Standard-Config host profile and attach it to the other hosts."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 65,
+      "question": "A vSphere cluster has the following configuration: Virtual machines (VMs) are running Production and Test workloads vSphere Distributed Resource Scheduler (DRS) is enabled There are no resource pools in the cluster Performance monitoring data shows that the Production workload VMs are not receiving their fully allocated memory when the vSphere cluster is fully utilized. A combination of which two steps could the administrator perform to ensure that the Production VMs are always guaranteed the full allocation of memory? (Choose two.)",
+      "type": "multiple",
+      "options": [
+        "A. A. Assign a custom memory share value to the resource pool containing the Production VMs.",
+        "B. B. Assign a memory reservation value to the resource pool containing the Production VMs.",
+        "C. C. Create a parent resource pool for the Production VMs.",
+        "D. D. Create a sibling resource pool for each of the Production and Test VMs.",
+        "E. E. Create a child resource pool for the Test VMs."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 66,
+      "question": "Which two datastore types store the components of a virtual machine as a set of objects? (Choose two.)",
+      "type": "multiple",
+      "options": [
+        "A. A. VMware Virtual Machine File System (VMFS)",
+        "B. B. VMware vSAN",
+        "C. C. Network File System (NFS) 3",
+        "D. D. vSphere Virtual Volumes (vVols)",
+        "E. E. Network File System (NFS) 4.1"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 67,
+      "question": "An administrator is tasked with moving an application and guest operating system (OS) running on top of a physical server to a software-defined data center (SDDC) in a remote secure location. The following constraints apply: The remote secure location has no network connectivity to the outside world. The business owner is not concerned if all changes in the application make it to the SDDC in the secure location. The application’s data is hosted in a database with a high number of transactions. What could the administrator do to create an image of the guest OS and application that can be moved to this remote data center?",
+      "type": "multiple",
+      "options": [
+        "A. A. Create a hot clone of the physical server using VMware vCenter Converter.",
+        "B. B. Create a cold clone of the physical server using VMware vCenter Converter.",
+        "C. C. Restore the guest OS from a backup.",
+        "D. D. Use storage replication to replicate the guest OS and application."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 68,
+      "question": "An administrator is tasked with configuring an appropriate Single Sign-On (SSO) solution for VMware vCenter based on the following criteria: The solution should support the creation of Enhanced Link Mode groups. All user accounts are stored within a single Active Directory domain and the solution must support only this Active Directory domain as the identity source. All user account password and account lockout policies must be managed within the Active Directory domain. The solution should support token-based authentication. Which SSO solution should the administrator choose based on the criteria?",
+      "type": "multiple",
+      "options": [
+        "A. A. vCenter Identity Provider Federation with Active Directory Federation Services as the identity provider",
+        "B. B. vCenter Single Sign-On with Active Directory over LDAP as the identity source",
+        "C. C. vCenter Single Sign-On with Active Directory (Windows Integrated Authentication) as the identity source",
+        "D. D. vCenter Identity Provider Federation with Active Directory over LDAP as the identity provider"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 69,
+      "question": "An administrator is tasked with looking into the disaster recovery options for protecting a database server using VMware vSphere Replication. The following requirements must be met: The virtual machine must remain online during the protection. The virtual machine's snapshots must be used as part of the replication process. Which step must the administrator complete to accomplish this task?",
+      "type": "multiple",
+      "options": [
+        "A. A. Configure the virtual machine storage policy.",
+        "B. B. Enable guest OS VSS quiescing for this virtual machine.",
+        "C. C. Perform a full initial synchronization of the source virtual machine to the target location.",
+        "D. D. Configure network traffic isolation for vSphere Replication."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 70,
+      "question": "An administrator must gracefully restart a virtual machine (VM) through the vSphere Client but the option is greyed out. The administrator has full administrative access on VMware vCenter and all the objects available in vCenter, but has no access to log onto the operating system. Which action should the administrator take to meet the objective?",
+      "type": "multiple",
+      "options": [
+        "A. A. Upgrade the virtual hardware",
+        "B. B. Migrate the VM to another host",
+        "C. C. Install VMware Tools",
+        "D. D. Restart vCenter"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 71,
+      "question": "An administrator is tasked with installing VMware vCenter. The vCenter Server Appliance must support an environment of: 400 hosts 4000 virtual machines Which two resources must be allocated, at a minimum, to meet the requirements? (Choose two.)",
+      "type": "multiple",
+      "options": [
+        "A. A. 16 vCPUs",
+        "B. B. 30 GB Memory",
+        "C. C. 4 vCPUs",
+        "D. D. 8 vCPUs",
+        "E. E. 20 GB Memory"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 72,
+      "question": "Which VMware offering will allow an administrator to manage the lifecycle of multiple vCenter Server instances in a single software as a service (SaaS)-based solution to help drive operational efficiency?",
+      "type": "multiple",
+      "options": [
+        "A. A. VMware vSphere with Tanzu",
+        "B. B. VMware Cloud Foundation",
+        "C. C. VMware vSphere+",
+        "D. D. VMware Aria Suite Lifecycle"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 73,
+      "question": "Which feature would allow for the non-disruptive migration of a virtual machine between two clusters in a single VMware vCenter instance?",
+      "type": "multiple",
+      "options": [
+        "A. A. vSphere vMotion",
+        "B. B. Cross vCenter Migration",
+        "C. C. vSphere Storage vMotion",
+        "D. D. vSphere Fault Tolerance"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 74,
+      "question": "Which four elements can a vSphere Lifecycle Manager image contain? (Choose four.)",
+      "type": "multiple",
+      "options": [
+        "A. A. ESXi base image",
+        "B. B. ESXi configuration",
+        "C. C. Vendor agents",
+        "D. D. Vendor add-ons",
+        "E. E. BIOS updates",
+        "F. F. Firmware and drivers add-on",
+        "G. G. Independent components"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 75,
+      "question": "If a distributed switch uses the “Route based on physical NIC load” load balancing algorithm, what does the mean send or receive utilization of an uplink need to exceed for the flow of traffic to move to the second uplink?",
+      "type": "multiple",
+      "options": [
+        "A. A. 75 percent of the capacity over a 30 second period",
+        "B. B. 60 percent of the capacity over a 30 second period",
+        "C. C. 60 percent of the capacity over a 40 second period",
+        "D. D. 75 percent of the capacity over a 40 second period"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 76,
+      "question": "An administrator notices a performance issue in VMware vCenter. To try and understand more about the performance issue, the administrator needs to gather more information about the vCenter database to eliminate a potential disk space issue.",
+      "type": "multiple",
+      "options": [
+        "A. A. vCenter Management Interface (VAMI)",
+        "B. B. Perfmon",
+        "C. C. df",
+        "D. D. esxtop",
+        "E. E. vSphere Client"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 77,
+      "question": "An administrator notices a Fibre Channel adapter in an ESXi host has been experiencing inconsistent connectivity states.",
+      "type": "multiple",
+      "options": [
+        "A. A. Host Connection Lost",
+        "B. B. Lost Network Path Redundancy",
+        "C. C. Lost Network Connectivity",
+        "D. D. Lost Storage Connectivity"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 78,
+      "question": "An administrator is tasked with looking into the disaster recovery (DR) options for a software-defined data center (SDDC).",
+      "type": "multiple",
+      "options": [
+        "A. A. Configure VMware Cloud Disaster Recovery (VCDR) and combine it with array-based storage replication.",
+        "B. B. Configure VMware a Site Recovery Manager and combine it with vSphere Replication.",
+        "C. C. Configure a subscribed content library on the secondary site.",
+        "D. D. Configure VMware Site Recovery Manager and combine it with array-based storage replication."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 79,
+      "question": "An administrator needs to update a VMware vCenter instance to a newer minor release version. Due to restrictions within the environment, the vCenter instance does not have access to the Internet. As a first step, the administrator downloads the required update on another machine.",
+      "type": "multiple",
+      "options": [
+        "A. A. Place the update ISO file in a Virtual Machine File System (VMFS) datastore. Use the vSphere Client to select the update ISO file as the source for the update.",
+        "B. B. Mount the ISO update file to the CD-ROM drive of the vCenter instance. Use the vCenter Management Interface to select the CD-ROM as the source for the update.",
+        "C. C. Place the ISO update file in a folder accessible to the vCenter instance over HTTPS. Use the vCenter Management Interface to select the update file as the source for the update.",
+        "D. D. Place the ZIP update file in a folder accessible to the vCenter instance over HTTPS. Use the vSphere Client to select the update file as the source for the update."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 80,
+      "question": "An administrator is tasked with allowing a single user the ability to take snapshots on a virtual machine. When looking in vCenter, the administrator can see that there are already users and groups assigned permissions on the virtual machine as follows:",
+      "type": "multiple",
+      "options": [
+        "A. A. Add the user to the VM_Users group and leave the permissions on the virtual machine object unchanged.",
+        "B. B. Add a new permission on the virtual machine object selecting the user and the new custom role.",
+        "C. C. Edit the Read Only role to add the Virtual Machine Snapshot Management privileges.",
+        "D. D. Create a new custom role with the Virtual Machine Snapshot Management privileges.",
+        "E. E. Add a new permission on the virtual machine object selecting the VM_Viewers group and the new custom role."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 81,
+      "question": "An administrator is preparing to perform an update to vSphere clusters that are running vSAN. The administrator wants to ensure that the following requirements are met as part of the update:",
+      "type": "multiple",
+      "options": [
+        "A. A. Configure vSphere Lifecycle Manager with an image for the cluster.",
+        "B. B. Register the vendor hardware management system as a vCenter Server extension.",
+        "C. C. Download the firmware updates from the VMware website.",
+        "D. D. Download the firmware updates from the vendor website.",
+        "E. E. Run a hardware compatibility check using vSphere Lifecycle Manager.",
+        "F. F. Configure vSphere Lifecycle Manager with a baseline for the cluster."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 82,
+      "question": "An administrator is asked to segregate virtual machine (VM) traffic by VLAN on a vSphere standard switch.",
+      "type": "multiple",
+      "options": [
+        "A. A. External Switch Tagging (EST)",
+        "B. B. None",
+        "C. C. Virtual Guest Tagging (VGT)",
+        "D. D. Virtual Switch Tagging (VST)"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 83,
+      "question": "An administrator wants to use tag-based placement rules on their virtual machine disks using VMware vCenter.",
+      "type": "multiple",
+      "options": [
+        "A. A. Storage Policy Based Management",
+        "B. B. Storage I/O Control",
+        "C. C. vSphere Storage APIs for Storage Awareness (VASA)",
+        "D. D. vSphere Distributed Resource Scheduler (DRS)"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 84,
+      "question": "A combination of which two components of the software-defined data center (SDDC) are responsible for the initial abstraction of CPU, memory, disk, and network resources and their subsequent management? (Choose two.)",
+      "type": "multiple",
+      "options": [
+        "A. A. VMware Aria Operations",
+        "B. B. VMware Aria Suite Lifecycle",
+        "C. C. VMware vCenter",
+        "D. D. VMware ESXi",
+        "E. E. VMware vCenter Cloud Gateway"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 85,
+      "question": "What are two use cases for VMware vSphere+? (Choose two.)",
+      "type": "multiple",
+      "options": [
+        "A. A. Enhance on-premises workloads by managing them through the VMware Cloud Console.",
+        "B. B. Allow live migration between on-premises and VMware Cloud.",
+        "C. C. Increase the performance of the native vCenter vMotion capability.",
+        "D. D. Allow the creation of affinity and anti-affinity rules to be used during failover events.",
+        "E. E. Simplify vCenter lifecycle management through cloud-enabled automation."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 86,
+      "question": "An administrator is completing the configuration of a new vSphere cluster and has enabled vSphere High Availability (HA) and vSphere Distributed Resource Scheduler (DRS).",
+      "type": "multiple",
+      "options": [
+        "A. A. vMotion networking",
+        "B. B. Management networking",
+        "C. C. vSAN networking",
+        "D. D. Virtual machine networking"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 87,
+      "question": "An administrator plans to bring VMware vCenter offline in order to perform hardware maintenance on the host where the vCenter Server Appliance is running.",
+      "type": "multiple",
+      "options": [
+        "A. A. vSphere Distributed Resource Scheduler",
+        "B. B. Hybrid Linked Mode",
+        "C. C. vCenter Server High Availability",
+        "D. D. Enhanced Linked Mode"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 88,
+      "question": "Which two tasks can be completed using vSphere LifeCycle Manager? (Choose two.)",
+      "type": "multiple",
+      "options": [
+        "A. A. Manage the firmware lifecycle of ESXi hosts that are part of a managed cluster with a single image.",
+        "B. B. Check that the ESXi hosts are compliant with the recommended baseline and update the hosts.",
+        "C. C. Upgrade VMware vCenter from version 7 to 8.",
+        "D. D. Check the hardware compatibility of the hosts in a cluster against the VMware Compatibility Guide (VCG) using baselines.",
+        "E. E. Manage the firmware lifecycle of ESXi hosts that are part of a managed cluster using baselines."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 89,
+      "question": "An administrator is tasked with implementing a backup solution capable of backing up the Supervisor cluster, vSphere Pods, and persistent volumes.",
+      "type": "multiple",
+      "options": [
+        "A. A. VMware vCenter",
+        "B. B. Standalone Velero and Restic",
+        "C. C. NSX-T Manager",
+        "D. D. vSphere Host Client",
+        "E. E. Velero Plugin for vSphere"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 90,
+      "question": "An administrator receives reports from the application team of poor performance of a virtual machine (VM). The administrator reviews the virtual machine and discovers that it has 20 snapshots that are over 12 months old.",
+      "type": "multiple",
+      "options": [
+        "A. A. Inflate the base disk to make space for future snapshots.",
+        "B. B. Revert to the latest snapshot.",
+        "C. C. Consolidate all of the snapshots into the base VM.",
+        "D. D. Identify and delete the largest delta .vmdk file."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 91,
+      "question": "A vSphere cluster hosts a three-tier application. The cluster has 50% resources available. If a host in the cluster fails, the database server must be online before the application server, and the application server must be online before the Web server. Which feature can be used to meet these requirements?",
+      "type": "multiple",
+      "options": [
+        "A. A. Predictive DRS",
+        "B. B. vSphere HA Orchestrated Restart",
+        "C. C. vSphere HA Restart Priority",
+        "D. D. Proactive HA"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 92,
+      "question": "What is the minimum network throughput in Gb/s for vSAN using the Express Storage Architecture (ESA)?",
+      "type": "multiple",
+      "options": [
+        "A. A. 50",
+        "B. B. 25",
+        "C. C. 1",
+        "D. D. 10"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 93,
+      "question": "Which step is completed during Stage 1 of the vCenter Server Appliance deployment?",
+      "type": "multiple",
+      "options": [
+        "A. A. Join a vCenter Single Sign-On domain",
+        "B. B. Create a new vCenter Single Sign-On domain",
+        "C. C. Select the deployment size",
+        "D. D. Configure SSH access"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 94,
+      "question": "An administrator is tasked with adding two additional hosts into an existing production vSphere cluster to support the need for additional capacity. The vSphere cluster currently has four identically configured ESXi hosts (esx01, esx02, esx03 and esx04) that utilize Intel Skylake-based CPUs. The two new hosts (esx05 and esx06) are configured identically in terms of memory and storage to the existing hosts, but utilize Intel Ice Lake-based CPUs. The administrator must ensure that: Any virtual machine migrates to any of the six ESXi hosts running in the cluster. There is no virtual machine downtime during the process of adding the new hosts. Which step should the administrator take to meet these requirements?",
+      "type": "multiple",
+      "options": [
+        "A. A. Create a new vSphere cluster with Enhanced vMotion Compatibility (EVC) enabled and move all hosts into the new cluster.",
+        "B. B. Create a new vSphere cluster and move only three hosts into the new cluster.",
+        "C. C. Configure Enhanced vMotion Compatibility (EVC) mode on the existing cluster and add the two new hosts into the cluster.",
+        "D. D. Create a new vSphere cluster with vSphere High Availability (HA) enabled and move all hosts into the new cluster."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 95,
+      "question": "An administrator is investigating user logon failures for a VMware vCenter instance. Where can the administrator find log files containing information related to user login activities?",
+      "type": "multiple",
+      "options": [
+        "A. A. On the vCenter Management Interface",
+        "B. B. On the ESXi host using the Direct Console User Interface",
+        "C. C. On the vCenter Server Appliance",
+        "D. D. In the vSphere Client when viewing the vCenter virtual machine"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 96,
+      "question": "What are two uses cases for VMware Tools? (Choose two.)",
+      "type": "multiple",
+      "options": [
+        "A. A. Time synchronization with an NTP server",
+        "B. B. Direct deployment of the Aria Automation Config minion",
+        "C. C. Share folders between ESXi hosts and guest OS file systems",
+        "D. D. Ability to shut down a virtual machine remotely",
+        "E. E. Support for unsupported network device drivers"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 97,
+      "question": "An administrator has configured Storage I/O Control (SIOC) on a Virtual Machine File System (VMFS) datastore.",
+      "type": "multiple",
+      "options": [
+        "A. A. 30,000",
+        "B. B. 20,000",
+        "C. C. 10,000",
+        "D. D. 5,000"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 98,
+      "question": "An administrator needs to configure a content library solution based on the following information:",
+      "type": "multiple",
+      "options": [
+        "A. A. Create a new published content library in each secondary site.",
+        "B. B. Configure the New York subscribed content library to download content immediately.",
+        "C. C. Configure the Tokyo subscribed content library to download content immediately.",
+        "D. D. Configure the Tokyo subscribed content library to download content when needed.",
+        "E. E. Create a new published content library at the primary site.",
+        "F. F. Configure the New York subscribed content library to download content when needed.",
+        "G. G. Create a new subscribed content library in each secondary site."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 99,
+      "question": "An administrator is required to configure several Microsoft Windows virtual machines (VMs) to support Secure Boot for a critical secure application. The following information is provided: The corporate security policy states that all forms of data encryption must utilize a key provider. The firmware of each VM is currently set to use Unified Extensible Firmware Interface (UEFI). Due to the nature of the application running within the VMs, the guest operating system for each VM is currently a minimum of Windows Server 2008 and Windows 7. Which security feature should the administrator implement to meet these requirements?",
+      "type": "multiple",
+      "options": [
+        "A. A. vSphere Virtual Machine Encryption",
+        "B. B. vSphere Visualization-Based Security",
+        "C. C. Virtual Intel Software Guard Extensions (vSGX)",
+        "D. D. Virtual Trusted Platform Module (vTPM)"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 100,
+      "question": "An administrator is preparing for a deployment of a new vCenter Server Appliance. The following information has been provided to complete the deployment:",
+      "type": "multiple",
+      "options": [
+        "A. A. Create a DNS CNAME record for the vCenter Server (vcsa01.corp.local).",
+        "B. B. Create a DNS CNAME record for the ESXi Host server (esx01.corp.local).",
+        "C. C. Create a reverse DNS A record for the vCenter Server (vcsa01).",
+        "D. D. Create a reverse DNS A record for the ESXi Host server (esx01)",
+        "E. E. Create a forward DNS A record for the vCenter Server (vcsa01)."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 101,
+      "question": "An administrator manages VM templates and ISO images for a remote office. Their main requirements are to store these templates in a single repository and manage different versions of the templates. What solution should the administrator deploy to meet these requirements?",
+      "type": "multiple",
+      "options": [
+        "A. A. A vSAN datastore",
+        "B. B. A shared VMFS datastore",
+        "C. C. A local content library",
+        "D. D. A subscribed content library"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 102,
+      "question": "An administrator needs to create affinity rules for the following vSphere cluster setup: The cluster contains two virtual machines (VMs) named app01 and app02. The cluster contains six hosts named esx11 through esx16. The app01 and app02 VMs run software that is licensed to run only on esx11, esx12, or esx13. vSphere Distributed Resource Scheduler (DRS) is configured. Which set of steps must the administrator perform to ensure that the licensing requirements are met for app01 and app02?",
+      "type": "multiple",
+      "options": [
+        "A. A. 1. Add all the hosts to a host group. 2. Create a VM-VM anti-affinity rule for app01 and app02.",
+        "B. B. 1. Add the esx11 – esx13 hosts to a host group. 2. Create a VM-VM affinity rule for app01 and app02.",
+        "C. C. 1. Add the VMs to a VM group and the esx11 – esx13 hosts to a host group. 2. Create a VM-Host required rule between the VM group and the host group.",
+        "D. D. 1. Add the VMs to a VM group and the esx11 – esx13 hosts to a host group. 2. Create a VM-Host preferential rule between the VM group and the host group."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 103,
+      "question": "The vCenter inventory contains a virtual machine (VM) template called Linux-01. The administrator wants to install a software patch into Linux-01 while allowing users to continue to access Linux-01 to deploy VMs. Which series of steps should the administrator take to accomplish this task?",
+      "type": "multiple",
+      "options": [
+        "A. A. 1. Verify that Linux-01 is in a content library. 2. Clone Linux-01 3. Convert the clone to a VM. 4. Install the software patch.",
+        "B. B. 1. Convert Linux-01 to a VM 2. Install the software patch. 3. Convert the VM back to a VM template. 4. Add Linux-01 to the content library.",
+        "C. C. 1. Verify that Linux-01 is in a content library. 2. Check out Linux-01. 3. Install the software patch. 4. Check in Linux-01.",
+        "D. D. 1. Clone Linux-01. 2. Convert the clone to a VM. 3. Install the software patch. 4. Convert the VM back to a template."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 104,
+      "question": "An administrator remotely deploys VMware ESXi using an out of band management connection and now needs to complete the configuration of the management network so that the host is accessible through the vSphere Host Client. The following information has been provided to complete the configuration: Host FQDN: esxi01.corp.local Management VLAN ID: 10 DHCP: No Management IP Address: 172.16.10.101/24 Management IP Gateway: 172.16.10.1 Corporate DNS Servers: 172.16.10.5, 172.16.10.6 DNS Domain: corp.local In addition, all host configurations must also meet the following requirements: The management network must use only IPv4 network protocols. The management network must be fault tolerant. Which four high level tasks should the administrator complete in the Direct Console User Interface (DCUI) in order to meet the requirements and successfully log into the vSphere Host Client? (Choose four.)",
+      "type": "multiple",
+      "options": [
+        "A. A. Set the value of the VMware ESXi Management Network VLAN ID to 10.",
+        "B. B. Configure at least two network adapters for the VMware ESXi Management Network.",
+        "C. C. Update the VMware ESXi Management Network IPv4 configuration to use a static IPv4 address.",
+        "D. D. Create a DNS A Record for the VMware ESXi host on the corporate DNS servers.",
+        "E. E. Disable IPv6 for the VMware ESXi Management Network.",
+        "F. F. Restore the original Management vSphere Standard Switch.",
+        "G. G. Update the VMware ESXi Management Network DNS configuration to use the corporate DNS servers for names resolution."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 105,
+      "question": "Refer to the exhibit. Given the configuration shown in the exhibit, what should the administrator do if the latest VM template contains changes that are no longer needed?",
+      "type": "multiple",
+      "options": [
+        "A. A. Delete App-LibTemplate (2)",
+        "B. B. Revert to App-LibTemplate (2)",
+        "C. C. Delete App-LibTemplate (3)",
+        "D. D. Check out App-LibTemplate (3)"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 106,
+      "question": "Refer to the exhibit. An administrator configures a distributed switch and adds the first VMware ESXi server to it. The administrator also performs the following activities: The administrator assigns two uplinks to the distributed switch. The administrator enables uplink teaming. When attempting to perform a health check of the teaming policy, the health status of the Teaming and Failover reports as “Unknown”, as seen in the exhibit. What can the administrator changes in the distributed switch for the health status to report correctly?",
+      "type": "multiple",
+      "options": [
+        "A. A. Add a minimum of three hosts with two uplinks each",
+        "B. B. Add a minimum of two hosts with two uplinks each",
+        "C. C. Add a minimum of three hosts with four uplinks each",
+        "D. D. Add a minimum of two hosts with one uplink each"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 107,
+      "question": "Refer to the exhibit. After removing an ESXi host from a cluster for maintenance, a number of virtual machines have encountered the warning seen in the exhibit. After re-adding the ESXi, the issue is resolved. Which step should the administrator take to move the triggered alarm to its normal state?",
+      "type": "multiple",
+      "options": [
+        "A. A. Ignore",
+        "B. B. Acknowledge",
+        "C. C. Disable",
+        "D. D. Reset to Green"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 108,
+      "question": "Refer to the exhibit. An administrator set up the following configuration: The distributed switch has four ESXi hosts, and each host has two 10 Gbps NICs. In the Network I/O Control configuration, the amount of bandwidth reserved for virtual machine (VM) traffic if 4 Gbps. The administrator wants to guarantee that VMs in the Retail distributed port group can access 50 percent of the available reserved bandwidth for VM traffic. Given this scenario, what should the size (in Gbps) of the Retail network resource pool be?",
+      "type": "multiple",
+      "options": [
+        "A. A. 40",
+        "B. B. 32",
+        "C. C. 8",
+        "D. D. 16"
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 109,
+      "question": "Refer to the exhibit. An environment has the following configuration: 1. Resource Pool “RP-MOM” has a reservation of 6GHz and one running virtual machine (VM) “VM-M1” with 1 GHz reserved. 2. Resource Pool “RP-KID” has a reservation of 2GHz, and expandable reservations is activated. The administrator creates two VMs, “VM-K1” and “VM-K2”, in the “RP-KID” resource pool with 2GHz reserved for each, and turns on “VM-M1.” Given this scenario, which statement is true?",
+      "type": "multiple",
+      "options": [
+        "A. A. The administrator must deactivate expandable reservations to turn on VM-K2.",
+        "B. B. The administrator can create a third VM (“VM-K3”) at RP-KID and reserve 6GHz.",
+        "C. C. VM-K2 can be powered on because it can get the resources needed from RP-MOM.",
+        "D. D. VM-K2 cannot be powered on because there are not enough resources in RP-KID."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 110,
+      "question": "Refer to the exhibit. An administrator is tasked with adding new capacity to an existing software-defined data center (SDDC). The SDDC currently hosts two vSphere clusters (ClusterA and ClusterB) with different CPU compatibilities. vSphere vMotion and vSphere Distributed Resource Scheduler (DRS) are currently in use in the SDDC. The new capacity will be implemented by provisioning four ESXi hosts running a new generation of Intel Skylake CPUs. All workload virtual machines (VMs) must support live migration to any cluster in the SDDC. The administrator noticed the running critical \"evc1\" virtual machine (VM) shown in the exhibit is not migrating using vSphere vMotion to the original Clusters A or B. Which three steps must the administrator take to support this functionality? (Choose three.)",
+      "type": "multiple",
+      "options": [
+        "A. A. Disable the Enhanced vMotion Compatibility (EVC) on the VM.",
+        "B. B. Reboot the VM.",
+        "C. C. Configure the Enhanced vMotion Compatibility (EVC) on the VM to Intel Skylake.",
+        "D. D. Power on the VM.",
+        "E. E. Configure the Enhanced vMotion Compatibility (EVC) on vSphere Cluster A and B to support Intel Skylake.",
+        "F. F. Power off the VM."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    },
+    {
+      "id": 111,
+      "question": "An administrator has a requirement to revert a running virtual machine to a previous snapshot after a failed attempt to upgrade an application. When the administrator originally took the snapshot, the following choices in the Take Snapshot dialog were made:",
+      "type": "multiple",
+      "options": [
+        "A. A. The virtual machine will be restored to the parent snapshot",
+        "B. B. The virtual machine will be restored in a powered off state.",
+        "C. C. The virtual machine will be restored to the child snapshot",
+        "D. D. The virtual machine will be restored in a powered on state.",
+        "E. E. The virtual machine will be restored in a suspended state."
+      ],
+      "correctAnswers": [
+        "A",
+        "B"
+      ],
+      "explanation": ""
+    }
+  ],
+  "metadata": {
+    "created": "2025-08-03",
+    "lastModified": "2025-08-03",
+    "author": "MCQED Team",
+    "category": "VMware",
+    "difficulty": "Professional",
+    "tags": [
+      "vSphere",
+      "VMware",
+      "Virtualization",
+      "Professional"
+    ],
+    "source": "Extracted from vmware.html"
+  }
+}

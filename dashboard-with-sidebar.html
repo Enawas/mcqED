@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCQED - Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+                 :root {
+             --primary-color: #2c3e50;
+             --secondary-color: #34495e;
+             --success-color: #27ae60;
+             --warning-color: #f39c12;
+             --danger-color: #e74c3c;
+             --info-color: #3498db;
+             --sidebar-width: 280px;
+             --sidebar-primary: #2c3e50;
+             --sidebar-secondary: #34495e;
+         }
+        
+        body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+                         background: linear-gradient(135deg, var(--sidebar-primary) 0%, var(--sidebar-secondary) 100%);
+            color: white;
+            z-index: 1000;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .sidebar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white !important;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .sidebar-user {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.05);
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .nav-section-title {
+            padding: 1rem 1.5rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 0.05em;
+        }
+        
+        .nav-link {
+            padding: 0.75rem 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.2s ease;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-right: 3px solid white;
+        }
+        
+        .nav-link i {
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            transition: margin-left 0.3s ease;
+        }
+        
+        .navbar {
+            background: white !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: var(--sidebar-width) solid transparent;
+            margin-left: calc(-1 * var(--sidebar-width));
+        }
+        
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--primary-color) !important;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border: none;
+            transition: transform 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-card .card-body {
+            padding: 1.5rem;
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: white;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 0;
+        }
+        
+        .qcm-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .qcm-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .category-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+        
+        .user-menu {
+            position: relative;
+        }
+        
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            border-radius: 10px;
+        }
+        
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .navbar {
+                border-left: none;
+                margin-left: 0;
+            }
+            
+            .mobile-toggle {
+                display: block !important;
+            }
+        }
+        
+        .mobile-toggle {
+            display: none;
+        }
+        
+        /* Sections content */
+        .content-section {
+            display: none;
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="#" class="sidebar-brand">
+                <i class="fas fa-graduation-cap"></i>
+                mcqED
+            </a>
+        </div>
+        
+        <div class="sidebar-user">
+            <div class="d-flex align-items-center">
+                <div class="user-avatar" id="user-avatar">A</div>
+                <div class="ms-3">
+                    <div class="fw-bold" id="user-name">Admin</div>
+                    <small class="opacity-75" id="user-role">Administrateur</small>
+                </div>
+            </div>
+        </div>
+        
+        <nav class="sidebar-nav">
+            <div class="nav-section-title">Navigation</div>
+            
+            <a href="#" class="nav-link active" onclick="showSection('dashboard')">
+                <i class="fas fa-tachometer-alt"></i>
+                Tableau de bord
+            </a>
+            
+            <a href="#" class="nav-link" onclick="showSection('qcm-list')">
+                <i class="fas fa-book"></i>
+                Tous les QCM
+            </a>
+            
+            <a href="#" class="nav-link" onclick="showSection('favorites')">
+                <i class="fas fa-star"></i>
+                Mes Favoris
+            </a>
+            
+            <a href="#" class="nav-link" onclick="showSection('results')">
+                <i class="fas fa-chart-line"></i>
+                Mes Résultats
+            </a>
+            
+
+            
+            <div class="nav-section-title">Administration</div>
+            
+            <a href="#" class="nav-link" onclick="openQuestionEditor()">
+                <i class="fas fa-edit"></i>
+                Éditeur de questions
+            </a>
+            
+
+            
+            <a href="#" class="nav-link" onclick="openImportTool()">
+                <i class="fas fa-upload"></i>
+                Import de questions
+            </a>
+            
+            <div class="nav-section-title">Compte</div>
+            
+            <a href="#" class="nav-link" onclick="showProfile()">
+                <i class="fas fa-user"></i>
+                Mon profil
+            </a>
+            
+            <a href="#" class="nav-link" onclick="showSettings()">
+                <i class="fas fa-cog"></i>
+                Paramètres
+            </a>
+            
+            <a href="#" class="nav-link" onclick="showAdminProfile()">
+                <i class="fas fa-crown"></i>
+                Profil Admin
+            </a>
+            
+            <div class="nav-section-title">Apparence</div>
+            
+            <a href="#" class="nav-link" onclick="toggleTheme()">
+                <i class="fas fa-moon"></i>
+                Mode sombre
+            </a>
+            
+            <a href="#" class="nav-link" onclick="toggleHighContrast()">
+                <i class="fas fa-eye"></i>
+                Contraste élevé
+            </a>
+            
+            <a href="#" class="nav-link text-danger" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                Se déconnecter
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <button class="btn btn-outline-primary mobile-toggle me-3" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                
+                <div class="navbar-nav ms-auto">
+                    <div class="nav-item dropdown user-menu">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle"></i> <span id="username">Utilisateur</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#" onclick="showProfile()">
+                                <i class="fas fa-user"></i> Profil
+                            </a></li>
+                            <li><a class="dropdown-item" href="#" onclick="showSettings()">
+                                <i class="fas fa-cog"></i> Paramètres
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" onclick="logout()">
+                                <i class="fas fa-sign-out-alt"></i> Déconnexion
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard-section" class="content-section active">
+            <div class="container-fluid mt-4">
+                <!-- En-tête -->
+                <div class="row mb-4">
+                    <div class="col">
+                        <h2>
+                            <i class="fas fa-tachometer-alt text-primary"></i> Dashboard
+                        </h2>
+                        <p class="text-muted">Bienvenue sur votre tableau de bord MCQED</p>
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-primary" onclick="createNewQcm()">
+                            <i class="fas fa-plus"></i> Nouveau QCM
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Statistiques -->
+                <div class="row mb-4" id="stats-container">
+                    <div class="col-md-3 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body d-flex align-items-center">
+                                <div class="stat-icon me-3" style="background: var(--primary-color);">
+                                    <i class="fas fa-book"></i>
+                                </div>
+                                <div>
+                                    <p class="stat-number" id="total-qcm">-</p>
+                                    <p class="text-muted mb-0">QCM Disponibles</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body d-flex align-items-center">
+                                <div class="stat-icon me-3" style="background: var(--success-color);">
+                                    <i class="fas fa-question-circle"></i>
+                                </div>
+                                <div>
+                                    <p class="stat-number" id="total-questions">-</p>
+                                    <p class="text-muted mb-0">Questions</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body d-flex align-items-center">
+                                <div class="stat-icon me-3" style="background: var(--warning-color);">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <div>
+                                    <p class="stat-number" id="average-score">-%</p>
+                                    <p class="text-muted mb-0">Score Moyen</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body d-flex align-items-center">
+                                <div class="stat-icon me-3" style="background: var(--info-color);">
+                                    <i class="fas fa-trophy"></i>
+                                </div>
+                                <div>
+                                    <p class="stat-number" id="exams-taken">-</p>
+                                    <p class="text-muted mb-0">Examens Passés</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QCM Récents -->
+                <div class="row">
+                    <div class="col">
+                        <h4><i class="fas fa-clock text-primary"></i> QCM Récents</h4>
+                        <div class="row" id="recent-qcm">
+                            <div class="loading">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Chargement...</span>
+                                </div>
+                                <p class="mt-2">Chargement des QCM...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Autres sections -->
+        <div id="qcm-list-section" class="content-section">
+            <div class="container-fluid mt-4">
+                <h2><i class="fas fa-book"></i> Tous les QCM</h2>
+                <p>Liste complète des QCM disponibles - À implémenter</p>
+            </div>
+        </div>
+
+        <div id="favorites-section" class="content-section">
+            <div class="container-fluid mt-4">
+                <h2><i class="fas fa-star"></i> Mes Favoris</h2>
+                <p>Vos QCM favoris - À implémenter</p>
+            </div>
+        </div>
+
+        <div id="results-section" class="content-section">
+            <div class="container-fluid mt-4">
+                <h2><i class="fas fa-chart-line"></i> Mes Résultats</h2>
+                <p>Historique de vos résultats - À implémenter</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Service API (identique à votre dashboard actuel)
+        class ApiService {
+            constructor() {
+                this.baseURL = '/api';
+                this.token = localStorage.getItem('mcqed_token');
+            }
+
+            async request(endpoint, options = {}) {
+                const url = `${this.baseURL}${endpoint}`;
+                const config = {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(this.token && { 'Authorization': `Bearer ${this.token}` })
+                    },
+                    ...options
+                };
+
+                const response = await fetch(url, config);
+
+                if (response.status === 401) {
+                    localStorage.removeItem('mcqed_token');
+                    localStorage.removeItem('mcqed_user');
+                    window.location.href = '/login.html';
+                    return;
+                }
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Erreur serveur');
+                }
+
+                return data;
+            }
+
+            async getDashboardStats() {
+                return this.request('/dashboard/stats');
+            }
+
+            async getQcm() {
+                return this.request('/qcm');
+            }
+        }
+
+        const apiService = new ApiService();
+
+        // Vérifier l'authentification
+        if (!localStorage.getItem('mcqed_token')) {
+            window.location.href = '/login.html';
+        }
+
+        // Charger les informations utilisateur
+        const user = JSON.parse(localStorage.getItem('mcqed_user') || '{}');
+        document.getElementById('username').textContent = user.username || 'Utilisateur';
+        document.getElementById('user-name').textContent = user.first_name || user.username || 'Utilisateur';
+        document.getElementById('user-role').textContent = user.role === 'admin' ? 'Administrateur' : 'Utilisateur';
+        document.getElementById('user-avatar').textContent = (user.first_name || user.username || 'U').charAt(0).toUpperCase();
+
+        // Navigation entre sections
+        function showSection(sectionName) {
+            // Masquer toutes les sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Afficher la section demandée
+            const targetSection = document.getElementById(sectionName + '-section');
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+            
+            // Mettre à jour la navigation active
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Toggle sidebar mobile
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('show');
+        }
+
+        // Fonctions de navigation (de votre ancien site)
+
+        function openQuestionEditor() {
+            window.location.href = '/question-editor.html';
+        }
+
+
+
+        function openImportTool() {
+            window.location.href = '/import.html';
+        }
+
+        function showAdminProfile() {
+            window.location.href = '/admin-profile.html';
+        }
+
+        function createNewQcm() {
+            window.location.href = '/question-editor.html';
+        }
+
+        // Fonctions de thème
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            const isDark = document.body.classList.contains('dark-theme');
+            localStorage.setItem('mcqed_theme', isDark ? 'dark' : 'light');
+        }
+
+        function toggleHighContrast() {
+            document.body.classList.toggle('high-contrast');
+            const isHighContrast = document.body.classList.contains('high-contrast');
+            localStorage.setItem('mcqed_high_contrast', isHighContrast);
+        }
+
+        // Charger le dashboard (identique à votre version)
+        async function loadDashboard() {
+            try {
+                const stats = await apiService.getDashboardStats();
+
+                // Mettre à jour les statistiques
+                document.getElementById('total-qcm').textContent = stats.general.total_qcm;
+                document.getElementById('total-questions').textContent = stats.general.total_questions;
+                document.getElementById('average-score').textContent = Math.round(stats.user.average_score || 0) + '%';
+                document.getElementById('exams-taken').textContent = stats.user.total_exams_taken || 0;
+
+                // Charger les QCM récents
+                loadRecentQcm(stats.recent_qcm);
+
+            } catch (error) {
+                console.error('Erreur chargement dashboard:', error);
+                document.getElementById('recent-qcm').innerHTML = `
+                    <div class="col-12">
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle"></i> 
+                            Erreur de chargement: ${error.message}
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // Charger les QCM récents (identique à votre version)
+        function loadRecentQcm(qcmList) {
+            const container = document.getElementById('recent-qcm');
+
+            if (qcmList.length === 0) {
+                container.innerHTML = `
+                    <div class="col-12">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i> 
+                            Aucun QCM disponible. Créez votre premier QCM !
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = qcmList.map(qcm => `
+                <div class="col-md-6 col-lg-4 mb-3">
+                    <div class="card qcm-card" onclick="openQcm('${qcm.qcm_id}')">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="category-badge" style="background: ${qcm.color}20; color: ${qcm.color};">
+                                    <i class="${qcm.icon}"></i> ${qcm.category_name}
+                                </span>
+                                <span class="text-muted">${qcm.question_count} questions</span>
+                            </div>
+                            <h5 class="card-title">${qcm.title}</h5>
+                            <p class="card-text text-muted">${qcm.description || 'Aucune description'}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted">
+                                    <i class="fas fa-clock"></i> ${qcm.time_limit} min
+                                </small>
+                                <span class="badge bg-primary">${qcm.passing_score}% requis</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Ouvrir un QCM
+        function openQcm(qcmId) {
+            window.location.href = `/qcm-player.html?qcm=${qcmId}`;
+        }
+
+        // Fonctions existantes de votre dashboard
+        function showProfile() {
+            alert('Profil utilisateur - À implémenter');
+        }
+
+        function showSettings() {
+            alert('Paramètres - À implémenter');
+        }
+
+        // Déconnexion
+        function logout() {
+            if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
+                localStorage.removeItem('mcqed_token');
+                localStorage.removeItem('mcqed_user');
+                window.location.href = '/login.html';
+            }
+        }
+
+        // Charger le dashboard au démarrage
+        loadDashboard();
+    </script>
+</body>
+</html>

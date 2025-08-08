@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen Blanc - MCQED</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="dark-mode.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 900px;
+            margin-top: 40px;
+        }
+        .exam-header {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid #dc3545;
+        }
+        .question-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+        .option-item {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .option-item:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+        .option-item.selected {
+            border-color: #28a745;
+            background: #f8fff9;
+        }
+        .option-item.correct {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+        .option-item.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+        .progress-bar {
+            background: linear-gradient(45deg, #dc3545, #c82333);
+        }
+        .btn-exam {
+            background: linear-gradient(45deg, #dc3545, #c82333);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            color: white;
+            font-weight: bold;
+            margin: 10px 5px;
+        }
+        .btn-exam:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            color: white;
+            text-decoration: none;
+        }
+        .explanation-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+        .exam-indicator {
+            background: #dc3545;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .alert-sm {
+            padding: 0.5rem 0.75rem;
+            font-size: 0.875rem;
+        }
+        .incorrect-questions-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .dropdown-header {
+            color: #6c757d;
+            font-weight: 600;
+            font-size: 0.875rem;
+            padding: 0.5rem 1rem;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .dropdown-header i {
+            margin-right: 0.5rem;
+            color: #667eea;
+        }
+        
+        /* Styles pour le chronomètre flottant (examen blanc) */
+        .timer-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            padding: 15px;
+            min-width: 180px;
+            z-index: 1000;
+            border: 1px solid rgba(220, 53, 69, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        /* Styles pour la carte des thèmes flottante */
+        .theme-container {
+            position: fixed;
+            bottom: 160px;
+            left: 20px;
+            background: var(--card-bg, rgba(255, 255, 255, 0.95));
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            box-shadow: var(--card-shadow, 0 8px 25px rgba(0, 0, 0, 0.15));
+            padding: 15px;
+            min-width: 80px;
+            z-index: 1000;
+            border: 1px solid var(--card-border, rgba(220, 53, 69, 0.2));
+            transition: all 0.3s ease;
+        }
+        
+        .theme-container:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--card-shadow-hover, 0 12px 35px rgba(0, 0, 0, 0.2));
+        }
+        
+        .theme-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary, #dc3545);
+        }
+        
+        .theme-header i {
+            margin-right: 5px;
+        }
+        
+        .theme-buttons-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .theme-btn-vertical {
+            background: var(--btn-bg, rgba(255, 255, 255, 0.9));
+            border: 1px solid var(--btn-border, rgba(220, 53, 69, 0.2));
+            border-radius: 8px;
+            padding: 10px;
+            color: var(--btn-color, #dc3545);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .theme-btn-vertical:hover {
+            background: var(--btn-hover-bg, rgba(220, 53, 69, 0.1));
+            transform: scale(1.1);
+            color: var(--btn-hover-color, #c82333);
+        }
+        
+        .theme-btn-vertical.active {
+            background: var(--btn-active-bg, #dc3545);
+            color: var(--btn-active-color, white);
+            border-color: var(--btn-active-border, #dc3545);
+        }
+        
+        .timer-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+        }
+        
+        .timer-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #dc3545;
+        }
+        
+        .timer-header i {
+            margin-right: 5px;
+        }
+        
+        .timer-display {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            color: #333;
+            background: #f8f9fa;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        
+        /* Responsive pour mobile */
+        @media (max-width: 768px) {
+            .theme-container {
+                bottom: 10px;
+                left: 10px;
+                right: 10px;
+                min-width: auto;
+                max-width: 120px;
+                margin: 0 auto;
+            }
+            
+            .timer-container {
+                bottom: 10px;
+                right: 10px;
+                left: 10px;
+                min-width: auto;
+                max-width: 200px;
+                margin: 0 auto;
+            }
+            
+            .timer-display {
+                font-size: 1rem;
+                padding: 6px 10px;
+            }
+            
+            .floating-buttons {
+                bottom: 10px;
+                left: 10px;
+                right: 10px;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .floating-btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        
+        /* Styles pour les boutons flottants */
+        .floating-buttons {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+        
+        .floating-btn {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 25px;
+            padding: 12px 20px;
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .floating-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+            color: #333;
+        }
+        
+        .floating-btn.home {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+        }
+        
+        .floating-btn.home:hover {
+            background: linear-gradient(45deg, #5a6fd8, #6a4190);
+            color: white;
+        }
+        
+        .floating-btn.logout {
+            background: linear-gradient(45deg, #dc3545, #c82333);
+            color: white;
+            border: none;
+        }
+        
+        .floating-btn.logout:hover {
+            background: linear-gradient(45deg, #c82333, #bd2130);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+
+    <div class="quiz-container">
+        <div class="text-center mb-4">
+            <h1 id="exam-title"><i class="fas fa-file-alt"></i> Chargement...</h1>
+            <p class="text-muted" id="exam-description">Chargement de l'examen...</p>
+        </div>
+
+        <!-- Barre de progression -->
+        <div class="progress mb-4" style="height: 10px;">
+            <div class="progress-bar" id="progress-bar" role="progressbar" style="width: 0%"></div>
+        </div>
+
+        <!-- Informations de l'examen -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="text-center">
+                    <h5 id="total-questions">0</h5>
+                    <small class="text-muted">Questions totales</small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <h5 id="correct-answers">0</h5>
+                    <small class="text-muted">Réponses correctes</small>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="text-center">
+                    <h5 id="score-percentage">0%</h5>
+                    <small class="text-muted">Score</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Zone de questions -->
+        <div id="exam-container">
+            <div class="text-center">
+                <p>Chargement de l'examen...</p>
+            </div>
+        </div>
+
+        <!-- Boutons de navigation -->
+        <div class="text-center mt-4">
+            <!-- Bouton terminer l'examen -->
+            <div class="mt-3">
+                <button class="btn btn-exam" id="finish-btn" onclick="finishExam()">
+                    <i class="fas fa-check"></i> Terminer l'examen
+                </button>
+            </div>
+        </div>
+
+        <!-- Résultats -->
+        <div id="results-container" style="display: none;">
+            <div class="text-center">
+                <h3>Résultats de l'Examen</h3>
+                <div class="alert alert-info">
+                    <h4 id="final-score">Score: 0%</h4>
+                    <p id="final-message">Message de résultat</p>
+                </div>
+                <button class="btn btn-exam" onclick="restartExam()">
+                    <i class="fas fa-redo"></i> Recommencer
+                </button>
+                <button class="btn btn-outline-primary" onclick="exportToPDF()">
+                    <i class="fas fa-file-pdf"></i> Exporter en PDF
+                </button>
+                <a href="index.html" class="btn btn-secondary">
+                    <i class="fas fa-home"></i> Retour à l'accueil
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+    <script>
+        let currentExam = null;
+        let userAnswers = {};
+        let examCompleted = false;
+        let shuffledQuestions = [];
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!checkSession()) {
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            updateUserDisplay();
+            loadExamFromURL();
+        });
+
+        function checkSession() {
+            const sessionData = sessionStorage.getItem('mcqed_session');
+            if (!sessionData) {
+                return false;
+            }
+
+            try {
+                const session = JSON.parse(sessionData);
+                const now = Date.now();
+                
+                if (session.expiresAt <= now) {
+                    sessionStorage.removeItem('mcqed_session');
+                    return false;
+                }
+                
+                return true;
+            } catch (e) {
+                sessionStorage.removeItem('mcqed_session');
+                return false;
+            }
+        }
+
+        function updateUserDisplay() {
+            // Cette fonction n'est plus nécessaire car nous n'affichons plus le nom d'utilisateur
+            // Gardée pour compatibilité mais ne fait rien
+        }
+
+        function logout() {
+            if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
+                sessionStorage.removeItem('mcqed_session');
+                window.location.href = 'login.html';
+            }
+        }
+
+        function loadExamFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const examId = urlParams.get('exam');
+            
+            if (!examId) {
+                alert('Aucun examen spécifié');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const qcms = JSON.parse(localStorage.getItem('mcqed_qcms') || '[]');
+            currentExam = qcms.find(qcm => qcm.id === examId);
+            
+            if (!currentExam) {
+                alert('Examen non trouvé');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Récupérer toutes les questions de toutes les pages
+            let allQuestions = [];
+            if (currentExam.pages && currentExam.pages.length > 0) {
+                allQuestions = currentExam.pages.flatMap(page => page.questions);
+            } else if (currentExam.questions) {
+                allQuestions = currentExam.questions;
+            }
+            
+            if (allQuestions.length === 0) {
+                alert('Cet examen ne contient aucune question');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Mélanger les questions pour l'examen
+            shuffledQuestions = shuffleArray([...allQuestions]);
+
+            // Afficher les informations de l'examen
+            document.getElementById('exam-title').innerHTML = `<i class="fas fa-file-alt"></i> ${currentExam.title}`;
+            document.getElementById('exam-description').textContent = currentExam.description;
+            document.getElementById('total-questions').textContent = shuffledQuestions.length;
+
+            // Afficher l'examen
+            displayExam();
+            updateProgress();
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function displayExam() {
+            if (!currentExam || shuffledQuestions.length === 0) {
+                return;
+            }
+
+            const container = document.getElementById('exam-container');
+            
+            let questionsHTML = '';
+            shuffledQuestions.forEach((question, questionIndex) => {
+                let optionsHTML = '';
+                question.options.forEach((option, optionIndex) => {
+                    const optionLetter = option.id.toUpperCase();
+                    const isSelected = userAnswers[question.id] && userAnswers[question.id].includes(optionLetter);
+                    let selectedClass = isSelected ? 'selected' : '';
+                    
+                    optionsHTML += `
+                        <div class="option-item ${selectedClass}" onclick="selectOption('${optionLetter}', '${question.id}')">
+                            <strong>${optionLetter}.</strong> ${option.text}
+                        </div>
+                    `;
+                });
+                
+
+                
+
+                
+                questionsHTML += `
+                    <div class="question-card">
+                        <h5 class="mb-3">Question ${questionIndex + 1}</h5>
+                        <p class="mb-4">${question.text}</p>
+                        <div class="options-container">
+                            ${optionsHTML}
+                        </div>
+                        ${question.type === 'multiple' ? '<small class="text-muted">Sélectionnez toutes les réponses correctes</small>' : ''}
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = `
+                <div class="exam-header">
+                    <div>
+                        <div class="exam-indicator">
+                            Examen Blanc - ${shuffledQuestions.length} questions
+                        </div>
+                        <h4>${currentExam.title}</h4>
+                        <p class="text-muted">${currentExam.description}</p>
+                    </div>
+                </div>
+                ${questionsHTML}
+            `;
+            
+            updateScore();
+        }
+
+        function selectOption(optionLetter, questionId) {
+            const question = shuffledQuestions.find(q => q.id === questionId);
+            
+            if (!userAnswers[questionId]) {
+                userAnswers[questionId] = [];
+            }
+            
+            if (question.type === 'single') {
+                userAnswers[questionId] = [optionLetter];
+            } else {
+                const index = userAnswers[questionId].indexOf(optionLetter);
+                if (index > -1) {
+                    userAnswers[questionId].splice(index, 1);
+                } else {
+                    userAnswers[questionId].push(optionLetter);
+                }
+            }
+            
+            displayExam();
+        }
+
+        function updateProgress() {
+            const answered = Object.keys(userAnswers).length;
+            const progress = (answered / shuffledQuestions.length) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
+        }
+
+        function finishExam() {
+            // Arrêter le chronomètre
+            stopTimer();
+            
+            const totalScore = calculateScore();
+            const totalQuestions = shuffledQuestions.length;
+            const totalPercentage = Math.round((totalScore.correct / totalQuestions) * 100);
+            const elapsedTimeString = getElapsedTimeString();
+            
+            // Calculer le temps en minutes
+            const timeInMinutes = Math.round(elapsedTime / 60000);
+            
+            // Sauvegarder les statistiques si la fonction est disponible
+            if (typeof window.updateQCMStats === 'function') {
+                window.updateQCMStats(currentExam.id, totalPercentage, timeInMinutes);
+            }
+            
+            // Calculer les questions incorrectes
+            let incorrectQuestions = [];
+            shuffledQuestions.forEach((question, questionIndex) => {
+                const userAnswer = userAnswers[question.id] || [];
+                const correctAnswer = question.correctAnswers.map(a => a.toUpperCase());
+                
+                if (!(userAnswer.length === correctAnswer.length && 
+                    userAnswer.every(answer => correctAnswer.includes(answer)))) {
+                    incorrectQuestions.push({
+                        questionNumber: questionIndex + 1,
+                        questionText: question.text,
+                        userAnswer: userAnswer.length > 0 ? userAnswer.join(', ') : 'Aucune réponse',
+                        correctAnswer: correctAnswer.join(', '),
+                        explanation: question.explanation || 'Aucune explication disponible'
+                    });
+                }
+            });
+            
+            // Créer le HTML pour les résultats détaillés
+            let resultsHTML = `
+                <div class="alert alert-info mb-4">
+                    <h4 class="text-center">Score Total: ${totalPercentage}%</h4>
+                    <p class="text-center">${totalScore.correct} bonnes réponses sur ${totalQuestions} questions</p>
+                    <p class="text-center"><i class="fas fa-clock"></i> Temps total : ${elapsedTimeString}</p>
+                    <p class="text-center">
+                        ${totalPercentage >= 70 ? 
+                        '<strong class="text-success">Félicitations ! Vous avez réussi l\'examen.</strong>' : 
+                        '<strong class="text-danger">Vous devez obtenir au moins 70% pour réussir.</strong>'}
+                    </p>
+                </div>
+                
+                ${incorrectQuestions.length > 0 ? `
+                    <h5 class="mb-3"><i class="fas fa-times-circle"></i> Questions incorrectes (${incorrectQuestions.length}) :</h5>
+                    <div class="incorrect-questions-list mb-4">
+                        ${incorrectQuestions.map(incorrect => `
+                            <div class="alert alert-danger alert-sm mb-2">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <strong>Question ${incorrect.questionNumber}</strong>
+                                    <small class="text-muted">${incorrect.questionText.length > 50 ? incorrect.questionText.substring(0, 50) + '...' : incorrect.questionText}</small>
+                                </div>
+                                <div class="mt-2">
+                                    <small><strong>Votre réponse :</strong> <span class="text-danger">${incorrect.userAnswer}</span></small><br>
+                                    <small><strong>Réponse correcte :</strong> <span class="text-success">${incorrect.correctAnswer}</span></small>
+                                    ${incorrect.explanation !== 'Aucune explication disponible' ? `<br><small><strong>Explication :</strong> ${incorrect.explanation}</small>` : ''}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : `
+                    <div class="text-center mb-4">
+                        <span class="badge badge-success"><i class="fas fa-check-circle"></i> Toutes les questions sont correctes !</span>
+                    </div>
+                `}
+                
+                <div class="text-center mt-4">
+                    <button class="btn btn-exam" onclick="restartExam()">
+                        <i class="fas fa-redo"></i> Recommencer
+                    </button>
+                    <button class="btn btn-outline-primary" onclick="exportToPDF()">
+                        <i class="fas fa-file-pdf"></i> Exporter en PDF
+                    </button>
+                    <a href="index.html" class="btn btn-secondary">
+                        <i class="fas fa-home"></i> Retour à l'accueil
+                    </a>
+                </div>
+            `;
+            
+            // Mettre à jour le conteneur de résultats
+            document.getElementById('results-container').innerHTML = resultsHTML;
+            
+            document.getElementById('exam-container').style.display = 'none';
+            document.getElementById('results-container').style.display = 'block';
+            
+            examCompleted = true;
+        }
+
+        function calculateScore() {
+            let correct = 0;
+            let total = 0;
+            
+            shuffledQuestions.forEach(question => {
+                const userAnswer = userAnswers[question.id] || [];
+                const correctAnswer = question.correctAnswers.map(a => a.toUpperCase());
+                
+                if (userAnswer.length === correctAnswer.length && 
+                    userAnswer.every(answer => correctAnswer.includes(answer))) {
+                    correct++;
+                }
+                total++;
+            });
+            
+            return { correct, total };
+        }
+
+        function updateScore() {
+            const score = calculateScore();
+            document.getElementById('correct-answers').textContent = score.correct;
+            document.getElementById('score-percentage').textContent = Math.round((score.correct / score.total) * 100) + '%';
+            updateProgress();
+        }
+
+        function showNotification(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `alert alert-${type} position-fixed`;
+            toast.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+            toast.innerHTML = `<i class="fas fa-info-circle"></i> ${message}`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function restartExam() {
+            userAnswers = {};
+            examCompleted = false;
+            
+            // Redémarrer le chronomètre
+            stopTimer();
+            setTimeout(startTimer, 1000);
+            
+            // Mélanger à nouveau les questions
+            shuffledQuestions = shuffleArray([...shuffledQuestions]);
+            
+            document.getElementById('exam-container').style.display = 'block';
+            document.getElementById('results-container').style.display = 'none';
+            
+            displayExam();
+            updateProgress();
+        }
+
+        function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Informations de l'examen
+            const examTitle = currentExam.title;
+            const examDescription = currentExam.description;
+            const totalScore = calculateScore();
+            const totalQuestions = shuffledQuestions.length;
+            const totalPercentage = Math.round((totalScore.correct / totalQuestions) * 100);
+            const elapsedTimeString = getElapsedTimeString();
+            
+            // Calculer les questions incorrectes
+            let incorrectQuestions = [];
+            shuffledQuestions.forEach((question, questionIndex) => {
+                const userAnswer = userAnswers[question.id] || [];
+                const correctAnswer = question.correctAnswers.map(a => a.toUpperCase());
+                
+                if (!(userAnswer.length === correctAnswer.length && 
+                    userAnswer.every(answer => correctAnswer.includes(answer)))) {
+                    incorrectQuestions.push({
+                        questionNumber: questionIndex + 1,
+                        questionText: question.text,
+                        userAnswer: userAnswer.length > 0 ? userAnswer.join(', ') : 'Aucune réponse',
+                        correctAnswer: correctAnswer.join(', '),
+                        explanation: question.explanation || 'Aucune explication disponible'
+                    });
+                }
+            });
+            
+            // Configuration du PDF
+            const pageWidth = doc.internal.pageSize.width;
+            const margin = 20;
+            let yPosition = 20;
+            
+            // Titre principal
+            doc.setFontSize(20);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Rapport d\'Examen Blanc - MCQED', pageWidth / 2, yPosition, { align: 'center' });
+            yPosition += 15;
+            
+            // Informations de l'examen
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.text(examTitle, margin, yPosition);
+            yPosition += 10;
+            
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'normal');
+            doc.text(examDescription, margin, yPosition);
+            yPosition += 15;
+            
+            // Score total
+            doc.setFontSize(16);
+            doc.setFont('helvetica', 'bold');
+            const scoreText = `Score Total: ${totalPercentage}% (${totalScore.correct}/${totalQuestions} bonnes réponses)`;
+            doc.text(scoreText, pageWidth / 2, yPosition, { align: 'center' });
+            yPosition += 8;
+            
+            // Temps total
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'normal');
+            const timeText = `Temps total: ${elapsedTimeString}`;
+            doc.text(timeText, pageWidth / 2, yPosition, { align: 'center' });
+            yPosition += 10;
+            
+            // Message de réussite/échec
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'normal');
+            const resultMessage = totalPercentage >= 70 ? 
+                'Félicitations ! Vous avez réussi l\'examen.' : 
+                'Vous devez obtenir au moins 70% pour réussir.';
+            doc.text(resultMessage, pageWidth / 2, yPosition, { align: 'center' });
+            yPosition += 20;
+            
+            // Questions incorrectes
+            if (incorrectQuestions.length > 0) {
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.text('Questions incorrectes :', margin, yPosition);
+                yPosition += 15;
+                
+                incorrectQuestions.forEach((incorrect, index) => {
+                    // Vérifier si on a besoin d'une nouvelle page
+                    if (yPosition > 250) {
+                        doc.addPage();
+                        yPosition = 20;
+                    }
+                    
+                    doc.setFontSize(11);
+                    doc.setFont('helvetica', 'bold');
+                    doc.text(`Question ${incorrect.questionNumber}:`, margin, yPosition);
+                    yPosition += 5;
+                    
+                    // Texte de la question (tronqué si trop long)
+                    doc.setFont('helvetica', 'normal');
+                    const questionText = incorrect.questionText.length > 80 ? 
+                        incorrect.questionText.substring(0, 80) + '...' : 
+                        incorrect.questionText;
+                    doc.text(questionText, margin + 5, yPosition);
+                    yPosition += 5;
+                    
+                    // Réponses
+                    doc.text(`Votre réponse: ${incorrect.userAnswer}`, margin + 5, yPosition);
+                    yPosition += 4;
+                    doc.text(`Réponse correcte: ${incorrect.correctAnswer}`, margin + 5, yPosition);
+                    yPosition += 4;
+                    
+                    // Explication si disponible
+                    if (incorrect.explanation !== 'Aucune explication disponible') {
+                        const explanation = incorrect.explanation.length > 60 ? 
+                            incorrect.explanation.substring(0, 60) + '...' : 
+                            incorrect.explanation;
+                        doc.text(`Explication: ${explanation}`, margin + 5, yPosition);
+                        yPosition += 4;
+                    }
+                    
+                    yPosition += 3; // Espacement entre questions
+                });
+            } else {
+                doc.setFontSize(14);
+                doc.setFont('helvetica', 'bold');
+                doc.text('✓ Toutes les questions sont correctes !', margin, yPosition);
+                yPosition += 15;
+            }
+            
+            // Pied de page
+            const currentDate = new Date().toLocaleDateString('fr-FR');
+            const currentTime = new Date().toLocaleTimeString('fr-FR');
+            doc.setFontSize(8);
+            doc.setFont('helvetica', 'normal');
+            doc.text(`Généré le ${currentDate} à ${currentTime} par MCQED`, pageWidth / 2, 280, { align: 'center' });
+            
+            // Sauvegarder le PDF
+            const fileName = `examen_${examTitle.replace(/[^a-zA-Z0-9]/g, '_')}_${currentDate.replace(/\//g, '-')}.pdf`;
+            doc.save(fileName);
+            
+            // Notification de succès
+            showNotification('PDF exporté avec succès !', 'success');
+        }
+        
+        // Variables pour le chronomètre (examen blanc - sans pause)
+        let timerInterval;
+        let startTime;
+        let elapsedTime = 0;
+        let isTimerRunning = false;
+        
+        // Fonction pour démarrer le chronomètre
+        function startTimer() {
+            if (!isTimerRunning) {
+                startTime = Date.now() - elapsedTime;
+                isTimerRunning = true;
+                timerInterval = setInterval(updateTimer, 1000);
+            }
+        }
+        
+        // Fonction pour arrêter le chronomètre
+        function stopTimer() {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            updateTimerDisplay();
+        }
+        
+        // Fonction pour mettre à jour l'affichage du chronomètre
+        function updateTimer() {
+            if (isTimerRunning) {
+                elapsedTime = Date.now() - startTime;
+                updateTimerDisplay();
+            }
+        }
+        
+        // Fonction pour mettre à jour l'affichage
+        function updateTimerDisplay() {
+            const timerDisplay = document.getElementById('timer-display');
+            if (timerDisplay) {
+                const hours = Math.floor(elapsedTime / 3600000);
+                const minutes = Math.floor((elapsedTime % 3600000) / 60000);
+                const seconds = Math.floor((elapsedTime % 60000) / 1000);
+                
+                const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                timerDisplay.textContent = timeString;
+            }
+        }
+        
+        // Fonction pour obtenir le temps écoulé en format lisible
+        function getElapsedTimeString() {
+            const hours = Math.floor(elapsedTime / 3600000);
+            const minutes = Math.floor((elapsedTime % 3600000) / 60000);
+            const seconds = Math.floor((elapsedTime % 60000) / 1000);
+            
+            if (hours > 0) {
+                return `${hours}h ${minutes}m ${seconds}s`;
+            } else if (minutes > 0) {
+                return `${minutes}m ${seconds}s`;
+            } else {
+                return `${seconds}s`;
+            }
+        }
+        
+        // Démarrer le chronomètre au chargement de la page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Démarrer le chronomètre automatiquement
+            setTimeout(startTimer, 1000);
+            
+            // Initialiser les boutons de thème
+            initializeThemeButtons();
+        });
+        
+        // Fonction pour initialiser les boutons de thème
+        function initializeThemeButtons() {
+            const darkModeBtn = document.getElementById('dark-mode-btn');
+            const colorblindBtn = document.getElementById('colorblind-btn');
+            
+            // Récupérer les préférences sauvegardées
+            const savedTheme = localStorage.getItem('mcqed_theme') || 'light';
+            const savedColorblind = localStorage.getItem('mcqed_colorblind') || 'disabled';
+            
+            // Appliquer les thèmes
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            document.documentElement.setAttribute('data-colorblind', savedColorblind);
+            
+            // Mettre à jour les boutons
+            if (darkModeBtn) {
+                const icon = darkModeBtn.querySelector('i');
+                if (savedTheme === 'dark') {
+                    icon.className = 'fas fa-sun';
+                    darkModeBtn.title = 'Mode clair';
+                    darkModeBtn.classList.add('active');
+                } else {
+                    icon.className = 'fas fa-moon';
+                    darkModeBtn.title = 'Mode sombre';
+                    darkModeBtn.classList.remove('active');
+                }
+            }
+            
+            if (colorblindBtn) {
+                const icon = colorblindBtn.querySelector('i');
+                if (savedColorblind === 'enabled') {
+                    icon.className = 'fas fa-eye-slash';
+                    colorblindBtn.title = 'Mode normal';
+                    colorblindBtn.classList.add('active');
+                } else {
+                    icon.className = 'fas fa-eye';
+                    colorblindBtn.title = 'Mode daltonien';
+                    colorblindBtn.classList.remove('active');
+                }
+            }
+        }
+        
+        // Fonction pour basculer le mode sombre
+        function toggleDarkMode() {
+            const darkModeBtn = document.getElementById('dark-mode-btn');
+            const icon = darkModeBtn.querySelector('i');
+            
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            // Appliquer le nouveau thème
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('mcqed_theme', newTheme);
+            
+            // Mettre à jour le bouton
+            if (newTheme === 'dark') {
+                icon.className = 'fas fa-sun';
+                darkModeBtn.title = 'Mode clair';
+                darkModeBtn.classList.add('active');
+            } else {
+                icon.className = 'fas fa-moon';
+                darkModeBtn.title = 'Mode sombre';
+                darkModeBtn.classList.remove('active');
+            }
+        }
+        
+        // Fonction pour basculer le mode daltonien
+        function toggleColorblindMode() {
+            const colorblindBtn = document.getElementById('colorblind-btn');
+            const icon = colorblindBtn.querySelector('i');
+            
+            const currentMode = document.documentElement.getAttribute('data-colorblind');
+            const newMode = currentMode === 'enabled' ? 'disabled' : 'enabled';
+            
+            // Appliquer le nouveau mode
+            document.documentElement.setAttribute('data-colorblind', newMode);
+            localStorage.setItem('mcqed_colorblind', newMode);
+            
+            // Mettre à jour le bouton
+            if (newMode === 'enabled') {
+                icon.className = 'fas fa-eye-slash';
+                colorblindBtn.title = 'Mode normal';
+                colorblindBtn.classList.add('active');
+            } else {
+                icon.className = 'fas fa-eye';
+                colorblindBtn.title = 'Mode daltonien';
+                colorblindBtn.classList.remove('active');
+            }
+        }
+    </script>
+    <script src="dark-mode.js"></script>
+    
+    <!-- Carte des thèmes flottante -->
+    <div id="theme-container" class="theme-container">
+        <div class="theme-header">
+            <i class="fas fa-palette"></i>
+            <span>Thème</span>
+        </div>
+        <div class="theme-buttons-vertical">
+            <button id="dark-mode-btn" class="theme-btn-vertical" onclick="toggleDarkMode()" title="Mode sombre">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button id="colorblind-btn" class="theme-btn-vertical" onclick="toggleColorblindMode()" title="Mode daltonien">
+                <i class="fas fa-eye"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Chronomètre flottant (examen blanc) -->
+    <div id="timer-container" class="timer-container">
+        <div class="timer-header">
+            <i class="fas fa-clock"></i>
+            <span>Chronomètre Examen</span>
+        </div>
+        <div id="timer-display" class="timer-display">00:00:00</div>
+    </div>
+    
+    <!-- Boutons flottants -->
+    <div class="floating-buttons">
+        <a href="index.html" class="floating-btn home">
+            <i class="fas fa-home"></i>
+            Accueil
+        </a>
+        <a href="#" onclick="logout()" class="floating-btn logout">
+            <i class="fas fa-sign-out-alt"></i>
+            Se déconnecter
+        </a>
+    </div>
+</body>
+</html> 

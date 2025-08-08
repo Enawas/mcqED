@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - MCQED</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .login-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 400px;
+            max-width: 90vw;
+        }
+        .logo-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo-section i {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .btn-login {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .btn-login:disabled {
+            opacity: 0.6;
+            transform: none;
+        }
+        .error-message {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 15px;
+            display: none;
+        }
+        .attempts-warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 10px;
+            border-radius: 5px;
+            margin-top: 15px;
+            display: none;
+        }
+        .input-group-text {
+            background: transparent;
+            border: 2px solid #e9ecef;
+            border-right: none;
+            border-radius: 10px 0 0 10px;
+        }
+        .input-group .form-control {
+            border-left: none;
+            border-radius: 0 10px 10px 0;
+        }
+        .password-toggle {
+            cursor: pointer;
+            color: #6c757d;
+        }
+        .password-toggle:hover {
+            color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo-section">
+            <i class="fas fa-graduation-cap"></i>
+            <h2>MCQED</h2>
+            <p class="text-muted">Plateforme de QCM</p>
+        </div>
+        
+        <form id="login-form">
+            <div class="form-group">
+                <label for="username"><i class="fas fa-user"></i> Nom d'utilisateur</label>
+                <input type="text" class="form-control" id="username" required 
+                       placeholder="Entrez votre nom d'utilisateur" autocomplete="username">
+            </div>
+            
+            <div class="form-group">
+                <label for="password"><i class="fas fa-lock"></i> Mot de passe</label>
+                <div class="input-group">
+                    <input type="password" class="form-control" id="password" required 
+                           placeholder="Entrez votre mot de passe" autocomplete="current-password">
+                    <div class="input-group-append">
+                        <span class="input-group-text password-toggle" onclick="togglePassword()">
+                            <i class="fas fa-eye" id="password-icon"></i>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-login btn-block" id="login-btn">
+                <i class="fas fa-sign-in-alt"></i> Se connecter
+            </button>
+            
+            <div id="error-message" class="error-message">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span id="error-text">Identifiants invalides</span>
+            </div>
+            
+            <div id="attempts-warning" class="attempts-warning">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="attempts-text"></span>
+            </div>
+        </form>
+        
+        <div class="text-center mt-4">
+            <a href="password-generator.html" class="btn btn-info btn-sm">
+                <i class="fas fa-key"></i> Générateur de mot de passe
+            </a>
+            <a href="diagnostic-login.html" class="btn btn-warning btn-sm ml-2">
+                <i class="fas fa-stethoscope"></i> Diagnostic
+            </a>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <script src="config.js"></script>
+    <script>
+        // Configuration sécurisée (utilise la configuration centralisée)
+        const SECURITY_CONFIG = {
+            maxAttempts: MCQED_CONFIG.security.maxLoginAttempts,
+            lockoutDuration: MCQED_CONFIG.security.lockoutDuration,
+            sessionTimeout: MCQED_CONFIG.security.sessionTimeout,
+            salt: MCQED_CONFIG.security.passwordSalt
+        };
+
+        // Identifiants depuis la configuration centralisée
+        const validCredentials = {
+            username: MCQED_CONFIG.security.credentials.username,
+            passwordHash: MCQED_CONFIG.security.credentials.passwordHash
+        };
+
+        let loginAttempts = 0;
+        let lockoutUntil = 0;
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLockoutStatus();
+            checkExistingSession();
+        });
+
+        function checkExistingSession() {
+            const sessionData = sessionStorage.getItem('mcqed_session');
+            if (sessionData) {
+                try {
+                    const session = JSON.parse(sessionData);
+                    const now = Date.now();
+                    
+                    if (session.expiresAt > now) {
+                        // Session valide, rediriger
+                        window.location.href = 'index.html';
+                    } else {
+                        // Session expirée, nettoyer
+                        sessionStorage.removeItem('mcqed_session');
+                    }
+                } catch (e) {
+                    sessionStorage.removeItem('mcqed_session');
+                }
+            }
+        }
+
+        function checkLockoutStatus() {
+            const lockoutData = localStorage.getItem('mcqed_lockout');
+            if (lockoutData) {
+                try {
+                    const lockout = JSON.parse(lockoutData);
+                    const now = Date.now();
+                    
+                    if (lockout.until > now) {
+                        // Encore verrouillé
+                        const remainingTime = Math.ceil((lockout.until - now) / 1000 / 60);
+                        showAttemptsWarning(`Compte temporairement verrouillé. Réessayez dans ${remainingTime} minutes.`);
+                        disableLoginForm();
+                    } else {
+                        // Verrouillage expiré
+                        localStorage.removeItem('mcqed_lockout');
+                        loginAttempts = 0;
+                    }
+                } catch (e) {
+                    localStorage.removeItem('mcqed_lockout');
+                }
+            }
+        }
+
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const passwordIcon = document.getElementById('password-icon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                passwordIcon.classList.remove('fa-eye');
+                passwordIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                passwordIcon.classList.remove('fa-eye-slash');
+                passwordIcon.classList.add('fa-eye');
+            }
+        }
+
+        function showError(message) {
+            const errorDiv = document.getElementById('error-message');
+            const errorText = document.getElementById('error-text');
+            errorText.textContent = message;
+            errorDiv.style.display = 'block';
+            
+            // Masquer après 5 secondes
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showAttemptsWarning(message) {
+            const warningDiv = document.getElementById('attempts-warning');
+            const warningText = document.getElementById('attempts-text');
+            warningText.textContent = message;
+            warningDiv.style.display = 'block';
+        }
+
+        function hideAttemptsWarning() {
+            document.getElementById('attempts-warning').style.display = 'none';
+        }
+
+        function disableLoginForm() {
+            document.getElementById('username').disabled = true;
+            document.getElementById('password').disabled = true;
+            document.getElementById('login-btn').disabled = true;
+        }
+
+        function enableLoginForm() {
+            document.getElementById('username').disabled = false;
+            document.getElementById('password').disabled = false;
+            document.getElementById('login-btn').disabled = false;
+        }
+
+        function lockoutAccount() {
+            const lockoutUntil = Date.now() + SECURITY_CONFIG.lockoutDuration;
+            localStorage.setItem('mcqed_lockout', JSON.stringify({
+                until: lockoutUntil,
+                attempts: loginAttempts
+            }));
+            
+            showAttemptsWarning(`Trop de tentatives échouées. Compte verrouillé pour 15 minutes.`);
+            disableLoginForm();
+        }
+
+        function createSecureSession() {
+            const sessionData = {
+                userId: validCredentials.username,
+                loginTime: Date.now(),
+                expiresAt: Date.now() + SECURITY_CONFIG.sessionTimeout,
+                sessionId: CryptoJS.lib.WordArray.random(32).toString(),
+                userAgent: navigator.userAgent
+            };
+            
+            sessionStorage.setItem('mcqed_session', JSON.stringify(sessionData));
+        }
+
+        document.getElementById('login-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Vérifier le verrouillage
+            if (lockoutUntil > Date.now()) {
+                showError('Compte temporairement verrouillé. Veuillez patienter.');
+                return;
+            }
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            
+            // Validation basique
+            if (!username || !password) {
+                showError('Veuillez remplir tous les champs.');
+                return;
+            }
+
+            // Désactiver le bouton pendant la vérification
+            const loginBtn = document.getElementById('login-btn');
+            const originalText = loginBtn.innerHTML;
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Connexion...';
+            loginBtn.disabled = true;
+
+            // Simuler un délai de vérification (en production, ce serait une requête serveur)
+            setTimeout(() => {
+                const hashedPassword = CryptoJS.SHA256(password + SECURITY_CONFIG.salt).toString();
+
+                if (username === validCredentials.username && hashedPassword === validCredentials.passwordHash) {
+                    // Connexion réussie
+                    loginAttempts = 0;
+                    localStorage.removeItem('mcqed_lockout');
+                    hideAttemptsWarning();
+                    
+                    createSecureSession();
+                    
+                    // Redirection
+                    window.location.href = 'index.html';
+                } else {
+                    // Échec de connexion
+                    loginAttempts++;
+                    
+                    if (loginAttempts >= SECURITY_CONFIG.maxAttempts) {
+                        lockoutAccount();
+                    } else {
+                        const remainingAttempts = SECURITY_CONFIG.maxAttempts - loginAttempts;
+                        showError(`Identifiants incorrects. Il vous reste ${remainingAttempts} tentative(s).`);
+                        showAttemptsWarning(`Attention : ${remainingAttempts} tentative(s) restante(s) avant verrouillage.`);
+                    }
+                    
+                    // Réactiver le formulaire
+                    loginBtn.innerHTML = originalText;
+                    loginBtn.disabled = false;
+                    document.getElementById('password').value = '';
+                    document.getElementById('password').focus();
+                }
+            }, 1000); // Délai d'1 seconde pour simuler la vérification
+        });
+
+        // Gestion de la touche Entrée
+        document.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                document.getElementById('login-form').dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+</body>
+</html>
