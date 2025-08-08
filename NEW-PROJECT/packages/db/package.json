@@ -2,13 +2,19 @@
   "name": "@packages/db",
   "private": true,
   "scripts": {
-    "generate": "echo 'TODO: sync Drizzle schema with SQL'",
-    "migrate:up": "echo 'TODO: apply migrations'",
-    "migrate:down": "echo 'TODO: rollback migrations'",
-    "lint": "echo 'TODO: run ESLint'",
-    "typecheck": "echo 'TODO: run tsc'",
-    "test": "echo 'TODO: run DB unit tests'"
+    "generate": "drizzle-kit generate:pg --config=drizzle.config.ts",
+    "migrate:up": "drizzle-kit up --config=drizzle.config.ts",
+    "migrate:down": "drizzle-kit down --config=drizzle.config.ts",
+    "lint": "echo 'No lint configured yet for db package'",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "echo 'No DB unit tests yet'"
   },
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "drizzle-orm": "^0.29.1",
+    "pg": "^8.11.1"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.20.8",
+    "typescript": "^5.3.3"
+  }
 }

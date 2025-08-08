@@ -11,6 +11,11 @@
     "openapi": "echo 'TODO: generate OpenAPI spec from Zod'",
     "health": "echo 'TODO: ping /healthz'"
   },
-  "dependencies": {},
+  "dependencies": {
+    "fastify": "^4.25.1",
+    "zod": "^3.22.2",
+    "drizzle-orm": "^0.29.1",
+    "pg": "^8.11.1"
+  },
   "devDependencies": {}
 }
