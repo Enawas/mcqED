@@ -213,6 +213,24 @@ export class XQcmList extends HTMLElement {
       });
       actions.appendChild(favBtn);
 
+      // Export JSON button
+      const exportJsonBtn = document.createElement('button');
+      exportJsonBtn.className = 'secondary';
+      exportJsonBtn.textContent = 'Export JSON';
+      exportJsonBtn.addEventListener('click', async () => {
+        await this.exportQcm(qcm.id, 'json');
+      });
+      actions.appendChild(exportJsonBtn);
+
+      // Export XML button
+      const exportXmlBtn = document.createElement('button');
+      exportXmlBtn.className = 'secondary';
+      exportXmlBtn.textContent = 'Export XML';
+      exportXmlBtn.addEventListener('click', async () => {
+        await this.exportQcm(qcm.id, 'xml');
+      });
+      actions.appendChild(exportXmlBtn);
+
       card.appendChild(actions);
       listEl.appendChild(card);
     });
@@ -240,6 +258,37 @@ export class XQcmList extends HTMLElement {
       this.applyFilters();
     } catch (err) {
       console.error('Error toggling favourite', err);
+    }
+  }
+
+  /**
+   * Exports a QCM in the specified format by invoking the API and
+   * triggering a file download in the browser. Supports JSON and XML
+   * formats. If the API call fails, logs an error to the console.
+   */
+  private async exportQcm(id: string, format: 'json' | 'xml') {
+    try {
+      const response = await fetch(`http://localhost:3000/qcm/${id}/export?format=${format}`);
+      if (!response.ok) {
+        console.error('Failed to export QCM:', await response.text());
+        return;
+      }
+      const data = await response.text();
+      // Determine file name and MIME type
+      const mime = format === 'json' ? 'application/json' : 'application/xml';
+      const fileExt = format === 'json' ? 'json' : 'xml';
+      const filename = `qcm-${id}.${fileExt}`;
+      const blob = new Blob([data], { type: mime });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error('Error exporting QCM', err);
     }
   }
 }

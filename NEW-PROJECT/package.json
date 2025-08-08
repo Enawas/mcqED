@@ -17,7 +17,7 @@
     "graph": "echo 'TODO: run dependency-cruiser'",
     "migrate:up": "echo 'TODO: run DB migrations up'",
     "migrate:down": "echo 'TODO: run DB migrations down'",
-    "ov:generate": "echo 'TODO: generate OpenAPI spec and TypeScript client'",
+    "ov:generate": "node scripts/generate-openapi.js",
     "docker:up": "echo 'TODO: start local docker services'",
     "docker:down": "echo 'TODO: stop local docker services'",
     "release": "echo 'TODO: run changesets versioning'"
