@@ -8,4 +8,11 @@
  */
 // TODO: import fastify, register plugins and start the server.
 
+// Example registration:
+// import fastify from 'fastify';
+// import { qcmListPlugin } from './plugins/qcm/list/index';
+// const app = fastify();
+// app.register(qcmListPlugin);
+// await app.listen({ port: parseInt(process.env.PORT ?? '3000', 10) });
+
 export {};
