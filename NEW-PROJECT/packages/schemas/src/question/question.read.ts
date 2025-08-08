@@ -29,6 +29,8 @@ export const questionReadSchema = z.object({
   options: z.array(optionSchema).min(2),
   correctAnswers: z.array(z.string()).min(1),
   explanation: z.string().optional(),
+  // Position of the question within its page; used for ordering
+  position: z.number().int(),
 });
 
 export type QuestionId = z.infer<typeof questionIdSchema>;

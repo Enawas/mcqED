@@ -12,12 +12,14 @@
 import '../features/qcm/list/x-qcm-list';
 import '../features/qcm/edit/x-qcm-edit';
 import '../features/qcm/create/x-qcm-create';
+import '../features/qcm/player/x-qcm-player';
 
 export class QcmApp extends HTMLElement {
   private shadow: ShadowRoot;
   // Track the current view ('list' or 'edit') and the ID of the QCM being edited.
-  private currentView: 'list' | 'edit' | 'create' = 'list';
+  private currentView: 'list' | 'edit' | 'create' | 'player' = 'list';
   private editingQcmId: string | null = null;
+  private playingQcmId: string | null = null;
 
   constructor() {
     super();
@@ -46,7 +48,13 @@ export class QcmApp extends HTMLElement {
       this.shadow.innerHTML = `<x-qcm-edit${idAttr}></x-qcm-edit>`;
     } else {
       // create view
-      this.shadow.innerHTML = `<x-qcm-create></x-qcm-create>`;
+      if (this.currentView === 'create') {
+        this.shadow.innerHTML = `<x-qcm-create></x-qcm-create>`;
+      } else {
+        // player view
+        const idAttr2 = this.playingQcmId ? ` qcm-id="${this.playingQcmId}"` : '';
+        this.shadow.innerHTML = `<x-qcm-player${idAttr2}></x-qcm-player>`;
+      }
     }
   }
 
@@ -74,7 +82,11 @@ export class QcmApp extends HTMLElement {
       list.addEventListener('qcm-launch', (e: Event) => {
         const id = (e as CustomEvent).detail.id;
         // TODO: implement routing to player, e.g., using a router.
-        console.log('Launch QCM', id);
+        // Switch to player view with the specified QCM ID
+        this.playingQcmId = id;
+        this.currentView = 'player';
+        this.render();
+        this.bindEvents();
       });
       list.addEventListener('qcm-edit', (e: Event) => {
         const id = (e as CustomEvent).detail.id;
@@ -107,19 +119,36 @@ export class QcmApp extends HTMLElement {
         this.bindEvents();
       });
     } else {
-      // currentView === 'create'
-      const create = this.shadow.querySelector('x-qcm-create');
-      if (!create) return;
-      create.addEventListener('qcm-created', () => {
-        // Return to list view and refresh after creation
-        this.currentView = 'list';
-        this.render();
-        this.bindEvents();
-        const list = this.shadow.querySelector('x-qcm-list');
-        if (list && typeof (list as any).refresh === 'function') {
-          (list as any).refresh();
-        }
-      });
+      // create or player view
+      if (this.currentView === 'create') {
+        const create = this.shadow.querySelector('x-qcm-create');
+        if (!create) return;
+        create.addEventListener('qcm-created', () => {
+          // Return to list view and refresh after creation
+          this.currentView = 'list';
+          this.render();
+          this.bindEvents();
+          const list = this.shadow.querySelector('x-qcm-list');
+          if (list && typeof (list as any).refresh === 'function') {
+            (list as any).refresh();
+          }
+        });
+      } else {
+        // player view
+        const player = this.shadow.querySelector('x-qcm-player');
+        if (!player) return;
+        player.addEventListener('quiz-finished', (e: Event) => {
+          // When quiz finishes, return to list view and maybe refresh list
+          this.currentView = 'list';
+          this.playingQcmId = null;
+          this.render();
+          this.bindEvents();
+          const list = this.shadow.querySelector('x-qcm-list');
+          if (list && typeof (list as any).refresh === 'function') {
+            (list as any).refresh();
+          }
+        });
+      }
     }
   }
 }

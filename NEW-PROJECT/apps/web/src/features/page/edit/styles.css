@@ -66,3 +66,76 @@ h2 {
   font-size: 0.85rem;
   margin-bottom: 0.5rem;
 }
+
+/* Questions section styling */
+.questions-section {
+  margin-top: 2rem;
+}
+
+.questions-section h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+}
+
+#questionsList {
+  margin-bottom: 0.75rem;
+}
+
+.question-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.question-row:last-child {
+  border-bottom: none;
+}
+
+.question-text {
+  flex-grow: 1;
+}
+
+.question-actions button {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-left: 0.5rem;
+}
+
+/* Up and down buttons for reordering questions */
+.move-up-question-button,
+.move-down-question-button {
+  background-color: #e9ecef;
+  color: #212529;
+}
+
+.move-up-question-button:disabled,
+.move-down-question-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.edit-question-button {
+  background-color: #6c757d;
+  color: white;
+}
+
+.delete-question-button {
+  background-color: #dc3545;
+  color: white;
+}
+
+.add-question {
+  margin-bottom: 0.75rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+  border: none;
+  background-color: #198754;
+  color: white;
+  border-radius: 3px;
+  cursor: pointer;
+}

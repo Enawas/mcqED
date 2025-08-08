@@ -114,3 +114,58 @@ h2 {
   color: white;
   cursor: pointer;
 }
+
+/* Move up/down buttons */
+.move-up-button,
+.move-down-button {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.85rem;
+  border: none;
+  border-radius: 3px;
+  background-color: #e9ecef;
+  color: #212529;
+  cursor: pointer;
+  margin-right: 0.25rem;
+}
+
+.move-up-button:disabled,
+.move-down-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+/* Delete button styling */
+.delete-button {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.85rem;
+  border: none;
+  border-radius: 3px;
+  background-color: #dc3545;
+  color: white;
+  cursor: pointer;
+  margin-left: 0.25rem;
+}
+
+/* Delete button for a page */
+.delete-button {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.85rem;
+  border: none;
+  border-radius: 3px;
+  background-color: #dc3545;
+  color: white;
+  cursor: pointer;
+  margin-left: 0.5rem;
+}
+
+/* Button to add a new page */
+.add-page {
+  margin-bottom: 0.75rem;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.9rem;
+  border: none;
+  background-color: #198754;
+  color: white;
+  border-radius: 3px;
+  cursor: pointer;
+}

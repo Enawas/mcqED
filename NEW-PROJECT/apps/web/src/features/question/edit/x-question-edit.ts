@@ -28,21 +28,36 @@ export class XQuestionEdit extends HTMLElement {
   private question: QuestionRead | null = null;
   private options: OptionState[] = [];
 
+  // The page identifier to which this question belongs. When present
+  // and questionId is not provided, a new question will be created
+  // using POST /page/:pageId/question.
+  private pageId: string | null = null;
+
   constructor() {
     super();
     this.shadow = this.attachShadow({ mode: 'open' });
   }
 
   static get observedAttributes() {
-    return ['question-id'];
+    return ['question-id', 'page-id'];
   }
 
   attributeChangedCallback(name: string, oldValue: string | null, newValue: string | null) {
     if (name === 'question-id' && newValue !== oldValue) {
       this.questionId = newValue;
       if (this.isConnected) {
-        this.loadQuestion();
+        // Load question only if an ID is provided (editing); skip when undefined (creating)
+        if (newValue) {
+          this.loadQuestion();
+        } else {
+          // Clear any existing question state when switching to creation
+          this.question = null;
+          this.options = [];
+        }
       }
+    }
+    if (name === 'page-id' && newValue !== oldValue) {
+      this.pageId = newValue;
     }
   }
 
@@ -70,8 +85,19 @@ export class XQuestionEdit extends HTMLElement {
     if (addOptionBtn) addOptionBtn.addEventListener('click', () => this.addOption());
     const typeSelect = this.shadow.getElementById('questionType') as HTMLSelectElement | null;
     if (typeSelect) typeSelect.addEventListener('change', () => this.onTypeChange());
-    // Load question if ID already set
-    await this.loadQuestion();
+    // Load question if an ID is already set (editing). For creation,
+    // initialize an empty options list with two empty options by default.
+    if (this.questionId) {
+      await this.loadQuestion();
+    } else {
+      // When creating a new question, start with two empty options
+      this.options = [
+        { id: 'A', text: '', correct: false },
+        { id: 'B', text: '', correct: false },
+      ];
+      // Render options so the user can start filling them
+      this.renderOptions();
+    }
   }
 
   /**
@@ -263,38 +289,71 @@ export class XQuestionEdit extends HTMLElement {
    */
   private async handleSave() {
     const errorEl = this.shadow.getElementById('error');
-    if (!this.questionId) {
-      if (errorEl) errorEl.textContent = 'No question ID provided.';
-      return;
-    }
     const body = this.gatherInput();
     if (!body) return;
-    try {
-      const response = await fetch(`http://localhost:3000/question/${this.questionId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      });
-      if (!response.ok) {
-        const msg = await response.text();
-        throw new Error(`Failed to update question: ${msg}`);
+    // If questionId is set, perform update; otherwise, perform create using pageId
+    if (this.questionId) {
+      try {
+        const response = await fetch(`http://localhost:3000/question/${this.questionId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        if (!response.ok) {
+          const msg = await response.text();
+          throw new Error(`Failed to update question: ${msg}`);
+        }
+        const updated = (await response.json()) as QuestionRead;
+        this.question = updated;
+        // Update local state from the updated question
+        this.options = updated.options.map((opt) => ({
+          id: opt.id,
+          text: opt.text,
+          correct: updated.correctAnswers.includes(opt.id),
+        }));
+        this.populateForm();
+        if (errorEl) errorEl.textContent = '';
+        this.dispatchEvent(
+          new CustomEvent('question-updated', { detail: { question: updated }, bubbles: true }),
+        );
+      } catch (err) {
+        console.error('Error updating question', err);
+        if (errorEl) errorEl.textContent = 'Error updating question.';
       }
-      const updated = (await response.json()) as QuestionRead;
-      this.question = updated;
-      // Update local state from the updated question
-      this.options = updated.options.map((opt) => ({
-        id: opt.id,
-        text: opt.text,
-        correct: updated.correctAnswers.includes(opt.id),
-      }));
-      this.populateForm();
-      if (errorEl) errorEl.textContent = '';
-      this.dispatchEvent(
-        new CustomEvent('question-updated', { detail: { question: updated }, bubbles: true }),
-      );
-    } catch (err) {
-      console.error('Error updating question', err);
-      if (errorEl) errorEl.textContent = 'Error updating question.';
+    } else {
+      // Creating a new question requires a page-id
+      if (!this.pageId) {
+        if (errorEl) errorEl.textContent = 'No page ID provided.';
+        return;
+      }
+      try {
+        const response = await fetch(`http://localhost:3000/page/${this.pageId}/question`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        if (!response.ok) {
+          const msg = await response.text();
+          throw new Error(`Failed to create question: ${msg}`);
+        }
+        const created = (await response.json()) as QuestionRead;
+        this.question = created;
+        // Reset local state to updated state (id and options)
+        this.questionId = created.id;
+        this.options = created.options.map((opt) => ({
+          id: opt.id,
+          text: opt.text,
+          correct: created.correctAnswers.includes(opt.id),
+        }));
+        this.populateForm();
+        if (errorEl) errorEl.textContent = '';
+        this.dispatchEvent(
+          new CustomEvent('question-created', { detail: { question: created }, bubbles: true }),
+        );
+      } catch (err) {
+        console.error('Error creating question', err);
+        if (errorEl) errorEl.textContent = 'Error creating question.';
+      }
     }
   }
 

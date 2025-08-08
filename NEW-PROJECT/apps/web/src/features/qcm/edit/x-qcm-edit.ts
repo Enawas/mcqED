@@ -23,6 +23,45 @@ export class XQcmEdit extends HTMLElement {
   // edit component is displayed instead of the pages list.
   private editingPageId: string | null = null;
 
+  /**
+   * Moves a page up or down in the order. Sends a PATCH request to the
+   * backend to reorder the page, then updates the local pages array and
+   * re-renders the list. If the API call fails, logs the error and
+   * displays a message in the component.
+   */
+  private async handleMovePage(pageId: string, direction: 'up' | 'down') {
+    try {
+      const resp = await fetch(`http://localhost:3000/page/${pageId}/reorder`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ direction }),
+      });
+      if (!resp.ok) {
+        const msg = await resp.text();
+        throw new Error(`Failed to reorder page: ${msg}`);
+      }
+      // Update local pages order by swapping the positions in the array
+      if (this.qcm) {
+        const idx = this.qcm.pages.findIndex((p) => p.id === pageId);
+        if (idx === -1) return;
+        if (direction === 'up' && idx > 0) {
+          const tmp = this.qcm.pages[idx - 1];
+          this.qcm.pages[idx - 1] = this.qcm.pages[idx];
+          this.qcm.pages[idx] = tmp;
+        } else if (direction === 'down' && idx < this.qcm.pages.length - 1) {
+          const tmp = this.qcm.pages[idx + 1];
+          this.qcm.pages[idx + 1] = this.qcm.pages[idx];
+          this.qcm.pages[idx] = tmp;
+        }
+      }
+      this.renderPagesList();
+    } catch (err) {
+      console.error('Error reordering page', err);
+      const errorEl = this.shadow.getElementById('error');
+      if (errorEl) errorEl.textContent = 'Error reordering page.';
+    }
+  }
+
   constructor() {
     super();
     this.shadow = this.attachShadow({ mode: 'open' });
@@ -66,6 +105,11 @@ export class XQcmEdit extends HTMLElement {
     }
     if (cancelBtn) {
       cancelBtn.addEventListener('click', () => this.handleCancel());
+    }
+    // Bind add page button
+    const addPageBtn = this.shadow.getElementById('addPage') as HTMLButtonElement | null;
+    if (addPageBtn) {
+      addPageBtn.addEventListener('click', () => this.handleAddPage());
     }
     // Attempt to load QCM if ID is already provided
     await this.loadQcm();
@@ -200,13 +244,36 @@ export class XQcmEdit extends HTMLElement {
     const pages = this.qcm?.pages ?? [];
     // Build HTML for each page row
     listContainer.innerHTML = '';
-    pages.forEach((page) => {
+    pages.forEach((page, index) => {
       const row = document.createElement('div');
       row.className = 'page-row';
+      // Name element
       const nameSpan = document.createElement('span');
       nameSpan.className = 'page-name';
       nameSpan.textContent = page.name;
       row.appendChild(nameSpan);
+      // Container for action buttons (move up/down, rename, delete)
+      const actionsContainer = document.createElement('div');
+      actionsContainer.className = 'page-actions';
+      // Move up button (disabled for first)
+      const upBtn = document.createElement('button');
+      upBtn.className = 'move-up-button';
+      upBtn.textContent = '↑';
+      upBtn.disabled = index === 0;
+      upBtn.addEventListener('click', () => {
+        this.handleMovePage(page.id, 'up');
+      });
+      actionsContainer.appendChild(upBtn);
+      // Move down button (disabled for last)
+      const downBtn = document.createElement('button');
+      downBtn.className = 'move-down-button';
+      downBtn.textContent = '↓';
+      downBtn.disabled = index === pages.length - 1;
+      downBtn.addEventListener('click', () => {
+        this.handleMovePage(page.id, 'down');
+      });
+      actionsContainer.appendChild(downBtn);
+      // Rename button
       const renameBtn = document.createElement('button');
       renameBtn.className = 'rename-button';
       renameBtn.textContent = 'Rename';
@@ -215,7 +282,16 @@ export class XQcmEdit extends HTMLElement {
         this.renderPagesList();
         this.renderPageEditor();
       });
-      row.appendChild(renameBtn);
+      actionsContainer.appendChild(renameBtn);
+      // Delete button
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'delete-button';
+      deleteBtn.textContent = 'Delete';
+      deleteBtn.addEventListener('click', () => {
+        this.handleDeletePage(page.id);
+      });
+      actionsContainer.appendChild(deleteBtn);
+      row.appendChild(actionsContainer);
       listContainer.appendChild(row);
     });
   }
@@ -259,6 +335,75 @@ export class XQcmEdit extends HTMLElement {
       this.renderPageEditor();
     });
     editorContainer.appendChild(pageEdit);
+  }
+
+  /**
+   * Handles the Add Page button click. Creates a new page via
+   * the API with a default name (Page N) where N is the next number.
+   * Updates local QCM state and re-renders the pages list.
+   */
+  private async handleAddPage() {
+    if (!this.qcmId) return;
+    // Determine default name based on current number of pages
+    const num = (this.qcm?.pages.length ?? 0) + 1;
+    const defaultName = `Page ${num}`;
+    try {
+      const response = await fetch(`http://localhost:3000/qcm/${this.qcmId}/page`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: defaultName }),
+      });
+      if (!response.ok) {
+        const msg = await response.text();
+        throw new Error(`Failed to create page: ${msg}`);
+      }
+      const newPage = (await response.json()) as any;
+      // Append to local QCM pages
+      if (this.qcm) {
+        this.qcm.pages.push({ id: newPage.id, name: newPage.name, questions: [] });
+      }
+      this.renderPagesList();
+    } catch (err) {
+      console.error('Error creating page', err);
+      const errorEl = this.shadow.getElementById('error');
+      if (errorEl) errorEl.textContent = 'Error creating page.';
+    }
+  }
+
+  /**
+   * Handles deletion of a page. Prompts the user for confirmation,
+   * then calls the API to delete the page. Updates local state and
+   * re-renders the pages list. If the page being deleted is currently
+   * open in the editor, editing mode is cancelled.
+   */
+  private async handleDeletePage(pageId: string) {
+    // Simple confirmation dialog
+    if (!confirm('Are you sure you want to delete this page?')) {
+      return;
+    }
+    try {
+      const resp = await fetch(`http://localhost:3000/page/${pageId}`, {
+        method: 'DELETE',
+      });
+      if (!resp.ok) {
+        const msg = await resp.text();
+        throw new Error(`Failed to delete page: ${msg}`);
+      }
+      // Remove from local state
+      if (this.qcm) {
+        this.qcm.pages = this.qcm.pages.filter((p) => p.id !== pageId);
+      }
+      // If this page was being edited, cancel editing
+      if (this.editingPageId === pageId) {
+        this.editingPageId = null;
+      }
+      this.renderPagesList();
+      this.renderPageEditor();
+    } catch (err) {
+      console.error('Error deleting page', err);
+      const errorEl = this.shadow.getElementById('error');
+      if (errorEl) errorEl.textContent = 'Error deleting page.';
+    }
   }
 }
 

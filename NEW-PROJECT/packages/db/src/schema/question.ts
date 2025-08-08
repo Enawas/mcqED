@@ -38,6 +38,12 @@ export const question = pgTable('question', {
   options: jsonb('options').$type<{ id: string; text: string }[]>().notNull(),
   correctAnswers: jsonb('correct_answers').$type<string[]>().notNull(),
   explanation: text('explanation'),
+  /**
+   * Position of the question within its page. This determines the
+   * ordering when rendering questions in a page. Positions are
+   * 1-based integers and contiguous within a page.
+   */
+  position: integer('position').notNull(),
 });
 
 export type QuestionModel = typeof question;

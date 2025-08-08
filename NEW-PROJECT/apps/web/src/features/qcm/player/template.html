@@ -1,0 +1,18 @@
+<!--
+  Purpose: Template for the QCM player Web Component. Defines the
+  structure of the quiz runner, including the timer, questions
+  display, navigation controls, and result summary. Dynamic content
+  is rendered by the component logic.
+-->
+<div class="player-container">
+  <div id="timer" class="timer">00:00</div>
+  <div id="page-container" class="page-container">
+    <h2 id="page-name"></h2>
+    <div id="questions-container"></div>
+    <div class="navigation">
+      <button id="prev-page">Previous</button>
+      <button id="next-page">Next</button>
+    </div>
+  </div>
+  <div id="result-container" class="result-container hidden"></div>
+</div>
