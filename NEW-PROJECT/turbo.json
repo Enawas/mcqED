@@ -1,0 +1,27 @@
+{
+  "pipeline": {
+    // This file defines the Turbo build pipeline for the monorepo.  Tasks are
+    // organized into stages like compile, build, test and quality.  Each stage
+    // references scripts defined in package.json files across the repo.
+    "compile": {
+      "dependsOn": [],
+      "outputs": []
+    },
+    "build": {
+      "dependsOn": ["^compile"],
+      "outputs": []
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "e2e": {
+      "dependsOn": ["^test"],
+      "outputs": []
+    },
+    "quality": {
+      "dependsOn": ["compile"],
+      "outputs": []
+    }
+  }
+}
