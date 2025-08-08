@@ -197,14 +197,39 @@ export class XQcmList extends HTMLElement {
       const favBtn = document.createElement('button');
       favBtn.className = 'secondary';
       favBtn.textContent = qcm.isFavorite ? 'Unfavourite' : 'Favourite';
-      favBtn.addEventListener('click', () => {
-        this.dispatchEvent(new CustomEvent('qcm-fav-toggle', { detail: { id: qcm.id } }));
+      favBtn.addEventListener('click', async () => {
+        await this.toggleFavorite(qcm.id);
       });
       actions.appendChild(favBtn);
 
       card.appendChild(actions);
       listEl.appendChild(card);
     });
+  }
+
+  /**
+   * Toggles the favourite status of a QCM by invoking the API. Upon
+   * successful update, replaces the corresponding entry in the internal
+   * qcms array and reapplies filters to refresh the display.
+   */
+  private async toggleFavorite(id: string) {
+    try {
+      const response = await fetch(`http://localhost:3000/qcm/${id}/favorite`, {
+        method: 'PATCH',
+      });
+      if (!response.ok) {
+        console.error('Failed to toggle favourite:', await response.text());
+        return;
+      }
+      const updated = (await response.json()) as QcmRead;
+      const idx = this.qcms.findIndex((q) => q.id === id);
+      if (idx !== -1) {
+        this.qcms[idx] = updated;
+      }
+      this.applyFilters();
+    } catch (err) {
+      console.error('Error toggling favourite', err);
+    }
   }
 }
 
