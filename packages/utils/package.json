@@ -1,0 +1,11 @@
+{
+  "name": "@packages/utils",
+  "private": true,
+  "scripts": {
+    "lint": "echo 'TODO: run ESLint'",
+    "typecheck": "echo 'TODO: run tsc'",
+    "test": "echo 'TODO: run utils unit tests'"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

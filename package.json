@@ -1,0 +1,27 @@
+{
+  "name": "new-project",
+  "private": true,
+  "packageManager": "pnpm@8.0.0",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "prepare": "echo 'TODO: setup husky & lint-staged'",
+    "build": "echo 'TODO: run builds in order (schemas → packages → apps)'",
+    "dev": "echo 'TODO: run web, api and worker concurrently'",
+    "lint": "echo 'TODO: run eslint across all packages/apps'",
+    "typecheck": "echo 'TODO: run tsc project references'",
+    "test": "echo 'TODO: run unit tests'",
+    "e2e": "echo 'TODO: run e2e tests'",
+    "graph": "echo 'TODO: run dependency-cruiser'",
+    "migrate:up": "echo 'TODO: run DB migrations up'",
+    "migrate:down": "echo 'TODO: run DB migrations down'",
+    "ov:generate": "echo 'TODO: generate OpenAPI spec and TypeScript client'",
+    "docker:up": "echo 'TODO: start local docker services'",
+    "docker:down": "echo 'TODO: stop local docker services'",
+    "release": "echo 'TODO: run changesets versioning'"
+  },
+  "devDependencies": {},
+  "dependencies": {}
+}
