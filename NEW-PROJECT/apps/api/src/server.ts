@@ -12,6 +12,8 @@ import fastify from 'fastify';
 import { qcmListPlugin } from './plugins/qcm/list/index';
 import { qcmCreatePlugin } from './plugins/qcm/create/index';
 import { qcmToggleFavoritePlugin } from './plugins/qcm/toggleFavorite/index';
+import { qcmGetPlugin } from './plugins/qcm/get/index';
+import { qcmUpdatePlugin } from './plugins/qcm/update/index';
 
 /**
  * Factory function to build the Fastify server instance.  Additional
@@ -28,6 +30,10 @@ export async function buildServer() {
   await app.register(qcmCreatePlugin);
   // QCM toggle favourite plugin
   await app.register(qcmToggleFavoritePlugin);
+  // QCM get by ID plugin
+  await app.register(qcmGetPlugin);
+  // QCM update plugin
+  await app.register(qcmUpdatePlugin);
   return app;
 }
 

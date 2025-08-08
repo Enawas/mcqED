@@ -1,0 +1,49 @@
+<!--
+  Purpose: Template for the QCM edit Web Component. Defines the form fields
+  for editing QCM metadata. This markup is static and styling is defined
+  in the corresponding CSS file.
+  Inputs: None (values are populated by the component logic).
+  Outputs: None.
+  Events: None.
+  Errors: None.
+-->
+<div class="container">
+  <h2>Edit QCM</h2>
+  <div class="form-group">
+    <label for="title">Title</label>
+    <input id="title" type="text" />
+  </div>
+  <div class="form-group">
+    <label for="description">Description</label>
+    <textarea id="description"></textarea>
+  </div>
+  <div class="form-group">
+    <label for="icon">Icon class</label>
+    <input id="icon" type="text" />
+  </div>
+  <div class="form-group">
+    <label for="status">Status</label>
+    <select id="status">
+      <option value="draft">Draft</option>
+      <option value="published">Published</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="difficulty">Difficulty</label>
+    <select id="difficulty">
+      <option value="">None</option>
+      <option value="beginner">Beginner</option>
+      <option value="intermediate">Intermediate</option>
+      <option value="advanced">Advanced</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="passingThreshold">Passing threshold (%)</label>
+    <input id="passingThreshold" type="number" min="0" max="100" step="1" />
+  </div>
+  <div class="actions">
+    <button id="save">Save</button>
+    <button id="cancel" class="secondary">Cancel</button>
+  </div>
+  <div id="error" class="error"></div>
+</div>
