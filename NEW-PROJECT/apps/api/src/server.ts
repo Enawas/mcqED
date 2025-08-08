@@ -16,6 +16,8 @@ import { qcmGetPlugin } from './plugins/qcm/get/index';
 import { qcmUpdatePlugin } from './plugins/qcm/update/index';
 import { questionGetPlugin } from './plugins/question/get/index';
 import { questionEditPlugin } from './plugins/question/edit/index';
+import { pageGetPlugin } from './plugins/page/get/index';
+import { pageEditPlugin } from './plugins/page/edit/index';
 
 /**
  * Factory function to build the Fastify server instance.  Additional
@@ -40,6 +42,10 @@ export async function buildServer() {
   await app.register(questionGetPlugin);
   // Question edit plugin
   await app.register(questionEditPlugin);
+  // Page get plugin
+  await app.register(pageGetPlugin);
+  // Page edit plugin
+  await app.register(pageEditPlugin);
   return app;
 }
 
