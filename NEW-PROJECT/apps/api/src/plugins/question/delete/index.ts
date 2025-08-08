@@ -14,6 +14,8 @@ import { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { deleteQuestion } from '../../../services/question/delete.service';
 import { canDeleteQuestion } from '../../../policies/question/delete.policy';
+import { recordAudit } from '../../../observability/auditWriter';
+import { getQuestion } from '../../../services/question/get.service';
 
 export async function questionDeletePlugin(fastify: FastifyInstance) {
   fastify.delete(
@@ -33,7 +35,17 @@ export async function questionDeletePlugin(fastify: FastifyInstance) {
       }
       const { id } = request.params as { id: string };
       try {
+        // Retrieve question before deletion for audit
+        let beforeQuestion;
+        try {
+          beforeQuestion = await getQuestion(id);
+        } catch (_) {
+          beforeQuestion = undefined;
+        }
         await deleteQuestion(id);
+        // Record audit event for question deletion
+        const userId = (request as any).user?.id ?? null;
+        await recordAudit('question.deleted', 'question', id, userId, beforeQuestion, undefined);
         return reply.status(204).send();
       } catch (err: any) {
         if (err.message === 'QUESTION_NOT_FOUND') {

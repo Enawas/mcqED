@@ -15,6 +15,7 @@ import { z } from 'zod';
 import { qcmPageReadSchema } from '@packages/schemas/src/qcm/qcm.read';
 import { updatePage } from '../../../services/page/update.service';
 import { canEditPage } from '../../../policies/page/edit.policy';
+import { recordAudit } from '../../../observability/auditWriter';
 
 export async function pageEditPlugin(fastify: FastifyInstance) {
   fastify.patch(
@@ -38,6 +39,9 @@ export async function pageEditPlugin(fastify: FastifyInstance) {
       const { name } = request.body as { name: string };
       try {
         const updated = await updatePage(id, name);
+        // Record audit event for page update
+        const userId = (request as any).user?.id ?? null;
+        await recordAudit('page.updated', 'page', updated.id, userId, undefined, updated);
         return updated;
       } catch (err: any) {
         if (err.message === 'PAGE_NOT_FOUND') {

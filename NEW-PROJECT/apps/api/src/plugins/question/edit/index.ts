@@ -19,6 +19,7 @@ import {
 } from '@packages/schemas/src/question';
 import { updateQuestion } from '../../../services/question/update.service';
 import { canEditQuestion } from '../../../policies/question/edit.policy';
+import { recordAudit } from '../../../observability/auditWriter';
 
 export async function questionEditPlugin(fastify: FastifyInstance) {
   fastify.patch(
@@ -42,6 +43,9 @@ export async function questionEditPlugin(fastify: FastifyInstance) {
       const input = request.body as any;
       try {
         const updated = await updateQuestion(id, input);
+        // Record audit event for question update
+        const userId = (request as any).user?.id ?? null;
+        await recordAudit('question.updated', 'question', updated.id, userId, undefined, updated);
         return updated;
       } catch (err: any) {
         if (err.message === 'QUESTION_NOT_FOUND') {

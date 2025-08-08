@@ -16,6 +16,7 @@ import { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { qcmReadSchema } from '@packages/schemas/src/qcm';
 import { updateStats } from '../../../services/qcm/updateStats.service';
+import { recordAudit } from '../../../observability/auditWriter';
 import { canUpdateStats } from '../../../policies/qcm/updateStats.policy';
 
 export async function qcmUpdateStatsPlugin(fastify: FastifyInstance) {
@@ -42,6 +43,9 @@ export async function qcmUpdateStatsPlugin(fastify: FastifyInstance) {
       const { score, time } = request.body as { score: number; time: number };
       try {
         const updated = await updateStats(id, score, time);
+        // Record audit event for stats update
+        const userId = (request as any).user?.id ?? null;
+        await recordAudit('qcm.stats_updated', 'qcm', updated.id, userId, undefined, updated);
         return updated;
       } catch (err: any) {
         if (err.message === 'QCM_NOT_FOUND') {

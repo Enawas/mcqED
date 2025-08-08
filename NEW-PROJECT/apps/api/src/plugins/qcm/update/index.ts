@@ -19,6 +19,7 @@ import {
   QcmUpdateInput,
 } from '@packages/schemas/src/qcm';
 import { updateQcm } from '../../../services/qcm/update.service';
+import { recordAudit } from '../../../observability/auditWriter';
 import { canEditQcm } from '../../../policies/qcm/edit.policy';
 
 export async function qcmUpdatePlugin(fastify: FastifyInstance) {
@@ -44,6 +45,9 @@ export async function qcmUpdatePlugin(fastify: FastifyInstance) {
       const input = request.body as unknown as Omit<QcmUpdateInput, 'id' | 'pages'>;
       try {
         const updated = await updateQcm(id, input as any);
+        // Record audit event for QCM update
+        const userId = (request as any).user?.id ?? null;
+        await recordAudit('qcm.updated', 'qcm', updated.id, userId, undefined, updated);
         return updated;
       } catch (err: any) {
         if (err.message === 'QCM_NOT_FOUND') {

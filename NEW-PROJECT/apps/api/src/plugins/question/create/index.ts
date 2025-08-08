@@ -19,6 +19,7 @@ import {
 } from '@packages/schemas/src/question';
 import { createQuestion } from '../../../services/question/create.service';
 import { canCreateQuestion } from '../../../policies/question/create.policy';
+import { recordAudit } from '../../../observability/auditWriter';
 
 export async function questionCreatePlugin(fastify: FastifyInstance) {
   fastify.post(
@@ -41,6 +42,9 @@ export async function questionCreatePlugin(fastify: FastifyInstance) {
       const body = request.body as any;
       try {
         const question = await createQuestion(id, body);
+        // Record audit event for question creation
+        const userId = (request as any).user?.id ?? null;
+        await recordAudit('question.created', 'question', question.id, userId, undefined, question);
         return question;
       } catch (err: any) {
         if (err.message === 'PAGE_NOT_FOUND') {

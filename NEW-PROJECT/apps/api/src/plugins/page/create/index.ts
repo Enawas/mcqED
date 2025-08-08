@@ -17,6 +17,7 @@ import { z } from 'zod';
 import { pageCreateSchema } from '@packages/schemas/src/page/page.write';
 import { qcmPageReadSchema } from '@packages/schemas/src/qcm/qcm.read';
 import { createPage } from '../../../services/page/create.service';
+import { recordAudit } from '../../../observability/auditWriter';
 import { canCreatePage } from '../../../policies/page/create.policy';
 
 export async function pageCreatePlugin(fastify: FastifyInstance) {
@@ -40,6 +41,9 @@ export async function pageCreatePlugin(fastify: FastifyInstance) {
       const body = request.body as any;
       try {
         const page = await createPage(id, body);
+        // Record audit event for page creation
+        const userId = (request as any).user?.id ?? null;
+        await recordAudit('page.created', 'page', page.id, userId, undefined, page);
         return page;
       } catch (err: any) {
         if (err.message === 'QCM_NOT_FOUND') {

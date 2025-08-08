@@ -14,6 +14,8 @@ import { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { reorderPage } from '../../../services/page/reorder.service';
 import { canEditPage } from '../../../policies/page/edit.policy';
+import { recordAudit } from '../../../observability/auditWriter';
+import { getPage } from '../../../services/page/get.service';
 
 export async function pageReorderPlugin(fastify: FastifyInstance) {
   fastify.patch(
@@ -36,6 +38,15 @@ export async function pageReorderPlugin(fastify: FastifyInstance) {
       const { direction } = request.body as { direction: 'up' | 'down' };
       try {
         await reorderPage(id, direction);
+        // Record audit event after page reordering
+        const userId = (request as any).user?.id ?? null;
+        let pageAfter;
+        try {
+          pageAfter = await getPage(id);
+        } catch (_) {
+          pageAfter = undefined;
+        }
+        await recordAudit('page.reordered', 'page', id, userId, undefined, pageAfter);
         return reply.status(204).send();
       } catch (err: any) {
         if (err.message === 'PAGE_NOT_FOUND') {

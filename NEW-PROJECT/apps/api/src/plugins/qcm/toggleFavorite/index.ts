@@ -14,6 +14,7 @@ import { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { qcmReadSchema } from '@packages/schemas/src/qcm';
 import { toggleFavoriteQcm } from '../../../services/qcm/toggleFavorite.service';
+import { recordAudit } from '../../../observability/auditWriter';
 import { canToggleFavorite } from '../../../policies/qcm/toggleFavorite.policy';
 
 export async function qcmToggleFavoritePlugin(fastify: FastifyInstance) {
@@ -35,6 +36,9 @@ export async function qcmToggleFavoritePlugin(fastify: FastifyInstance) {
       const { id } = request.params as { id: string };
       try {
         const updated = await toggleFavoriteQcm(id);
+        // Record audit event for favourite toggle
+        const userId = (request as any).user?.id ?? null;
+        await recordAudit('qcm.favorite_toggled', 'qcm', updated.id, userId, undefined, updated);
         return updated;
       } catch (err: any) {
         if (err.message === 'QCM_NOT_FOUND') {

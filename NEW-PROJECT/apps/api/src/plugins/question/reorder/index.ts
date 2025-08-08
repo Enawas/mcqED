@@ -15,6 +15,8 @@ import { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 import { reorderQuestion } from '../../../services/question/reorder.service';
 import { canEditQuestion } from '../../../policies/question/edit.policy';
+import { recordAudit } from '../../../observability/auditWriter';
+import { getQuestion } from '../../../services/question/get.service';
 
 export async function questionReorderPlugin(fastify: FastifyInstance) {
   fastify.patch(
@@ -37,6 +39,15 @@ export async function questionReorderPlugin(fastify: FastifyInstance) {
       const { direction } = request.body as { direction: 'up' | 'down' };
       try {
         await reorderQuestion(id, direction);
+        // Record audit event for question reordering
+        const userId = (request as any).user?.id ?? null;
+        let questionAfter;
+        try {
+          questionAfter = await getQuestion(id);
+        } catch (_) {
+          questionAfter = undefined;
+        }
+        await recordAudit('question.reordered', 'question', id, userId, undefined, questionAfter);
         return reply.status(204).send();
       } catch (err: any) {
         if (err.message === 'QUESTION_NOT_FOUND') {
