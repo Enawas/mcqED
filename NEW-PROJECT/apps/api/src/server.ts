@@ -10,6 +10,7 @@
 // application entry point in development and production environments.
 import fastify from 'fastify';
 import { qcmListPlugin } from './plugins/qcm/list/index';
+import { qcmCreatePlugin } from './plugins/qcm/create/index';
 
 /**
  * Factory function to build the Fastify server instance.  Additional
@@ -20,7 +21,10 @@ import { qcmListPlugin } from './plugins/qcm/list/index';
 export async function buildServer() {
   const app = fastify();
   // Register API plugins.  For now we only register the QCM list plugin.
+  // QCM list plugin
   await app.register(qcmListPlugin);
+  // QCM create plugin
+  await app.register(qcmCreatePlugin);
   return app;
 }
 
