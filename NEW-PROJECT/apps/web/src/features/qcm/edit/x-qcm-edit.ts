@@ -11,11 +11,17 @@
  */
 
 import { QcmRead, QcmUpdateInput } from '@packages/schemas/src/qcm';
+// Import page edit component to ensure it is registered
+import '../../page/edit/x-page-edit';
 
 export class XQcmEdit extends HTMLElement {
   private shadow: ShadowRoot;
   private qcmId: string | null = null;
   private qcm: QcmRead | null = null;
+
+  // Track the page being edited, if any. When not null, the page
+  // edit component is displayed instead of the pages list.
+  private editingPageId: string | null = null;
 
   constructor() {
     super();
@@ -107,6 +113,10 @@ export class XQcmEdit extends HTMLElement {
     if (statusSelect) statusSelect.value = this.qcm.status;
     if (diffSelect) diffSelect.value = this.qcm.difficultyLevel ?? '';
     if (thresholdInput) thresholdInput.value = this.qcm.passingThreshold?.toString() ?? '';
+
+    // Render the list of pages and the page editor (if any)
+    this.renderPagesList();
+    this.renderPageEditor();
   }
 
   /**
@@ -171,6 +181,84 @@ export class XQcmEdit extends HTMLElement {
    */
   private handleCancel() {
     this.dispatchEvent(new CustomEvent('edit-cancel', { detail: {}, bubbles: true }));
+  }
+
+  /**
+   * Renders the list of pages in the QCM edit form. Each page is
+   * displayed with its name and a rename button. Clicking the rename
+   * button switches to the page editing mode.
+   */
+  private renderPagesList() {
+    const listContainer = this.shadow.getElementById('pagesList');
+    if (!listContainer) return;
+    // Only render list if not currently editing a page
+    if (this.editingPageId) {
+      listContainer.innerHTML = '';
+      return;
+    }
+    // Ensure qcm and pages exist
+    const pages = this.qcm?.pages ?? [];
+    // Build HTML for each page row
+    listContainer.innerHTML = '';
+    pages.forEach((page) => {
+      const row = document.createElement('div');
+      row.className = 'page-row';
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'page-name';
+      nameSpan.textContent = page.name;
+      row.appendChild(nameSpan);
+      const renameBtn = document.createElement('button');
+      renameBtn.className = 'rename-button';
+      renameBtn.textContent = 'Rename';
+      renameBtn.addEventListener('click', () => {
+        this.editingPageId = page.id;
+        this.renderPagesList();
+        this.renderPageEditor();
+      });
+      row.appendChild(renameBtn);
+      listContainer.appendChild(row);
+    });
+  }
+
+  /**
+   * Renders the page editing component when editingPageId is set.
+   * Attaches event listeners for page-updated and edit-cancel to
+   * handle updates and cancellations.
+   */
+  private renderPageEditor() {
+    const editorContainer = this.shadow.getElementById('pageEditorContainer');
+    if (!editorContainer) return;
+    // Clear container first
+    editorContainer.innerHTML = '';
+    if (!this.editingPageId) {
+      return;
+    }
+    // Create and insert the page edit component
+    const pageEdit = document.createElement('x-page-edit');
+    pageEdit.setAttribute('page-id', this.editingPageId);
+    // Attach listeners for update and cancel
+    pageEdit.addEventListener('page-updated', (e: Event) => {
+      const detail = (e as CustomEvent).detail;
+      const updatedPage = detail.page as any;
+      // Update the local qcm pages with the new name
+      if (this.qcm) {
+        const idx = this.qcm.pages.findIndex((p) => p.id === updatedPage.id);
+        if (idx !== -1) {
+          this.qcm.pages[idx].name = updatedPage.name;
+        }
+      }
+      // Exit editing mode and re-render list
+      this.editingPageId = null;
+      this.renderPagesList();
+      this.renderPageEditor();
+    });
+    pageEdit.addEventListener('edit-cancel', () => {
+      // Exit editing mode without changes
+      this.editingPageId = null;
+      this.renderPagesList();
+      this.renderPageEditor();
+    });
+    editorContainer.appendChild(pageEdit);
   }
 }
 
